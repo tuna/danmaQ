@@ -86,13 +86,16 @@ class DanmakuApp(QtWidgets.QWidget):
         layout.addLayout(hbox)
 
         hbox = QtWidgets.QHBoxLayout()
+        self.config_button = QtWidgets.QPushButton("Preferences", self)
         self.hide_button = QtWidgets.QPushButton("Hide", self)
         self.main_button = QtWidgets.QPushButton("Subscribe", self)
+        hbox.addWidget(self.config_button)
         hbox.addWidget(self.hide_button)
         hbox.addWidget(self.main_button)
         layout.addLayout(hbox)
         self.setLayout(layout)
 
+        self.config_button.released.connect(self.config_dialog.show)
         self.hide_button.released.connect(self.hide)
         self.main_button.released.connect(self.subscribe_danmaku)
         self.config_dialog.preferenceChanged.connect(self.apply_new_preference)

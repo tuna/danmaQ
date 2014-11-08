@@ -15,7 +15,7 @@ color_styles = {
     "blue": ('rgb(20, 95, 198)', QtGui.QColor("white"), ),
     "cyan": ('rgb(0, 255, 255)', QtGui.QColor("black"), ),
     "red": ('rgb(231, 34, 0)', QtGui.QColor("white"), ),
-    "yellow": ('rgb(1, 221, 0)', QtGui.QColor("black"), ),
+    "yellow": ('rgb(255, 221, 2)', QtGui.QColor("black"), ),
     "green": ('rgb(4, 202, 0)', QtGui.QColor("black"), ),
     "purple": ('rgb(128, 0, 128)', QtGui.QColor("white"), ),
 }
