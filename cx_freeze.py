@@ -1,14 +1,22 @@
 #!/usr/bin/env python2
 # -*- coding:utf-8 -*-
+import os
 import sys
+import site
 from cx_Freeze import setup, Executable
+
+
+site_dir = site.getsitepackages()[1]
 
 # Dependencies are automatically detected, but it might need
 # fine tuning.
 buildOptions = dict(
     packages=['requests', 'danmaQ'],
     excludes=[],
-    include_files=['danmaQ\images'],
+    include_files=[
+        'danmaQ\images',
+        (os.path.join(site_dir, 'PyQt5', 'libEGL.dll'), 'libEGL.dll')],
+    include_msvcr=True,
 )
 
 name = 'danmaQ'
@@ -23,6 +31,7 @@ if sys.platform == "win32":
 executables = [
     Executable('danmaQ.py',
                base=base,
+               icon=os.path.join("danmaQ", "images", "statusicon.ico"),
                targetName=name)
 ]
 

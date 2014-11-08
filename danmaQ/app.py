@@ -3,10 +3,10 @@
 import sys
 import json
 import requests
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal
 from .danmaq_ui import Danmaku
-from .tray_icon import DanmaQTrayIcon
+from .tray_icon import DanmaQTrayIcon, ICON_ENABLED
 
 
 class SubscribeThread(QtCore.QThread):
@@ -50,6 +50,7 @@ class DanmakuApp(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(DanmakuApp, self).__init__(parent)
         self.setWindowTitle("Danmaku")
+        self.setWindowIcon(QtGui.QIcon(ICON_ENABLED))
 
         self.trayIcon = DanmaQTrayIcon(self)
         self.trayIcon.show()
