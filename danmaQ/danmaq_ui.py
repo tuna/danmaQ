@@ -5,6 +5,7 @@ from random import randint
 from threading import Lock
 
 from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtCore import pyqtSignal
 
 color_styles = {
     "white": ('rgb(255, 255, 255)', QtGui.QColor("black"), ),
@@ -25,6 +26,8 @@ class Danmaku(QtWidgets.QWidget):
     _speed_scale = 1
     _font_size = 28
     _interval = 10
+
+    exited = pyqtSignal(str, name="exited")
 
     def __init__(self, text="text", style='white', position='fly', parent=None):
         super(Danmaku, self).__init__(parent)
@@ -153,8 +156,8 @@ class Danmaku(QtWidgets.QWidget):
                 if self.vslot is not None:
                     Danmaku.vertical_slots[self.vslot] = 0
 
-            self.parent().delete_danmaku(id(self))
-            self.destroy()
+            self.exited.emit(str(id(self)))
+            self.close()
 
 
 class DanmakuTestApp(QtWidgets.QDialog):
@@ -178,8 +181,9 @@ class DanmakuTestApp(QtWidgets.QDialog):
         text = self.lineedit.text()
         style = self.style.text()
         position = self.position.text()
-        dm = Danmaku(text, style=style, position=position, parent=self)
-        self.dms[id(dm)] = dm
+        dm = Danmaku(text, style=style, position=position)
+        dm.exited.connect(self.delete_danmaku)
+        self.dms[str(id(dm))] = dm
         dm.show()
 
     def delete_danmaku(self, _id):
