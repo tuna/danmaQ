@@ -7,6 +7,8 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal
 from .danmaq_ui import Danmaku
 from .tray_icon import DanmaQTrayIcon, ICON_ENABLED
+from .settings import load_config, save_config
+from .config_dialog import ConfigDialog
 
 
 class SubscribeThread(QtCore.QThread):
@@ -54,34 +56,50 @@ class DanmakuApp(QtWidgets.QWidget):
 
         self.trayIcon = DanmaQTrayIcon(self)
         self.trayIcon.show()
+        self.config_dialog = ConfigDialog(self)
+        self._options = load_config()
 
         layout = QtWidgets.QVBoxLayout()
         hbox = QtWidgets.QHBoxLayout()
-        hbox.addWidget(QtWidgets.QLabel("Server: "))
-        self._server = QtWidgets.QLineEdit("http://dm.tuna.moe/")
+        hbox.addWidget(QtWidgets.QLabel("Server: ", self))
+        self._server = QtWidgets.QLineEdit(
+            self._options['http_stream_server'], self)
         hbox.addWidget(self._server)
         layout.addLayout(hbox)
 
         hbox = QtWidgets.QHBoxLayout()
-        hbox.addWidget(QtWidgets.QLabel("Channel: "))
-        self._chan = QtWidgets.QLineEdit("demo")
+        hbox.addWidget(QtWidgets.QLabel("Save As Default Server: ", self))
+        self._save_server = QtWidgets.QCheckBox(self)
+        hbox.addWidget(self._save_server)
+        layout.addLayout(hbox)
+
+        hbox = QtWidgets.QHBoxLayout()
+        hbox.addWidget(QtWidgets.QLabel("Channel: ", self))
+        self._chan = QtWidgets.QLineEdit("demo", self)
         hbox.addWidget(self._chan)
         layout.addLayout(hbox)
 
         hbox = QtWidgets.QHBoxLayout()
-        hbox.addWidget(QtWidgets.QLabel("Password: "))
-        self._passwd = QtWidgets.QLineEdit("")
+        hbox.addWidget(QtWidgets.QLabel("Password: ", self))
+        self._passwd = QtWidgets.QLineEdit("", self)
         hbox.addWidget(self._passwd)
         layout.addLayout(hbox)
 
-        self.main_button = QtWidgets.QPushButton("Subscribe")
-        layout.addWidget(self.main_button)
+        hbox = QtWidgets.QHBoxLayout()
+        self.hide_button = QtWidgets.QPushButton("Hide", self)
+        self.main_button = QtWidgets.QPushButton("Subscribe", self)
+        hbox.addWidget(self.hide_button)
+        hbox.addWidget(self.main_button)
+        layout.addLayout(hbox)
         self.setLayout(layout)
 
+        self.hide_button.released.connect(self.hide)
         self.main_button.released.connect(self.subscribe_danmaku)
+        self.config_dialog.preferenceChanged.connect(self.apply_new_preference)
         self.trayIcon.toggleAction.triggered.connect(self.subscribe_danmaku)
         self.trayIcon.exitAction.triggered.connect(self.close)
         self.trayIcon.showAction.triggered.connect(self.show)
+        self.trayIcon.configAction.triggered.connect(self.config_dialog.show)
 
         self.workThread = None
         self.dms = {}
@@ -114,6 +132,11 @@ class DanmakuApp(QtWidgets.QWidget):
         dm.close()
 
     def on_subscription_started(self):
+        if self._save_server.isChecked():
+            opts = load_config()
+            opts['http_stream_server'] = self._server.text()
+            save_config(opts)
+
         self.main_button.setText("Unsubscribe")
         self.trayIcon.set_icon_running()
         self.trayIcon.showMessage(
@@ -129,6 +152,11 @@ class DanmakuApp(QtWidgets.QWidget):
         self.trayIcon.set_icon_not_running()
         self.main_button.setText("Subscribe")
         self.trayIcon.showMessage("DanmaQ", "Subscription Finished")
+
+    def apply_new_preference(self):
+        pref = self.config_dialog.preferences()
+        # print(pref)
+        Danmaku.set_options(pref)
 
 
 def main():

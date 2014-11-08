@@ -7,6 +7,8 @@ from threading import Lock
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal
 
+from .settings import load_config
+
 color_styles = {
     "white": ('rgb(255, 255, 255)', QtGui.QColor("black"), ),
     "black": ('rgb(0, 0, 0)', QtGui.QColor("white"), ),
@@ -18,19 +20,31 @@ color_styles = {
     "purple": ('rgb(128, 0, 128)', QtGui.QColor("white"), ),
 }
 
+OPTIONS = load_config()
 
-class Danmaku(QtWidgets.QWidget):
+
+class Danmaku(QtWidgets.QLabel):
     _lock = Lock()
     vertical_slots = None
 
-    _speed_scale = 1
-    _font_size = 28
+    _font_family = OPTIONS['font_family']
+    _speed_scale = OPTIONS['speed_scale']
+    _font_size = OPTIONS['font_size']
     _interval = 10
+    _style_tmpl = "font-size: {font_size}pt;" \
+        + "font-family: {font_family};" \
+        + "color: {color}; font-weight: bold;"
 
     exited = pyqtSignal(str, name="exited")
 
+    @classmethod
+    def set_options(cls, opts):
+        cls._font_family = opts['font_family']
+        cls._font_size = opts['font_size']
+        cls._speed_scale = opts['speed_scale']
+
     def __init__(self, text="text", style='white', position='fly', parent=None):
-        super(Danmaku, self).__init__(parent)
+        super(Danmaku, self).__init__(text, parent)
 
         self._text = text
         self._style = style
@@ -41,12 +55,12 @@ class Danmaku(QtWidgets.QWidget):
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
-        self.setWindowFlags(QtCore.Qt.ToolTip
-                            |QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlags(
+            QtCore.Qt.ToolTip
+            | QtCore.Qt.FramelessWindowHint
+        )
 
         self.init_text(text, style)
-
-        # QtCore.QTimer.singleShot(20, self.fly)
 
         self._width = self.frameSize().width()
         self._height = self.frameSize().height()
@@ -62,8 +76,6 @@ class Danmaku(QtWidgets.QWidget):
         self.init_position()
 
     def init_text(self, text, style):
-
-        self.label = QtWidgets.QLabel(text, parent=self)
         tcolor, bcolor = color_styles.get(style, color_styles['white'])
 
         effect = QtWidgets.QGraphicsDropShadowEffect(self)
@@ -71,22 +83,18 @@ class Danmaku(QtWidgets.QWidget):
         effect.setColor(bcolor)
         effect.setOffset(0, 0)
 
-        self.label.setStyleSheet(
-            "font-size: {font_size}pt; color: {color}; font-weight: bold; ".format(
+        self.setStyleSheet(
+            self._style_tmpl.format(
                 font_size=self._font_size,
+                font_family=self._font_family,
                 color=tcolor,
             )
         )
 
-        self.label.setGraphicsEffect(effect)
+        self.setGraphicsEffect(effect)
 
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.label)
-        self.setLayout(layout)
-        self.setContentsMargins(0, 0, 0, 0)
-        self.layout().setContentsMargins(0, 0, 0, 0)
         _msize = self.minimumSizeHint()
-        _msize.setHeight(_msize.height() - 10)
+        _msize.setHeight(_msize.height())
         self.resize(_msize)
 
     def init_position(self):
@@ -129,7 +137,7 @@ class Danmaku(QtWidgets.QWidget):
                     QtCore.QTimer.singleShot(1000, self.init_position)
                     return
 
-                self.y = self._height * self.vslot + 10
+                self.y = self._height * self.vslot
                 QtCore.QTimer.singleShot(5000, self.clean_close)
 
         self.move(self.x, self.y)
@@ -189,7 +197,6 @@ class DanmakuTestApp(QtWidgets.QDialog):
     def delete_danmaku(self, _id):
         dm = self.dms.pop(_id)
         dm.close()
-
 
 if __name__ == "__main__":
     import signal

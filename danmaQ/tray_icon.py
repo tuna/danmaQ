@@ -22,6 +22,7 @@ class DanmaQTrayIcon(QtWidgets.QSystemTrayIcon):
         menu = QtWidgets.QMenu(parent)
         self.toggleAction = menu.addAction("Toggle Subscription")
         self.showAction = menu.addAction("Show Main Window")
+        self.configAction = menu.addAction("Preferences")
         self.exitAction = menu.addAction("Exit")
         self.setContextMenu(menu)
         self.activated.connect(self.on_activate)
