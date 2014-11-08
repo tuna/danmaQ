@@ -23,7 +23,7 @@ color_styles = {
 OPTIONS = load_config()
 
 
-class Danmaku(QtWidgets.QLabel):
+class Danmaku(QtWidgets.QWidget):
     _lock = Lock()
     vertical_slots = None
 
@@ -44,7 +44,7 @@ class Danmaku(QtWidgets.QLabel):
         cls._speed_scale = opts['speed_scale']
 
     def __init__(self, text="text", style='white', position='fly', parent=None):
-        super(Danmaku, self).__init__(text, parent)
+        super(Danmaku, self).__init__(parent)
 
         self._text = text
         self._style = style
@@ -76,6 +76,7 @@ class Danmaku(QtWidgets.QLabel):
         self.init_position()
 
     def init_text(self, text, style):
+        self.label = QtWidgets.QLabel(text, parent=self)
         tcolor, bcolor = color_styles.get(style, color_styles['white'])
 
         effect = QtWidgets.QGraphicsDropShadowEffect(self)
@@ -83,7 +84,7 @@ class Danmaku(QtWidgets.QLabel):
         effect.setColor(bcolor)
         effect.setOffset(0, 0)
 
-        self.setStyleSheet(
+        self.label.setStyleSheet(
             self._style_tmpl.format(
                 font_size=self._font_size,
                 font_family=self._font_family,
@@ -91,10 +92,17 @@ class Danmaku(QtWidgets.QLabel):
             )
         )
 
-        self.setGraphicsEffect(effect)
+        self.label.setGraphicsEffect(effect)
+        self.label.setContentsMargins(0, 0, 0, 0)
+
+        self.setContentsMargins(0, 0, 0, 0)
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.label, 0, QtCore.Qt.AlignVCenter)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
 
         _msize = self.minimumSizeHint()
-        _msize.setHeight(_msize.height())
+        _msize.setHeight(self.label.height()+16)
         self.resize(_msize)
 
     def init_position(self):
@@ -165,7 +173,7 @@ class Danmaku(QtWidgets.QLabel):
                     Danmaku.vertical_slots[self.vslot] = 0
 
             self.exited.emit(str(id(self)))
-            self.close()
+            self.destroy()
 
 
 class DanmakuTestApp(QtWidgets.QDialog):

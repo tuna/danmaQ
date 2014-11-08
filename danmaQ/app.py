@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 import sys
 import json
@@ -26,6 +26,7 @@ class SubscribeThread(QtCore.QThread):
             server = self.server[:-1]
         else:
             server = self.server
+
         url = server + uri
 
         while 1:
@@ -128,11 +129,8 @@ class DanmakuApp(QtWidgets.QWidget):
         dm.exited.connect(self.delete_danmaku)
         self.dms[str(id(dm))] = dm
 
-        dm.show()
-
     def delete_danmaku(self, _id):
-        dm = self.dms.pop(_id)
-        dm.close()
+        self.dms.pop(_id)
 
     def on_subscription_started(self):
         if self._save_server.isChecked():
@@ -158,7 +156,6 @@ class DanmakuApp(QtWidgets.QWidget):
 
     def apply_new_preference(self):
         pref = self.config_dialog.preferences()
-        # print(pref)
         Danmaku.set_options(pref)
 
 
