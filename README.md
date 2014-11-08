@@ -11,7 +11,8 @@ DanmaQ is still under development, documents might be outdated.
 ### Dependencies
 
 `danmaQ` depends on `requests` and `PyQt5`, you can either install via `pip` or system package manager,
-if you use Windows, please download and install python3.4 and PyQt5 manually.
+if you use Windows, please download and install python3.4 and PyQt5 manually or download binary version from 
+[releases page](https://github.com/bigeagle/danmaQ/releases/).
 
 ### Use TUNA Service
 
@@ -29,7 +30,9 @@ Clone https://github.com/tuna/gdanmaku-server and run `webserver.py` to start a 
 
 ### Installation
 
-run `python setup.py install`.
+- **from source**: run `python setup.py install`.
+- **windows binary**: https://github.com/bigeagle/danmaQ/releases/
+- **Arch Linux**: [AUR](https://aur.archlinux.org/packages/danmaq-git/)
 
 ## Screenshot
 
