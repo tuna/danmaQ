@@ -1,10 +1,14 @@
 #!/usr/bin/env python2
 # -*- coding:utf-8 -*-
 import os
+import sys
 from PyQt5 import QtWidgets, QtGui
 
-ICON_DIR = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "images")
+__dir = os.path.dirname(sys.executable) \
+    if getattr(sys, 'frozen', False) else \
+    os.path.dirname(os.path.realpath(__file__))
+
+ICON_DIR = os.path.join(__dir, "images")
 
 ICON_ENABLED = os.path.join(ICON_DIR, "statusicon.png")
 ICON_DISABLED = os.path.join(ICON_DIR, "statusicon_disabled.png")
