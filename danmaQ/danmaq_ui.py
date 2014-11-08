@@ -1,59 +1,174 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 import sys
-from PyQt5 import QtWidgets, QtCore
+from random import randint
+from threading import Lock
+
+from PyQt5 import QtWidgets, QtCore, QtGui
+
+color_styles = {
+    "white": ('rgb(255, 255, 255)', QtGui.QColor("black"), ),
+    "black": ('rgb(0, 0, 0)', QtGui.QColor("white"), ),
+    "blue": ('rgb(20, 95, 198)', QtGui.QColor("white"), ),
+    "cyan": ('rgb(0, 255, 255)', QtGui.QColor("black"), ),
+    "red": ('rgb(231, 34, 0)', QtGui.QColor("white"), ),
+    "yellow": ('rgb(1, 221, 0)', QtGui.QColor("black"), ),
+    "green": ('rgb(4, 202, 0)', QtGui.QColor("black"), ),
+    "purple": ('rgb(128, 0, 128)', QtGui.QColor("white"), ),
+}
 
 
 class Danmaku(QtWidgets.QWidget):
-    def __init__(self, text="text", parent=None):
+    _lock = Lock()
+    vertical_slots = None
+
+    _speed_scale = 1
+    _font_size = 28
+    _interval = 10
+
+    def __init__(self, text="text", style='white', position='fly', parent=None):
         super(Danmaku, self).__init__(parent)
-        self.label = QtWidgets.QLabel(text, parent=self)
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.label)
-        self.setLayout(layout)
+
+        self._text = text
+        self._style = style
+        self._position = position
+
+        self.setWindowTitle("Danmaku")
+        self.setStyleSheet("background:transparent")
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
         self.setWindowFlags(QtCore.Qt.ToolTip
                             |QtCore.Qt.FramelessWindowHint)
 
-        self.resize(self.label.minimumSizeHint())
-        self.setWindowTitle("Danmaku")
-        self.closed = False
-        # QtCore.QTimer.singleShot(20, self.refresh)
-        QtCore.QTimer.singleShot(10, self.fly)
+        self.init_text(text, style)
 
-        self.width = self.frameSize().width()
-        self.height = self.frameSize().height()
+        # QtCore.QTimer.singleShot(20, self.fly)
+
+        self._width = self.frameSize().width()
+        self._height = self.frameSize().height()
         self.screenGeo = QtWidgets.QDesktopWidget().screenGeometry()
-        self.x = self.screenGeo.width()
-        self.y = self.screenGeo.height() / 2 - self.height/2
-        self.move(self.x, self.y)
 
-        self.setStyleSheet("background:transparent")
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+        with Danmaku._lock:
+            if Danmaku.vertical_slots is None:
+                Danmaku.vertical_slots = [0] * \
+                    int((self.screenGeo.height() - 20) / self._height)
+
+        self.quited = False
+        self.position_inited = False
+        self.init_position()
+
+    def init_text(self, text, style):
+
+        self.label = QtWidgets.QLabel(text, parent=self)
+        tcolor, bcolor = color_styles.get(style, color_styles['white'])
+
+        effect = QtWidgets.QGraphicsDropShadowEffect(self)
+        effect.setBlurRadius(7)
+        effect.setColor(bcolor)
+        effect.setOffset(0, 0)
+
+        self.label.setStyleSheet(
+            "font-size: {font_size}pt; color: {color}; font-weight: bold; ".format(
+                font_size=self._font_size,
+                color=tcolor,
+            )
+        )
+
+        self.label.setGraphicsEffect(effect)
+
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.label)
+        self.setLayout(layout)
+        self.setContentsMargins(0, 0, 0, 0)
+        self.layout().setContentsMargins(0, 0, 0, 0)
+        _msize = self.minimumSizeHint()
+        _msize.setHeight(_msize.height() - 10)
+        self.resize(_msize)
+
+    def init_position(self):
+        self.vslot = None
+        self.show()
+        if self._position == 'fly':
+            self.x = self.screenGeo.width()
+            self.y = randint(20, self.screenGeo.height()-self._font_size-20)
+            self.step = min(len(self._text) * 0.05 + 1.5, 10) * self._speed_scale
+            QtCore.QTimer.singleShot(self._interval, self.fly)
+
+        elif self._position == 'bottom':
+            self.x = (self.screenGeo.width() - self._width) / 2
+            with Danmaku._lock:
+                i = 0
+                for i, v in enumerate(Danmaku.vertical_slots[::-1]):
+                    if v == 0:
+                        Danmaku.vertical_slots[-(i+1)] = 1
+                        self.vslot = -(i+1)
+                        break
+                else:
+                    self.hide()
+                    QtCore.QTimer.singleShot(1000, self.init_position)
+                    return
+
+                self.y = self.screenGeo.height() + self._height * self.vslot - 10
+                QtCore.QTimer.singleShot(5000, self.clean_close)
+
+        elif self._position == 'top':
+            self.x = (self.screenGeo.width() - self._width) / 2
+            with Danmaku._lock:
+                i = 0
+                for i, v in enumerate(Danmaku.vertical_slots):
+                    if v == 0:
+                        Danmaku.vertical_slots[i] = 1
+                        self.vslot = i
+                        break
+                else:
+                    self.hide()
+                    QtCore.QTimer.singleShot(1000, self.init_position)
+                    return
+
+                self.y = self._height * self.vslot + 10
+                QtCore.QTimer.singleShot(5000, self.clean_close)
+
+        self.move(self.x, self.y)
+        self.position_inited = True
 
     def fly(self):
-        self.x -= 5
-        self.move(self.x, self.y)
-        if self.x < -self.width:
+        _x = int(self.x)
+        self.x -= self.step
+        x_dst = int(self.x)
+        if self.x < -self._width:
             self.clean_close()
         else:
-            QtCore.QTimer.singleShot(10, self.fly)
+            QtCore.QTimer.singleShot(self._interval, self.fly)
+
+        if _x != x_dst:
+            self.move(x_dst, self.y)
 
     def clean_close(self):
-        self.parent().delete_danmaku(id(self))
-        self.destroy()
-        # self.close()
+        if self.quited is False:
+            self.quited = True
+
+            with Danmaku._lock:
+                # print(Danmaku.count)
+                if self.vslot is not None:
+                    Danmaku.vertical_slots[self.vslot] = 0
+
+            self.parent().delete_danmaku(id(self))
+            self.destroy()
 
 
-class DanmakuApp(QtWidgets.QDialog):
+class DanmakuTestApp(QtWidgets.QDialog):
     def __init__(self, parent=None):
-        super(DanmakuApp, self).__init__(parent)
+        super(DanmakuTestApp, self).__init__(parent)
         self.setWindowTitle("Danmaku")
         self.lineedit = QtWidgets.QLineEdit("Text")
+        self.style = QtWidgets.QLineEdit("blue")
+        self.position = QtWidgets.QLineEdit("top")
         self.pushbutton = QtWidgets.QPushButton("Send")
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.lineedit)
+        layout.addWidget(self.style)
+        layout.addWidget(self.position)
         layout.addWidget(self.pushbutton)
         self.setLayout(layout)
         self.pushbutton.clicked.connect(self.new_danmaku)
@@ -61,9 +176,9 @@ class DanmakuApp(QtWidgets.QDialog):
 
     def new_danmaku(self):
         text = self.lineedit.text()
-        dm = Danmaku(
-            u"<font size=28 color=red><b>{}</b></font>".format(text),
-            parent=self)
+        style = self.style.text()
+        position = self.position.text()
+        dm = Danmaku(text, style=style, position=position, parent=self)
         self.dms[id(dm)] = dm
         dm.show()
 
@@ -77,8 +192,8 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     signal.signal(signal.SIGTERM, signal.SIG_DFL)
     app = QtWidgets.QApplication(sys.argv)
-    danmakuApp = DanmakuApp()
-    danmakuApp.show()
+    danmakuTestApp = DanmakuTestApp()
+    danmakuTestApp.show()
     sys.exit(app.exec_())
 
 # vim: ts=4 sw=4 sts=4 expandtab
