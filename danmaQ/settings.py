@@ -6,7 +6,6 @@ import json
 
 DEFAULT_OPTIONS = {
     'http_stream_server': "http://dm.tuna.moe",
-    'http_stream_uri': "/api/v1/channels/{cname}/danmaku",
     'font_family': "WenQuanYi Micro Hei",
     'font_size': 28,
     'speed_scale': 1.0,
