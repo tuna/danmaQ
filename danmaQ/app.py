@@ -87,9 +87,9 @@ class DanmakuApp(QtGui.QWidget):
         layout.addLayout(hbox)
 
         hbox = QtGui.QHBoxLayout()
-        self.config_button = QtGui.QPushButton("Preferences", self)
-        self.hide_button = QtGui.QPushButton("Hide", self)
-        self.main_button = QtGui.QPushButton("Subscribe", self)
+        self.config_button = QtGui.QPushButton("&Preferences", self)
+        self.hide_button = QtGui.QPushButton("&Hide", self)
+        self.main_button = QtGui.QPushButton("&Subscribe", self)
         hbox.addWidget(self.config_button)
         hbox.addWidget(self.hide_button)
         hbox.addWidget(self.main_button)
@@ -101,12 +101,21 @@ class DanmakuApp(QtGui.QWidget):
         self.main_button.released.connect(self.subscribe_danmaku)
         self.config_dialog.preferenceChanged.connect(self.apply_new_preference)
         self.trayIcon.toggleAction.triggered.connect(self.subscribe_danmaku)
-        self.trayIcon.exitAction.triggered.connect(self.close)
         self.trayIcon.showAction.triggered.connect(self.show)
         self.trayIcon.configAction.triggered.connect(self.config_dialog.show)
+        self.trayIcon.aboutAction.triggered.connect(self.show_about_dialog)
+        self.trayIcon.exitAction.triggered.connect(self.close)
 
         self.workThread = None
         self.dms = {}
+
+    def place_center(self):
+        # Align Center
+        screenGeo = QtGui.QDesktopWidget().screenGeometry()
+        self.move(
+            screenGeo.width() / 2 - self.width() / 2,
+            screenGeo.height() / 2 - self.height() / 2,
+        )
 
     def subscribe_danmaku(self):
         if self.workThread is None or self.workThread.isFinished():
@@ -158,6 +167,23 @@ class DanmakuApp(QtGui.QWidget):
         pref = self.config_dialog.preferences()
         Danmaku.set_options(pref)
 
+    def show_about_dialog(self):
+        QtGui.QMessageBox.about(
+            self,
+            "About DanmaQ",
+            """
+            <strong>DanmaQ</strong>
+            <p>Copyright &copy; Justin Wong</p>
+            <p>
+            Source Code Available under GPLv3
+            <br />
+            <a href="https://github.com/bigeagle/danmaQ">
+                https://github.com/bigeagle/danmaQ
+            </a>
+            </p>
+            """
+        )
+
 
 def main():
     import signal
@@ -166,6 +192,7 @@ def main():
     app = QtGui.QApplication(sys.argv)
     danmakuApp = DanmakuApp()
     danmakuApp.show()
+    danmakuApp.place_center()
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
