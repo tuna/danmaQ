@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 import os
+import re
 
 try:
     from setuptools import setup
@@ -13,9 +14,14 @@ requires = ["requests"]
 with open("README.md") as f:
     readme = f.read()
 
+__version__ = re.search(
+    "__version__\s*=\s*'(.*)'",
+    open('danmaQ/__init__.py').read(), re.M).group(1)
+assert __version__
+
 setup(
     name="danmaQ",
-    version="0.11-dev",
+    version=__version__,
     description="Display danmaku on any screen",
     long_description=readme,
     author="Justin Wong",

@@ -2,6 +2,8 @@
 # -*- coding:utf-8 -*-
 import sys
 from PyQt4 import QtGui
+from datetime import datetime
+from . import __version__
 from .danmaq_ui import Danmaku
 from .tray_icon import DanmaQTrayIcon, ICON_ENABLED
 from .settings import load_config, save_config
@@ -43,6 +45,7 @@ class DanmakuApp(QtGui.QWidget):
         hbox = QtGui.QHBoxLayout()
         hbox.addWidget(QtGui.QLabel("Password: ", self))
         self._passwd = QtGui.QLineEdit("", self)
+        self._passwd.setEchoMode(QtGui.QLineEdit.Password)
         hbox.addWidget(self._passwd)
         layout.addLayout(hbox)
 
@@ -133,7 +136,10 @@ class DanmakuApp(QtGui.QWidget):
             "About DanmaQ",
             """
             <strong>DanmaQ</strong>
-            <p>Copyright &copy; Justin Wong</p>
+            <p>Version: {version} <br />
+            Copyright &copy; {year} Justin Wong <br />
+            Tsinghua University TUNA Association
+            </p>
             <p>
             Source Code Available under GPLv3
             <br />
@@ -141,7 +147,10 @@ class DanmakuApp(QtGui.QWidget):
                 https://github.com/bigeagle/danmaQ
             </a>
             </p>
-            """
+            """.format(
+                version=__version__,
+                year=datetime.now().strftime("%Y"),
+            )
         )
 
 

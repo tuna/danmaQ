@@ -10,8 +10,8 @@ DanmaQ is still under development, documents might be outdated.
 
 ### Dependencies
 
-`danmaQ` depends on `requests` and `PyQt5`, you can either install via `pip` or system package manager,
-if you use Windows, please download and install python3.4 and PyQt5 manually or download binary version from 
+`danmaQ` depends on `requests` and `PyQt4`, you can either install via `pip` or system package manager,
+if you use Windows, please download and install python3.4 and PyQt4 manually or download binary version from 
 [releases page](https://github.com/bigeagle/danmaQ/releases/).
 
 ### Use TUNA Service
@@ -41,7 +41,7 @@ Clone https://github.com/tuna/gdanmaku-server and run `webserver.py` to start a 
 ## TODO
 
 - [ ] Multi-Screen support
-- [ ] Chatting
+- [x] Chatting
 - [ ] Deb package
 - [ ] RPM package
 
