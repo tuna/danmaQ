@@ -4,8 +4,8 @@ import sys
 from random import randint
 from threading import Lock
 
-from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtCore import pyqtSignal
+from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import pyqtSignal
 
 from .settings import load_config
 
@@ -22,8 +22,11 @@ color_styles = {
 
 OPTIONS = load_config()
 
+if sys.platform == "win32":
+    import win32api
 
-class Danmaku(QtWidgets.QWidget):
+
+class Danmaku(QtGui.QLabel):
     _lock = Lock()
     vertical_slots = None
 
@@ -33,7 +36,8 @@ class Danmaku(QtWidgets.QWidget):
     _interval = 10
     _style_tmpl = "font-size: {font_size}pt;" \
         + "font-family: {font_family};" \
-        + "color: {color}; font-weight: bold;"
+        + "font-weight: bold;" \
+        + "color: {color}; "
 
     exited = pyqtSignal(str, name="exited")
 
@@ -44,14 +48,14 @@ class Danmaku(QtWidgets.QWidget):
         cls._speed_scale = opts['speed_scale']
 
     def __init__(self, text="text", style='white', position='fly', parent=None):
-        super(Danmaku, self).__init__(parent)
+        super(Danmaku, self).__init__(text, parent)
 
         self._text = text
         self._style = style
         self._position = position
 
         self.setWindowTitle("Danmaku")
-        self.setStyleSheet("background:transparent")
+        self.setStyleSheet("background:transparent; border:none;")
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
@@ -60,11 +64,18 @@ class Danmaku(QtWidgets.QWidget):
             | QtCore.Qt.FramelessWindowHint
         )
 
+        if sys.platform == "win32":
+            # Win32 Dark Magic, disable window drop shadows
+            win32api.SetClassLong(
+                self.winId().__int__(),
+                -26,
+                0x0008 & ~0x00020000)
+
         self.init_text(text, style)
 
         self._width = self.frameSize().width()
         self._height = self.frameSize().height()
-        self.screenGeo = QtWidgets.QDesktopWidget().screenGeometry()
+        self.screenGeo = QtGui.QDesktopWidget().screenGeometry()
 
         with Danmaku._lock:
             if Danmaku.vertical_slots is None:
@@ -76,15 +87,15 @@ class Danmaku(QtWidgets.QWidget):
         self.init_position()
 
     def init_text(self, text, style):
-        self.label = QtWidgets.QLabel(text, parent=self)
+        # self.label = QtGui.QLabel(text, parent=self)
         tcolor, bcolor = color_styles.get(style, color_styles['white'])
 
-        effect = QtWidgets.QGraphicsDropShadowEffect(self)
+        effect = QtGui.QGraphicsDropShadowEffect(self)
         effect.setBlurRadius(7)
         effect.setColor(bcolor)
         effect.setOffset(0, 0)
 
-        self.label.setStyleSheet(
+        self.setStyleSheet(
             self._style_tmpl.format(
                 font_size=self._font_size,
                 font_family=self._font_family,
@@ -92,17 +103,16 @@ class Danmaku(QtWidgets.QWidget):
             )
         )
 
-        self.label.setGraphicsEffect(effect)
-        self.label.setContentsMargins(0, 0, 0, 0)
-
+        self.setGraphicsEffect(effect)
         self.setContentsMargins(0, 0, 0, 0)
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.label, 0, QtCore.Qt.AlignVCenter)
-        layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(layout)
+
+        # layout = QtGui.QVBoxLayout()
+        # layout.addWidget(self.label, 0, QtCore.Qt.AlignVCenter)
+        # layout.setContentsMargins(0, 0, 0, 0)
+        # self.setLayout(layout)
 
         _msize = self.minimumSizeHint()
-        _msize.setHeight(self.label.height()+16)
+        # _msize.setHeight(self.label.height()+16)
         self.resize(_msize)
 
     def init_position(self):
@@ -176,15 +186,15 @@ class Danmaku(QtWidgets.QWidget):
             self.destroy()
 
 
-class DanmakuTestApp(QtWidgets.QDialog):
+class DanmakuTestApp(QtGui.QDialog):
     def __init__(self, parent=None):
         super(DanmakuTestApp, self).__init__(parent)
         self.setWindowTitle("Danmaku")
-        self.lineedit = QtWidgets.QLineEdit("Text")
-        self.style = QtWidgets.QLineEdit("blue")
-        self.position = QtWidgets.QLineEdit("top")
-        self.pushbutton = QtWidgets.QPushButton("Send")
-        layout = QtWidgets.QVBoxLayout()
+        self.lineedit = QtGui.QLineEdit("Text")
+        self.style = QtGui.QLineEdit("blue")
+        self.position = QtGui.QLineEdit("top")
+        self.pushbutton = QtGui.QPushButton("Send")
+        layout = QtGui.QVBoxLayout()
         layout.addWidget(self.lineedit)
         layout.addWidget(self.style)
         layout.addWidget(self.position)
@@ -197,7 +207,7 @@ class DanmakuTestApp(QtWidgets.QDialog):
         text = self.lineedit.text()
         style = self.style.text()
         position = self.position.text()
-        dm = Danmaku(text, style=style, position=position)
+        dm = Danmaku(text, style=style, position=position, parent=self)
         dm.exited.connect(self.delete_danmaku)
         self.dms[str(id(dm))] = dm
         dm.show()
@@ -206,13 +216,17 @@ class DanmakuTestApp(QtWidgets.QDialog):
         dm = self.dms.pop(_id)
         dm.close()
 
-if __name__ == "__main__":
+
+def dm_test():
     import signal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     signal.signal(signal.SIGTERM, signal.SIG_DFL)
-    app = QtWidgets.QApplication(sys.argv)
+    app = QtGui.QApplication(sys.argv)
     danmakuTestApp = DanmakuTestApp()
     danmakuTestApp.show()
     sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    dm_test()
 
 # vim: ts=4 sw=4 sts=4 expandtab

@@ -3,8 +3,8 @@
 import sys
 import json
 import requests
-from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtCore import pyqtSignal
+from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import pyqtSignal
 from .danmaq_ui import Danmaku
 from .tray_icon import DanmaQTrayIcon, ICON_ENABLED
 from .settings import load_config, save_config
@@ -49,7 +49,7 @@ class SubscribeThread(QtCore.QThread):
         self.wait()
 
 
-class DanmakuApp(QtWidgets.QWidget):
+class DanmakuApp(QtGui.QWidget):
     def __init__(self, parent=None):
         super(DanmakuApp, self).__init__(parent)
         self.setWindowTitle("Danmaku")
@@ -60,36 +60,36 @@ class DanmakuApp(QtWidgets.QWidget):
         self.config_dialog = ConfigDialog(self)
         self._options = load_config()
 
-        layout = QtWidgets.QVBoxLayout()
-        hbox = QtWidgets.QHBoxLayout()
-        hbox.addWidget(QtWidgets.QLabel("Server: ", self))
-        self._server = QtWidgets.QLineEdit(
+        layout = QtGui.QVBoxLayout()
+        hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(QtGui.QLabel("Server: ", self))
+        self._server = QtGui.QLineEdit(
             self._options['http_stream_server'], self)
         hbox.addWidget(self._server)
         layout.addLayout(hbox)
 
-        hbox = QtWidgets.QHBoxLayout()
-        hbox.addWidget(QtWidgets.QLabel("Save As Default Server: ", self))
-        self._save_server = QtWidgets.QCheckBox(self)
+        hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(QtGui.QLabel("Save As Default Server: ", self))
+        self._save_server = QtGui.QCheckBox(self)
         hbox.addWidget(self._save_server)
         layout.addLayout(hbox)
 
-        hbox = QtWidgets.QHBoxLayout()
-        hbox.addWidget(QtWidgets.QLabel("Channel: ", self))
-        self._chan = QtWidgets.QLineEdit("demo", self)
+        hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(QtGui.QLabel("Channel: ", self))
+        self._chan = QtGui.QLineEdit("demo", self)
         hbox.addWidget(self._chan)
         layout.addLayout(hbox)
 
-        hbox = QtWidgets.QHBoxLayout()
-        hbox.addWidget(QtWidgets.QLabel("Password: ", self))
-        self._passwd = QtWidgets.QLineEdit("", self)
+        hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(QtGui.QLabel("Password: ", self))
+        self._passwd = QtGui.QLineEdit("", self)
         hbox.addWidget(self._passwd)
         layout.addLayout(hbox)
 
-        hbox = QtWidgets.QHBoxLayout()
-        self.config_button = QtWidgets.QPushButton("Preferences", self)
-        self.hide_button = QtWidgets.QPushButton("Hide", self)
-        self.main_button = QtWidgets.QPushButton("Subscribe", self)
+        hbox = QtGui.QHBoxLayout()
+        self.config_button = QtGui.QPushButton("Preferences", self)
+        self.hide_button = QtGui.QPushButton("Hide", self)
+        self.main_button = QtGui.QPushButton("Subscribe", self)
         hbox.addWidget(self.config_button)
         hbox.addWidget(self.hide_button)
         hbox.addWidget(self.main_button)
@@ -125,7 +125,7 @@ class DanmakuApp(QtWidgets.QWidget):
             self.workThread.terminate()
 
     def on_new_danmaku(self, text, style, position):
-        dm = Danmaku(text, style=style, position=position)
+        dm = Danmaku(text, style=style, position=position, parent=self)
         dm.exited.connect(self.delete_danmaku)
         self.dms[str(id(dm))] = dm
 
@@ -163,7 +163,7 @@ def main():
     import signal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     signal.signal(signal.SIGTERM, signal.SIG_DFL)
-    app = QtWidgets.QApplication(sys.argv)
+    app = QtGui.QApplication(sys.argv)
     danmakuApp = DanmakuApp()
     danmakuApp.show()
     sys.exit(app.exec_())

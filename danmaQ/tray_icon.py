@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 import os
 import sys
-from PyQt5 import QtWidgets, QtGui
+from PyQt4 import QtGui
 
 __dir = os.path.dirname(sys.executable) \
     if getattr(sys, 'frozen', False) else \
@@ -14,18 +14,19 @@ ICON_ENABLED = os.path.join(ICON_DIR, "statusicon.png")
 ICON_DISABLED = os.path.join(ICON_DIR, "statusicon_disabled.png")
 
 
-class DanmaQTrayIcon(QtWidgets.QSystemTrayIcon):
+class DanmaQTrayIcon(QtGui.QSystemTrayIcon):
 
     def __init__(self, parent=None):
         self._icon = QtGui.QIcon(ICON_DISABLED)
         super(DanmaQTrayIcon, self).__init__(self._icon, parent)
-        menu = QtWidgets.QMenu(parent)
+        menu = QtGui.QMenu(parent)
         self.toggleAction = menu.addAction("Toggle Subscription")
         self.showAction = menu.addAction("Show Main Window")
         self.configAction = menu.addAction("Preferences")
         self.exitAction = menu.addAction("Exit")
         self.setContextMenu(menu)
         self.activated.connect(self.on_activate)
+        self.show()
 
     def on_activate(self, reason):
         if reason == self.Trigger:

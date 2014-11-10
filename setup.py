@@ -15,7 +15,7 @@ with open("README.md") as f:
 
 setup(
     name="danmaQ",
-    version="0.1-dev",
+    version="0.11-dev",
     description="Display danmaku on any screen",
     long_description=readme,
     author="Justin Wong",

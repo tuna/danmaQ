@@ -14,8 +14,10 @@ buildOptions = dict(
     packages=['requests', 'danmaQ'],
     excludes=[],
     include_files=[
+        'LICENSE',
         'danmaQ\images',
-        (os.path.join(site_dir, 'PyQt5', 'libEGL.dll'), 'libEGL.dll')],
+        # (os.path.join(site_dir, 'PyQt5', 'libEGL.dll'), 'libEGL.dll'),
+    ],
     include_msvcr=True,
 )
 
@@ -40,12 +42,13 @@ with open("README.md") as f:
 
 setup(
     name="danmaQ",
-    version="0.1-dev",
+    version="0.11",
     description="Display danmaku on any screen",
     long_description=readme,
     author="Justin Wong",
     author_email="justin.w.xd@gmail.com",
     url="https://github.com/bigeagle/danmaQ/",
+    license="GPLv3",
     options=dict(build_exe=buildOptions),
     executables=executables,
 )
