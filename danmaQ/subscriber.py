@@ -13,9 +13,9 @@ class SubscribeThread(QtCore.QThread):
 
     def __init__(self, server, channel, passwd, parent=None):
         super(SubscribeThread, self).__init__(parent)
-        self.server = server
-        self.channel = channel
-        self.passwd = passwd
+        self.server = str(server)
+        self.channel = str(channel)
+        self.passwd = str(passwd)
 
     def run(self):
         uri = "/api/v1.1/channels/{cname}/danmaku".format(cname=self.channel)
