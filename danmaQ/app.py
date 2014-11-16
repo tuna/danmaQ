@@ -102,7 +102,7 @@ class DanmakuApp(QtGui.QWidget):
         self.dms[str(id(dm))] = dm
 
     def delete_danmaku(self, _id):
-        self.dms.pop(_id)
+        self.dms.pop(str(_id))
 
     def on_subscription_started(self):
         if self._save_server.isChecked():
