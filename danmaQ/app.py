@@ -71,6 +71,7 @@ class DanmakuApp(QtGui.QWidget):
 
         self.workThread = None
         self.dms = {}
+        self.alert_msg = None
 
     def place_center(self):
         # Align Center
@@ -90,16 +91,24 @@ class DanmakuApp(QtGui.QWidget):
             )
             self.workThread.started.connect(self.on_subscription_started)
             self.workThread.finished.connect(self.on_subscription_finished)
-            self.workThread.start()
             self.workThread.new_danmaku.connect(self.on_new_danmaku)
+            self.workThread.new_alert.connect(self.on_new_alert)
+            self.workThread.start()
             self.hide()
         else:
             self.workThread.terminate()
+            self.workThread = None
 
     def on_new_danmaku(self, text, style, position):
         dm = Danmaku(text, style=style, position=position, parent=self)
         dm.exited.connect(self.delete_danmaku)
         self.dms[str(id(dm))] = dm
+
+    def on_new_alert(self, msg):
+        print(msg)
+        self.alert_msg = msg
+        self.workThread.terminate()
+        self.workThread = None
 
     def delete_danmaku(self, _id):
         self.dms.pop(str(_id))
@@ -124,7 +133,13 @@ class DanmakuApp(QtGui.QWidget):
             dm.clean_close()
         self.trayIcon.set_icon_not_running()
         self.main_button.setText("Subscribe")
-        self.trayIcon.showMessage("DanmaQ", "Subscription Finished")
+        print(self.alert_msg)
+        if self.alert_msg is not None:
+            self.trayIcon.showMessage("DanmaQ", self.alert_msg)
+            self.show()
+            self.alert_msg = None
+        else:
+            self.trayIcon.showMessage("DanmaQ", "Subscription Finished")
 
     def apply_new_preference(self):
         pref = self.config_dialog.preferences()
