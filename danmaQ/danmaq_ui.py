@@ -121,7 +121,9 @@ class Danmaku(QtGui.QLabel):
         if self._position == 'fly':
             self.x = self.screenGeo.width()
             self.y = randint(20, self.screenGeo.height()-self._font_size-20)
-            self.step = min(len(self._text) * 0.05 + 1.5, 10) * self._speed_scale
+            self.step = (self.screenGeo.width() + self._width) \
+                / (10000.0 / self._interval) * self._speed_scale
+
             QtCore.QTimer.singleShot(self._interval, self.fly)
 
         elif self._position == 'bottom':
