@@ -146,6 +146,7 @@ class DanmakuApp(QtGui.QWidget):
         Danmaku.set_options(pref)
 
     def show_about_dialog(self):
+        self.show()
         QtGui.QMessageBox.about(
             self,
             "About DanmaQ",
