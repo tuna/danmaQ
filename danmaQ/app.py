@@ -72,6 +72,7 @@ class DanmakuApp(QtGui.QWidget):
         self.workThread = None
         self.dms = {}
         self.alert_msg = None
+        Danmaku.init_lineheight()
 
     def place_center(self):
         # Align Center
