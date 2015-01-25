@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 import sys
+import re
+from cgi import escape
 from random import randint
 from threading import Lock
 
@@ -47,7 +49,17 @@ class Danmaku(QtGui.QLabel):
         cls._font_size = opts['font_size']
         cls._speed_scale = opts['speed_scale']
 
+    @classmethod
+    def escape_text(cls, text):
+        text = escape(text)
+        text = re.sub(r'([^\\])\\n', r'\1<br/>', text)
+        text = re.sub(r'\\\\n', r'\\n', text)
+        text = re.sub(r'\[s\](.+)\[/s\]', r'<s>\1</s>', text)
+        print(text)
+        return text
+
     def __init__(self, text="text", style='white', position='fly', parent=None):
+        text = self.escape_text(text)
         super(Danmaku, self).__init__(text, parent)
 
         self._text = text
@@ -120,7 +132,7 @@ class Danmaku(QtGui.QLabel):
         self.show()
         if self._position == 'fly':
             self.x = self.screenGeo.width()
-            self.y = randint(20, self.screenGeo.height()-self._font_size-20)
+            self.y = randint(20, self.screenGeo.height()-self.height()-20)
             self.step = (self.screenGeo.width() + self._width) \
                 / (10000.0 / self._interval) * self._speed_scale
 
