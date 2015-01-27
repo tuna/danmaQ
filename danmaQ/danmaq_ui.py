@@ -36,7 +36,7 @@ class Danmaku(QtGui.QLabel):
     _font_family = OPTIONS['font_family']
     _speed_scale = OPTIONS['speed_scale']
     _font_size = OPTIONS['font_size']
-    _interval = 10
+    _interval = 30
     _style_tmpl = "font-size: {font_size}pt;" \
         + "font-family: {font_family};" \
         + "font-weight: bold;" \
@@ -63,7 +63,8 @@ class Danmaku(QtGui.QLabel):
         text = re.sub(r'\[s\](.+)\[/s\]', r'<s>\1</s>', text)
         return text
 
-    def __init__(self, text="text", style='white', position='fly', parent=None, lifetime=10*1000):
+    def __init__(self, text="text", style='white', position='fly',
+                 lifetime=10*1000, parent=None):
         text = self.escape_text(text)
         super(Danmaku, self).__init__(text, parent)
 
