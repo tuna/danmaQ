@@ -85,9 +85,9 @@ class DanmakuApp(QtGui.QWidget):
     def subscribe_danmaku(self):
         if self.workThread is None or self.workThread.isFinished():
             self.workThread = SubscribeThread(
-                self._server.text(),
-                self._chan.text(),
-                self._passwd.text(),
+                str(self._server.text()),
+                str(self._chan.text()),
+                str(self._passwd.text()),
                 parent=self,
             )
             self.workThread.started.connect(self.on_subscription_started)
@@ -101,13 +101,19 @@ class DanmakuApp(QtGui.QWidget):
             self.workThread = None
 
     def on_new_danmaku(self, text, style, position):
-        dm = Danmaku(text, style=style, position=position, parent=self)
+        dm = Danmaku(
+            text=str(text),
+            style=str(style),
+            position=str(position),
+            parent=self
+        )
+
         dm.exited.connect(self.delete_danmaku)
         self.dms[str(id(dm))] = dm
 
     def on_new_alert(self, msg):
         print(msg)
-        self.alert_msg = msg
+        self.alert_msg = str(msg)
         self.workThread.terminate()
         self.workThread = None
 
