@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 import os
 import sys
 from PyQt4 import QtGui

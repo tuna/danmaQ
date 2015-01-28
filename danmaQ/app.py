@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 import sys
 from PyQt4 import QtGui
 from datetime import datetime
@@ -72,7 +74,7 @@ class DanmakuApp(QtGui.QWidget):
         self.workThread = None
         self.dms = {}
         self.alert_msg = None
-        Danmaku.init_lineheight()
+        Danmaku.init_lineheight(self)
 
     def place_center(self):
         # Align Center
@@ -85,9 +87,9 @@ class DanmakuApp(QtGui.QWidget):
     def subscribe_danmaku(self):
         if self.workThread is None or self.workThread.isFinished():
             self.workThread = SubscribeThread(
-                str(self._server.text()),
-                str(self._chan.text()),
-                str(self._passwd.text()),
+                "%s" % self._server.text(),
+                "%s" % self._chan.text(),
+                "%s" % self._passwd.text(),
                 parent=self,
             )
             self.workThread.started.connect(self.on_subscription_started)
@@ -102,9 +104,9 @@ class DanmakuApp(QtGui.QWidget):
 
     def on_new_danmaku(self, text, style, position):
         dm = Danmaku(
-            text=str(text),
-            style=str(style),
-            position=str(position),
+            text="%s" % text,
+            style="%s" % style,
+            position="%s" % position,
             parent=self
         )
 
@@ -113,7 +115,7 @@ class DanmakuApp(QtGui.QWidget):
 
     def on_new_alert(self, msg):
         print(msg)
-        self.alert_msg = str(msg)
+        self.alert_msg = "%s" % msg
         self.workThread.terminate()
         self.workThread = None
 

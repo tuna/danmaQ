@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 import sys
 import re
 from cgi import escape
@@ -46,8 +48,8 @@ class Danmaku(QtGui.QLabel):
     exited = pyqtSignal(str, name="exited")
 
     @classmethod
-    def init_lineheight(cls):
-        Danmaku("test", position='top', lifetime=10)
+    def init_lineheight(cls, par=None):
+        Danmaku("test", position='top', lifetime=10, parent=par)
 
     @classmethod
     def set_options(cls, opts):
@@ -101,9 +103,9 @@ class Danmaku(QtGui.QLabel):
             if Danmaku.vertical_slots is None:
                 Danmaku._lineheight = self._height
                 Danmaku.vertical_slots = [0] * \
-                    int((self.screenGeo.height() - 40) / self._height)
+                    ((self.screenGeo.height() - 20) // self._height)
                 Danmaku.fly_slots = [0] * \
-                    int((self.screenGeo.height() - 40) / self._height)
+                    ((self.screenGeo.height() - 20) // self._height)
 
         self.quited = False
         self.position_inited = False
@@ -160,7 +162,7 @@ class Danmaku(QtGui.QLabel):
                             slot = i
                             break
                 else:
-                    m = int(len(self.fly_slots) / 2)
+                    m = len(self.fly_slots) // 2
                     for _ in range(m+1):
                         i = randint(0, len(self.fly_slots)-1)
                         if self.fly_slots[i] == 0:
@@ -189,9 +191,11 @@ class Danmaku(QtGui.QLabel):
                 )
                 self.fslots = [i+j for j in range(nlines)]
 
-                self.step = (self.screenGeo.width() + self._width) \
-                    / (float(self._lifetime) / self._interval) \
+                self.step = (
+                    (self.screenGeo.width() + self._width)
+                    / (self._lifetime / self._interval)
                     * self._speed_scale
+                )
 
                 QtCore.QTimer.singleShot(self._interval, self.fly)
 
@@ -216,7 +220,8 @@ class Danmaku(QtGui.QLabel):
                 QtCore.QTimer.singleShot(10, self.clean_close)
                 return
             else:
-                self.y = self.screenGeo.height() + self._lineheight * self.vslots[-1] - 10
+                self.y = (self.screenGeo.height()
+                          + self._lineheight * self.vslots[-1] - 20)
                 QtCore.QTimer.singleShot(self._lifetime, self.clean_close)
 
         elif self._position == 'top':
@@ -244,7 +249,7 @@ class Danmaku(QtGui.QLabel):
                 QtCore.QTimer.singleShot(10, self.clean_close)
                 return
             else:
-                self.y = self._lineheight * self.vslots[0]
+                self.y = self._lineheight * self.vslots[0] + 20
                 QtCore.QTimer.singleShot(self._lifetime, self.clean_close)
 
         self.move(self.x, self.y)

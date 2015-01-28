@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import pyqtSignal
 from .tray_icon import ICON_ENABLED
