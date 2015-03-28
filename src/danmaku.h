@@ -3,5 +3,6 @@
 
 #include "danmaku_ui.h"
 #include "danmaku_window.h"
+#include "subscriber.h"
 
 #endif 
