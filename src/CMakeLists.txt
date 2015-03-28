@@ -10,17 +10,18 @@ set(danmaQ_HEADERS
 	danmaku.h
 	)
 
-
-Qt4_wrap_cpp(danmaQ_HEADERS_MOC ${danmaQ_HEADERS})
+set(CMAKE_AUTOMOC ON)
 
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
+
+find_package(QJSON REQUIRED)
 
 add_executable(danmaQ ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC})
 
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 	find_library(X_LIB Xext)
-	target_link_libraries(danmaQ ${QT_LIBRARIES} ${X_LIB})
+	target_link_libraries(danmaQ ${QT_LIBRARIES} ${QJSON_LIBRARIES} ${X_LIB})
 else()
-	target_link_libraries(danmaQ ${QT_LIBRARIES})
+	target_link_libraries(danmaQ ${QT_LIBRARIES} ${QJSON_LIBRARIES})
 endif()

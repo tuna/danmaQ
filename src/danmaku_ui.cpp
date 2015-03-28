@@ -7,11 +7,11 @@
 #include <QColor>
 #include <QGraphicsDropShadowEffect>
 #include <QTimer>
+#include <QDebug>
 
 #include <cmath>
 #include <map>
 #include <utility>
-#include <iostream>
 
 #include "danmaku_ui.h"
 
@@ -72,19 +72,18 @@ void Danmaku::init_position() {
 	int sh = this->parentWidget()->height();
 
 	if(this->_position.compare("fly") == 0) {
+		qDebug() << "fly";
 		this->_x = sw;
 		this->_y = sh / 2;
 		this->_step = (double)(sw + this->width()) / (10 * 1000 / this->_interval);
-		std::cout << this->_step << std::endl;
-		std::cout << "fly" << std::endl;
 		this->fly();
 
 	} else if (this->_position.compare("top") == 0) {
-		std::cout << "top" << std::endl;
+		qDebug() << "top";
 	} else if (this->_position.compare("bottom") == 0) {
-		std::cout << "bottom" << std::endl;
+		qDebug() << "bottom";
 	} else {
-		std::cout << "Wrong Position" << std::endl;
+		qDebug() << "wrong position: " << this->_position;
 	}
 }
 

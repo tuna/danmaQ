@@ -2,13 +2,12 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QX11Info>
+#include <QDebug>
 
 #ifdef	__linux
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
 #endif
-
-#include <iostream>
 
 #include "danmaku_ui.h"
 #include "danmaku_window.h"
@@ -18,7 +17,7 @@ DMWindow::DMWindow()
 	QDesktopWidget desktop;
 	QRect geo = desktop.screenGeometry();
 	int sw = geo.width(), sh = geo.height();
-	std::cout << sw << ", " << sh << std::endl;
+	qDebug() << sw << ", " << sh;
 
 	this->resize(sw, sh);
 	this->setWindowTitle("Danmaku");
@@ -37,9 +36,9 @@ DMWindow::DMWindow()
 
 }
 
-void DMWindow::new_danmaku(QString text, QString color)
+void DMWindow::new_danmaku(QString text, QString color, QString position)
 {
-	Danmaku *l = new Danmaku(text, this);
+	Danmaku *l = new Danmaku(text, color, position, this);
 	this->connect(l, SIGNAL(exited(Danmaku*)),
 				  this, SLOT(delete_danmaku(Danmaku*)));
 	l->show();
@@ -47,5 +46,5 @@ void DMWindow::new_danmaku(QString text, QString color)
 }
 
 void DMWindow::delete_danmaku(Danmaku* dm) {
-	std::cout << "danmaku closed" << std::endl;
+	qDebug() << "danmaku closed";
 }

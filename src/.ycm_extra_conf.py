@@ -44,6 +44,7 @@ flags = [
 '-I', '/usr/include/qt4/QtGui',
 '-I', '/usr/include/qt4/QtNetwork',
 '-I', '/usr/include/qt4/QtWidgets',
+'-I', '/usr/include/qjson',
 '-I', '/usr/include/X11',
 '-I', '/usr/include/X11/extensions',
 

@@ -11,7 +11,7 @@ public:
 	DMWindow();
 
 public slots:
-	void new_danmaku(QString text, QString color);
+	void new_danmaku(QString text, QString color, QString position);
 	void delete_danmaku(Danmaku*);
 
 };
