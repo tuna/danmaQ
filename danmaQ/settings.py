@@ -11,6 +11,7 @@ DEFAULT_OPTIONS = {
     'font_family': "WenQuanYi Micro Hei",
     'font_size': 28,
     'speed_scale': 1.0,
+    'to_extend_screen': False,
 }
 
 _xdg_cfg_dir = os.environ.get(
@@ -30,6 +31,7 @@ def load_config():
                     opts = json.loads(s)
                 else:
                     opts = json.load(f)
+            options['to_extend_screen'] = opts['to_extend_screen']
             options['font_family'] = opts['font_family']
             options['font_size'] = opts['font_size']
             options['speed_scale'] = opts['speed_scale']

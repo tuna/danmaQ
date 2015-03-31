@@ -38,6 +38,7 @@ class Danmaku(QtGui.QLabel):
     _font_family = OPTIONS['font_family']
     _speed_scale = OPTIONS['speed_scale']
     _font_size = OPTIONS['font_size']
+    _to_extend_screen = OPTIONS['to_extend_screen']
     _interval = 30
     _style_tmpl = "font-size: {font_size}pt;" \
         + "font-family: {font_family};" \
@@ -56,6 +57,7 @@ class Danmaku(QtGui.QLabel):
         cls._font_family = opts['font_family']
         cls._font_size = opts['font_size']
         cls._speed_scale = opts['speed_scale']
+        cls._to_extend_screen = opts['to_extend_screen']
 
     @classmethod
     def escape_text(cls, text):
@@ -97,8 +99,8 @@ class Danmaku(QtGui.QLabel):
         self._width = self.frameSize().width()
         self._height = self.frameSize().height()
         self._slot = None
-        self.screenGeo = QtGui.QDesktopWidget().screenGeometry()
-
+        self.screenGeo = QtGui.QDesktopWidget().screenGeometry(
+                screen=1 if self._to_extend_screen else 0)
         with Danmaku._lock:
             if Danmaku.vertical_slots is None:
                 Danmaku._lineheight = self._height
@@ -252,6 +254,9 @@ class Danmaku(QtGui.QLabel):
                 self.y = self._lineheight * self.vslots[0] + 20
                 QtCore.QTimer.singleShot(self._lifetime, self.clean_close)
 
+        # shift to the extend screen
+        if self._to_extend_screen:
+            self.x += QtGui.QDesktopWidget().availableGeometry(screen=0).width()
         self.move(self.x, self.y)
         self.position_inited = True
 

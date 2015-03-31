@@ -35,6 +35,17 @@ class ConfigDialog(QtGui.QDialog):
         layout.addLayout(hbox)
 
         hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(QtGui.QLabel("To Extend Screen? "))
+        self._to_extend_screen = QtGui.QCheckBox(self)
+        if QtGui.QDesktopWidget().screenCount() > 1:
+            self._to_extend_screen.setChecked(True)
+        else:
+            self._to_extend_screen.setChecked(False)
+            self._to_extend_screen.setEnabled(False)
+        hbox.addWidget(self._to_extend_screen)
+        layout.addLayout(hbox)
+
+        hbox = QtGui.QHBoxLayout()
         hbox.addWidget(QtGui.QLabel("Speed Scale: "))
         self._speed = QtGui.QSlider(QtCore.Qt.Horizontal, self)
         self._speed.setTickInterval(1)
@@ -70,6 +81,7 @@ class ConfigDialog(QtGui.QDialog):
             'font_family': self._font_family.currentText(),
             'font_size': self._font_size.value(),
             'speed_scale': self._speed.value() / 10.0,
+            'to_extend_screen': self._to_extend_screen.isChecked(),
         }
 
     def save_preferences(self):
@@ -78,6 +90,7 @@ class ConfigDialog(QtGui.QDialog):
         opts['font_family'] = new_opts['font_family']
         opts['font_size'] = new_opts['font_size']
         opts['speed_scale'] = new_opts['speed_scale']
+        opts['to_extend_screen'] = new_opts['to_extend_screen']
         save_config(opts)
         self.emit_new_preferences()
 
