@@ -99,8 +99,11 @@ class Danmaku(QtGui.QLabel):
         self._width = self.frameSize().width()
         self._height = self.frameSize().height()
         self._slot = None
-        self.screenGeo = QtGui.QDesktopWidget().screenGeometry(
-                screen=1 if self._to_extend_screen else 0)
+        self.screenGeo = \
+            (QtGui
+             .QDesktopWidget()
+             .screenGeometry(screen=1 if self._to_extend_screen else 0)
+             )
         with Danmaku._lock:
             if Danmaku.vertical_slots is None:
                 Danmaku._lineheight = self._height
@@ -165,12 +168,16 @@ class Danmaku(QtGui.QLabel):
                             break
                 else:
                     m = len(self.fly_slots) // 2
+                    _upper = len(self.fly_slots) // 4
                     for _ in range(m+1):
-                        i = randint(0, len(self.fly_slots)-1)
+                        i = randint(0, _upper)
                         if self.fly_slots[i] == 0:
                             self.fly_slots[i] = self
                             slot = i
                             break
+                        _upper *= 2
+                        if _upper > len(self.fly_slots) - 1:
+                            _upper = len(self.fly_slots) - 1
                     # for i in range(m+1)[::-1]:
                     #     if self.fly_slots[i] == 0:
                     #         self.fly_slots[i] = self
