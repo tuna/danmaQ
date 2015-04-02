@@ -85,6 +85,15 @@ class DanmakuApp(QtGui.QWidget):
         )
 
     def subscribe_danmaku(self):
+        if QtGui.QDesktopWidget().screenCount() > 1:
+            #self.config_dialog._to_extend_screen.setChecked(True)
+            self._options['to_extend_screen'] = True
+        else:
+            #self.config_dialog._to_extend_screen.setChecked(False)
+            self._options['to_extend_screen'] = False
+        #save_config(self._options)
+        Danmaku.set_options(self._options)
+
         if self.workThread is None or self.workThread.isFinished():
             self.workThread = SubscribeThread(
                 "%s" % self._server.text(),
