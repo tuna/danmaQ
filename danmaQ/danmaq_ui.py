@@ -104,6 +104,7 @@ class Danmaku(QtGui.QLabel):
              .QDesktopWidget()
              .screenGeometry(screen=1 if self._to_extend_screen else 0)
              )
+        self._shift = QtGui.QDesktopWidget().availableGeometry(screen=0).width()
         with Danmaku._lock:
             if Danmaku.vertical_slots is None:
                 Danmaku._lineheight = self._height
@@ -263,7 +264,7 @@ class Danmaku(QtGui.QLabel):
 
         # shift to the extend screen
         if self._to_extend_screen:
-            self.x += QtGui.QDesktopWidget().availableGeometry(screen=0).width()
+            self.x += self._shift
         self.move(self.x, self.y)
         self.position_inited = True
 
