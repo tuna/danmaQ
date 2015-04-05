@@ -192,12 +192,13 @@ def init_multiscreen():
     dw = QtGui.QApplication.desktop()
     primary_screen_idx = dw.primaryScreen()
 
-    print("Primary screen: %d" % (primary_screen_idx, ))
+    # print("Primary screen: %d" % (primary_screen_idx, ))
     screen_geoms = [dw.screenGeometry(i) for i in range(dw.screenCount())]
-    print(screen_geoms)
+    # print(screen_geoms)
 
     multiscreen_manager.set_primary(primary_screen_idx)
     multiscreen_manager.populate_geometries(screen_geoms)
+
 
 def main():
     import signal

@@ -272,7 +272,7 @@ class Danmaku(QtGui.QLabel):
         # true multiscreen
         self.x += self._offset_x
         self.y += self._origin_y
-        print("initial: (%d, %d)" % (self.x, self.y, ))
+        # print("initial: (%d, %d)" % (self.x, self.y, ))
 
         self.move(self.x, self.y)
         self.position_inited = True
