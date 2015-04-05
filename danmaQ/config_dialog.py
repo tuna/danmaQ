@@ -34,18 +34,18 @@ class ConfigDialog(QtGui.QDialog):
         hbox.addWidget(self._font_size)
         layout.addLayout(hbox)
 
-        #hbox = QtGui.QHBoxLayout()
-        #hbox.addWidget(QtGui.QLabel("To Extend Screen? "))
-        #self._to_extend_screen = QtGui.QCheckBox(self)
-        #if QtGui.QDesktopWidget().screenCount() > 1:
-        #    self._to_extend_screen.setChecked(True)
-        #else:
-        #    self._to_extend_screen.setChecked(False)
-        #    self._to_extend_screen.setEnabled(False)
-        #hbox.addWidget(self._to_extend_screen)
+        hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(QtGui.QLabel("To Extend Screen? "))
+        self._to_extend_screen = QtGui.QCheckBox(self)
+        if QtGui.QDesktopWidget().screenCount() > 1:
+            self._to_extend_screen.setChecked(True)
+        else:
+            self._to_extend_screen.setChecked(False)
+            self._to_extend_screen.setEnabled(False)
+        hbox.addWidget(self._to_extend_screen)
         #for i in range(hbox.count()):
         #    hbox.itemAt(i).hide()
-        #layout.addLayout(hbox)
+        layout.addLayout(hbox)
 
         hbox = QtGui.QHBoxLayout()
         hbox.addWidget(QtGui.QLabel("Speed Scale: "))
@@ -92,7 +92,7 @@ class ConfigDialog(QtGui.QDialog):
         opts['font_family'] = new_opts['font_family']
         opts['font_size'] = new_opts['font_size']
         opts['speed_scale'] = new_opts['speed_scale']
-        #opts['to_extend_screen'] = new_opts['to_extend_screen']
+        opts['to_extend_screen'] = new_opts['to_extend_screen']
         save_config(opts)
         self.emit_new_preferences()
 

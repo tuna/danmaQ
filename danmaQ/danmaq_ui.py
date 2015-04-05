@@ -11,7 +11,7 @@ from threading import Lock
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import pyqtSignal
 
-from .settings import load_config
+from .settings import load_config, multiscreen_manager
 
 color_styles = {
     "white": ('rgb(255, 255, 255)', QtGui.QColor("black"), ),
@@ -99,12 +99,12 @@ class Danmaku(QtGui.QLabel):
         self._width = self.frameSize().width()
         self._height = self.frameSize().height()
         self._slot = None
-        self.screenGeo = \
-            (QtGui
-             .QDesktopWidget()
-             .screenGeometry(screen=1 if self._to_extend_screen else 0)
-             )
-        self._shift = QtGui.QDesktopWidget().availableGeometry(screen=0).width()
+
+        self.screenIdx = multiscreen_manager.get_screen_idx(self._to_extend_screen)
+        self.screenGeo = multiscreen_manager.geometry(self.screenIdx)
+        # self._shift = QtGui.QDesktopWidget().availableGeometry(screen=0).width()
+        self._offset_x = multiscreen_manager.get_offset_x(self.screenIdx, False)
+        self._origin_y = multiscreen_manager.get_origin_y(self.screenIdx)
         with Danmaku._lock:
             if Danmaku.vertical_slots is None:
                 Danmaku._lineheight = self._height
@@ -153,7 +153,9 @@ class Danmaku(QtGui.QLabel):
         nlines = self._text.count('<br/>') + 1
         # print("height: {}, lineheight: {}".format(self._height, self._lineheight))
         if self._position == 'fly':
+            # NOTE: later offseted
             self.x = self.screenGeo.width()
+
             slot = None
             with Danmaku._lock:
                 if nlines > 1:
@@ -263,8 +265,15 @@ class Danmaku(QtGui.QLabel):
                 QtCore.QTimer.singleShot(self._lifetime, self.clean_close)
 
         # shift to the extend screen
-        if self._to_extend_screen:
-            self.x += self._shift
+        #if self._to_extend_screen:
+        #    print(self._shift)
+        #    self.x += self._shift
+
+        # true multiscreen
+        self.x += self._offset_x
+        self.y += self._origin_y
+        # print("initial: (%d, %d)" % (self.x, self.y, ))
+
         self.move(self.x, self.y)
         self.position_inited = True
 

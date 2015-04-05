@@ -8,7 +8,7 @@ from datetime import datetime
 from . import __version__
 from .danmaq_ui import Danmaku
 from .tray_icon import DanmaQTrayIcon, ICON_ENABLED
-from .settings import load_config, save_config
+from .settings import load_config, save_config, multiscreen_manager
 from .config_dialog import ConfigDialog
 from .subscriber import SubscribeThread
 
@@ -188,11 +188,24 @@ class DanmakuApp(QtGui.QWidget):
         )
 
 
+def init_multiscreen():
+    dw = QtGui.QApplication.desktop()
+    primary_screen_idx = dw.primaryScreen()
+
+    # print("Primary screen: %d" % (primary_screen_idx, ))
+    screen_geoms = [dw.screenGeometry(i) for i in range(dw.screenCount())]
+    # print(screen_geoms)
+
+    multiscreen_manager.set_primary(primary_screen_idx)
+    multiscreen_manager.populate_geometries(screen_geoms)
+
+
 def main():
     import signal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     signal.signal(signal.SIGTERM, signal.SIG_DFL)
     app = QtGui.QApplication(sys.argv)
+    init_multiscreen()
     danmakuApp = DanmakuApp()
     danmakuApp.show()
     danmakuApp.place_center()

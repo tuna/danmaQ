@@ -55,4 +55,47 @@ def save_config(options):
         else:
             json.dump(options, f, indent=4)
 
+
+class MultiscreenManager(object):
+    def __init__(self):
+        self._primary_screen = 0
+        self._geoms = []
+
+    @property
+    def primary_screen(self):
+        return self._primary_screen
+
+    def geometry(self, idx):
+        return self._geoms[idx]
+
+    def populate_geometries(self, geoms):
+        self._geoms = geoms
+
+    def set_primary(self, idx):
+        self._primary_screen = idx
+
+    def get_screen_idx(self, secondary=False):
+        if len(self._geoms) < 2:
+            return 0
+
+        if len(self._geoms) >= 3:
+            raise NotImplementedError
+
+        if secondary:
+            return 1 if self._primary_screen == 0 else 0
+        else:
+            return self._primary_screen
+
+    def get_offset_x(self, idx, reversed=False):
+        geom = self.geometry(idx)
+        return geom.x() if not reversed else (geom.x() - geom.width())
+
+    def get_origin_y(self, idx):
+        geom = self.geometry(idx)
+        return geom.y()
+
+
+multiscreen_manager = MultiscreenManager()
+
+
 # vim: ts=4 sw=4 sts=4 expandtab
