@@ -88,6 +88,7 @@ void Subscriber::parse_response(bool error) {
 			QString text = dm["text"].toString(),
 					color = dm["style"].toString(),
 					position = dm["position"].toString();
+			qDebug() << text ;
 
 			emit new_danmaku(text, color, position);
 		}

@@ -15,6 +15,7 @@
 
 #include "danmaku_ui.h"
 
+
 static std::map<QString, std::pair<QString, QColor>> colormap = {
 	{"white", std::make_pair("rgb(255, 255, 255)", QColor("black"))},
 	{"black", std::make_pair("rgb(0, 0, 0)", QColor("white"))},
@@ -27,15 +28,15 @@ static std::map<QString, std::pair<QString, QColor>> colormap = {
 };
 
 
-Danmaku::Danmaku(QString text, QWidget *parent): Danmaku(text, "blue", "fly", parent){};
+// Danmaku::Danmaku(QString text, QWidget *parent): Danmaku(text, "blue", FLY, -1, parent){};
 
-Danmaku::Danmaku(QString text, QString color, QString position, QWidget *parent)
+Danmaku::Danmaku(QString text, QString color, Position position, int slot, QWidget *parent)
 	:QLabel(escape_text(text), parent)
 {
 	QString tcolor = colormap[color].first;
 	QColor bcolor = colormap[color].second;
 	QString style = style_tmpl
-		.arg(20)
+		.arg(LINE_HEIGHT_PT)
 		.arg("WenQuanYi Micro Hei")
 		.arg(tcolor);
 
@@ -50,8 +51,9 @@ Danmaku::Danmaku(QString text, QString color, QString position, QWidget *parent)
 	
 	QSize _msize = this->minimumSizeHint();
 	this->resize(_msize);
-
-	this->_position = position;
+	
+	this->position = position;
+	this->slot = slot;
 	this->init_position();
 }
 
@@ -70,20 +72,22 @@ QString Danmaku::style_tmpl = QString(
 void Danmaku::init_position() {
 	int sw = this->parentWidget()->width();
 	int sh = this->parentWidget()->height();
+	
+	this->_y = LINE_HEIGHT_PX * this->slot + VMARGIN;
 
-	if(this->_position.compare("fly") == 0) {
-		qDebug() << "fly";
-		this->_x = sw;
-		this->_y = sh / 2;
-		this->_step = (double)(sw + this->width()) / (10 * 1000 / this->_interval);
-		this->fly();
-
-	} else if (this->_position.compare("top") == 0) {
-		qDebug() << "top";
-	} else if (this->_position.compare("bottom") == 0) {
-		qDebug() << "bottom";
-	} else {
-		qDebug() << "wrong position: " << this->_position;
+	switch(this->position) {
+		case FLY:
+			qDebug() << "fly";
+			this->_x = sw;
+			this->_step = (double)(sw + this->width()) / (10 * 1000 / this->_interval);
+			this->fly();
+			break;
+		case TOP:
+		case BOTTOM:
+			this->_x = (sw / 2) - (this->width() / 2);
+			this->move(this->_x, this->_y);
+			QTimer::singleShot(10 * 1000, this, SLOT(clean_close()));
+			break;
 	}
 }
 
@@ -91,7 +95,13 @@ void Danmaku::fly() {
 	int x = static_cast<int>(round(this->_x)), y = this->_y;
 	this->_x -= this->_step;
 	int x_dst = static_cast<int>(round(this->_x));
-
+	if(x < this->parentWidget()->width() / 2) {
+		if (this->slot > 0) {
+			int s = this->slot;
+			this->slot = 0;
+			emit clear_fly_slot(s);
+		}
+	}
 	if(x < -this->width()) {
 		this->clean_close();
 		return;
