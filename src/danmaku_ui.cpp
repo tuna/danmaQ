@@ -13,7 +13,7 @@
 #include <map>
 #include <utility>
 
-#include "danmaku_ui.h"
+#include "danmaku.h"
 
 
 static std::map<QString, std::pair<QString, QColor>> colormap = {
@@ -77,7 +77,7 @@ void Danmaku::init_position() {
 
 	switch(this->position) {
 		case FLY:
-			qDebug() << "fly";
+			myDebug << "fly";
 			this->_x = sw;
 			this->_step = (double)(sw + this->width()) / (10 * 1000 / this->_interval);
 			this->fly();

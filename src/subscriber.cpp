@@ -13,7 +13,7 @@
 #include <QDebug>
 #include <qjson/parser.h> 
 
-#include "subscriber.h"
+#include "danmaku.h"
 
 
 Subscriber::Subscriber(QString server, QString channel, QString passwd, QObject* parent)
@@ -24,11 +24,11 @@ Subscriber::Subscriber(QString server, QString channel, QString passwd, QObject*
 	this->passwd = passwd;
 	QUuid uuid = QUuid::createUuid();
 	this->_uuid = uuid.toString();
-	// qDebug() << this->_uuid;
+	// myDebug << this->_uuid;
 	
 	QString uri = QString("/api/v1.1/channels/%1/danmaku").arg(this->channel);
 	QUrl baseUrl = QUrl(this->server);
-	// qDebug() << baseUrl.host() << baseUrl.port();
+	// myDebug << baseUrl.host() << baseUrl.port();
 
 	qint16 port = baseUrl.port(80);
 	QHttp::ConnectionMode mode = QHttp::ConnectionModeHttp;
@@ -58,7 +58,7 @@ void Subscriber::run()
 		http->request(header);
 		loop.exec();
 		if(http->error()){
-			qDebug() << http->errorString() << "Wait 2 secs";
+			myDebug << http->errorString() << "Wait 2 secs";
 			this->msleep(2000);
 		}
 	}
@@ -88,7 +88,7 @@ void Subscriber::parse_response(bool error) {
 			QString text = dm["text"].toString(),
 					color = dm["style"].toString(),
 					position = dm["position"].toString();
-			qDebug() << text ;
+			myDebug << text ;
 
 			emit new_danmaku(text, color, position);
 		}

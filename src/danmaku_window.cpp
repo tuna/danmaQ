@@ -10,15 +10,14 @@
 #include <X11/extensions/shape.h>
 #endif
 
-#include "danmaku_ui.h"
-#include "danmaku_window.h"
+#include "danmaku.h"
 
 DMWindow::DMWindow() 
 {
 	QDesktopWidget desktop;
 	QRect geo = desktop.screenGeometry();
 	int sw = geo.width(), sh = geo.height();
-	qDebug() << sw << ", " << sh;
+	myDebug << sw << ", " << sh;
 
 	this->resize(sw, sh);
 	this->setWindowTitle("Danmaku");
@@ -87,7 +86,7 @@ int DMWindow::allocate_slot(Position position) {
 		}
 		break;
 	}
-	qDebug() << "Slot: " << slot;
+	myDebug << "Slot: " << slot;
 	return slot;
 }
 
@@ -95,21 +94,22 @@ void DMWindow::new_danmaku(QString text, QString color, QString position)
 {
 	Position pos;
 	if(position.compare("fly") == 0) {
-		qDebug() << "fly";
+		myDebug << "fly";
 		pos = FLY;
 	} else if (position.compare("top") == 0) {
-		qDebug() << "top";
+		myDebug << "top";
 		pos = TOP;
 	} else if (position.compare("bottom") == 0) {
-		qDebug() << "bottom";
+		myDebug << "bottom";
 		pos = BOTTOM;
 	} else {
-		qDebug() << "wrong position: " << position;
+		myDebug << "wrong position: " << position;
+		return;
 	}
 
 	auto slot = allocate_slot(pos);
 	if (slot < 0) {
-		qDebug() << "Screen is Full!";
+		myDebug << "Screen is Full!";
 		return;
 	} 
 
@@ -123,8 +123,8 @@ void DMWindow::new_danmaku(QString text, QString color, QString position)
 }
 
 void DMWindow::clear_fly_slot(int slot) {
-	qDebug() << "Clear Flying Slot: " << slot;
-	// qDebug() << this->fly_slots;
+	myDebug << "Clear Flying Slot: " << slot;
+	// myDebug << this->fly_slots;
 	this->fly_slots[slot] = false;
 }
 
@@ -132,5 +132,5 @@ void DMWindow::delete_danmaku(Danmaku* dm) {
 	if (dm->position == TOP || dm->position == BOTTOM) {
 		this->fixed_slots[dm->slot] = false;
 	}
-	qDebug() << "danmaku closed";
+	myDebug << "danmaku closed";
 }
