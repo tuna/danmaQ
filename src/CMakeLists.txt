@@ -2,6 +2,7 @@ set(danmaQ_SOURCES
 	main.cpp 
 	danmaku_ui.cpp
 	danmaku_window.cpp
+	danmaQ_app.cpp
 	subscriber.cpp
 	)
 
@@ -9,6 +10,7 @@ set(danmaQ_HEADERS
 	subscriber.h
 	danmaku_ui.h
 	danmaku_window.h
+	danmaQ_app.h
 	danmaku.h
 	)
 

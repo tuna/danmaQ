@@ -10,6 +10,8 @@ class DMWindow: public QWidget
 
 public:
 	DMWindow();
+	DMWindow(int screenNumber);
+	~DMWindow();
 
 public slots:
 	void new_danmaku(QString text, QString color, QString position);

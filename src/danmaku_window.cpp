@@ -12,10 +12,12 @@
 
 #include "danmaku.h"
 
-DMWindow::DMWindow() 
+
+DMWindow::DMWindow(int screenNumber) 
 {
+
 	QDesktopWidget desktop;
-	QRect geo = desktop.screenGeometry();
+	QRect geo = desktop.screenGeometry(screenNumber);
 	int sw = geo.width(), sh = geo.height();
 	myDebug << sw << ", " << sh;
 
@@ -25,7 +27,7 @@ DMWindow::DMWindow()
 	this->setAttribute(Qt::WA_DeleteOnClose, true);
 	this->setWindowFlags(Qt::ToolTip|Qt::FramelessWindowHint);
 	this->show();
-	this->move(0, 0);
+	this->move(geo.topLeft());
 	this->init_slots();
 
 #ifdef __linux
@@ -36,6 +38,8 @@ DMWindow::DMWindow()
 #endif
 
 }
+
+DMWindow::DMWindow(): DMWindow(0){};
 
 void DMWindow::init_slots()
 {
@@ -133,4 +137,8 @@ void DMWindow::delete_danmaku(Danmaku* dm) {
 		this->fixed_slots[dm->slot] = false;
 	}
 	myDebug << "danmaku closed";
+}
+
+DMWindow::~DMWindow() {
+	myDebug << "window closed";
 }
