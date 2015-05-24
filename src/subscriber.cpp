@@ -1,6 +1,7 @@
 #include <QtCore>
 #include <QEventLoop>
 #include <QThread>
+#include <QTimer>
 
 #include <QUuid>
 #include <QHttp>
@@ -45,8 +46,8 @@ Subscriber::Subscriber(QString server, QString channel, QString passwd, QObject*
 	header.setValue("X-GDANMAKU-SUBSCRIBER-ID", this->_uuid);
 	header.setValue("X-GDANMAKU-AUTH-KEY", this->passwd);
 	
-	// connect(http, SIGNAL(requestFinished(int, bool)), &loop, SLOT(quit()));
 	connect(http, SIGNAL(done(bool)), this, SLOT(parse_response(bool)));
+	connect(this, SIGNAL(terminated()), this, SLOT(deleteLater()));
 }
 
 void Subscriber::run() 
@@ -54,9 +55,17 @@ void Subscriber::run()
 	QEventLoop loop;
 	connect(http, SIGNAL(done(bool)), &loop, SLOT(quit()));
 	
+	// Set HTTP request timeout
+	QTimer timeout;
+	timeout.setSingleShot(true);
+	// If timeout signaled, let http request abort
+	connect(&timeout, SIGNAL(timeout()), http, SLOT(abort()));
+	
 	while(1) {
+		timeout.start(10000);
 		http->request(header);
 		loop.exec();
+		timeout.stop();
 		if(http->error()){
 			myDebug << http->errorString() << "Wait 2 secs";
 			this->msleep(2000);
