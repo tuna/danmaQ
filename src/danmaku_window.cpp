@@ -23,12 +23,21 @@ DMWindow::DMWindow(int screenNumber)
 
 	this->resize(sw, sh);
 	this->setWindowTitle("Danmaku");
+	this->setWindowFlags(
+		Qt::X11BypassWindowManagerHint
+		| Qt::WindowStaysOnTopHint
+		| Qt::FramelessWindowHint
+	);
 	this->setAttribute(Qt::WA_TranslucentBackground, true);
 	this->setAttribute(Qt::WA_DeleteOnClose, true);
-	this->setWindowFlags(Qt::ToolTip|Qt::FramelessWindowHint);
-	this->show();
+	this->setAttribute(Qt::WA_Disabled, true);
+	this->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+	this->setStyleSheet("background: transparent");
+
 	this->move(geo.topLeft());
 	this->init_slots();
+	
+	this->show();
 
 #ifdef __linux
 	QRegion region;
