@@ -11,10 +11,10 @@ int main(int argc, char *argv[])
 	std::srand(std::time(0));
 
 	QDesktopWidget desktop;
-	DMApp dm_app(argv[1], argv[2], "");
+	DMApp* dm_app = new DMApp();
 	app.connect(
 		&desktop, SIGNAL(workAreaResized(int)),
-		&dm_app, SLOT(reset_windows())
+		dm_app, SLOT(reset_windows())
 	);
 	return app.exec();
 }
