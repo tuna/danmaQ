@@ -8,6 +8,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QTimer>
 #include <QDebug>
+#include <QString>
 
 #include <cmath>
 #include <map>
@@ -27,17 +28,19 @@ static std::map<QString, std::pair<QString, QColor>> colormap = {
 	{"purple", std::make_pair("rgb(128, 0, 128)", QColor("white"))}
 };
 
-
 // Danmaku::Danmaku(QString text, QWidget *parent): Danmaku(text, "blue", FLY, -1, parent){};
 
-Danmaku::Danmaku(QString text, QString color, Position position, int slot, QWidget *parent)
+Danmaku::Danmaku(QString text, QString color, Position position, int slot, DMWindow *parent, DMApp* app)
 	:QLabel(escape_text(text), parent)
 {
+	this->dmwin = parent;
+	this->app = app;
 	QString tcolor = colormap[color].first;
 	QColor bcolor = colormap[color].second;
+	
 	QString style = style_tmpl
-		.arg(LINE_HEIGHT_PT)
-		.arg("WenQuanYi Micro Hei")
+		.arg(this->app->fontSize)
+		.arg(this->app->fontFamily)
 		.arg(tcolor);
 
 	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(this);
@@ -63,7 +66,7 @@ QString Danmaku::escape_text(QString text) {
 }
 
 QString Danmaku::style_tmpl = QString(
-		"font-size: %1pt;"
+		"font-size: %1px;"
 		"font-weight: bold;"
 		"font-family: %2;"
 		"color: %3;"
@@ -73,7 +76,7 @@ void Danmaku::init_position() {
 	int sw = this->parentWidget()->width();
 	int sh = this->parentWidget()->height();
 	
-	this->_y = LINE_HEIGHT_PX * this->slot + VMARGIN;
+	this->_y = this->dmwin->slot_y(this->slot);
 
 	switch(this->position) {
 		case FLY:

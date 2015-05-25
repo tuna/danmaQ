@@ -2,6 +2,7 @@
 #define __DANMAKU_WINDOW_H__
 #include <QWidget>
 #include <QVector>
+#include "danmaQ_app.h"
 #include "danmaku_ui.h"
 
 class DMWindow: public QWidget
@@ -9,9 +10,13 @@ class DMWindow: public QWidget
 	Q_OBJECT
 
 public:
-	DMWindow();
-	DMWindow(int screenNumber);
+	DMWindow(DMApp *parent);
+	DMWindow(int screenNumber, DMApp *parent);
 	~DMWindow();
+	DMApp *app;
+
+	int slot_y(int slot);
+
 
 public slots:
 	void new_danmaku(QString text, QString color, QString position);

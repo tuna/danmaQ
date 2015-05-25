@@ -7,18 +7,22 @@
 
 enum Position { TOP=1, BOTTOM, FLY };
 
-const int LINE_HEIGHT_PX = 42, LINE_HEIGHT_PT = 32;
 const int VMARGIN = 20;
+
+class DMWindow;
+class DMApp;
 
 class Danmaku: public QLabel
 {
 Q_OBJECT
 
 public:
-	Danmaku(QString text, QString color, Position position, int slot, QWidget *parent=0);
+	Danmaku(QString text, QString color, Position position, int slot, DMWindow *parent, DMApp *app);
 	// Danmaku(QString text, QWidget *parent=0);
 	Position position;
 	int slot;
+	DMWindow *dmwin;
+	DMApp *app;
 
 public slots:
 	void fly();

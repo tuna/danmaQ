@@ -3,7 +3,7 @@
 #include <QDesktopWidget>
 #include <ctime>
 
-#include "danmaku.h"
+#include "danmaQ_app.h"
 
 int main(int argc, char *argv[])
 {

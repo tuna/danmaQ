@@ -2,6 +2,11 @@
 #include "danmaku.h"
 
 DMApp::DMApp(QString server, QString channel, QString passwd) {
+	this->fontSize = 36;
+	this->lineHeight = this->fontSize * 1.2;
+	this->fontFamily = QString("WenQuanYi Micro Hei");
+	this->speedScale = 1.0;
+	
 	this->subscriber = NULL;
 	this->init_windows();
 	this->toggle_subscription(server, channel, passwd);
@@ -39,7 +44,7 @@ void DMApp::init_windows() {
 	QDesktopWidget	desktop;
 	
 	for (int i=0; i<desktop.screenCount(); i++) {
-		DMWindow* w = new DMWindow(i);
+		DMWindow* w = new DMWindow(i, this);
 		this->dm_windows.append(w);
 
 		if (!(this->subscriber == NULL || this->subscriber->isFinished())) {

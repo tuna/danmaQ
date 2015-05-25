@@ -2,7 +2,8 @@
 #define __DANMAQ_APP_H__
 #include <QWidget>
 #include <QVector>
-#include "subscriber.h"
+
+class Subscriber;
 
 class DMApp: public QWidget
 {
@@ -10,6 +11,10 @@ class DMApp: public QWidget
 
 public:
 	DMApp(QString server, QString channel, QString passwd);
+
+	int lineHeight, fontSize;
+	QString fontFamily;
+	float speedScale;
 
 public slots:
 	void reset_windows();

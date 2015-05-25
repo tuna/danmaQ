@@ -13,19 +13,20 @@
 #include "danmaku.h"
 
 
-DMWindow::DMWindow(int screenNumber) 
+DMWindow::DMWindow(int screenNumber, DMApp *parent)
 {
-
+	this->setParent(parent);
+	this->app = parent;
 	QDesktopWidget desktop;
 	QRect geo = desktop.screenGeometry(screenNumber);
 	int sw = geo.width(), sh = geo.height();
 	myDebug << sw << ", " << sh;
-
 	this->resize(sw, sh);
 	this->setWindowTitle("Danmaku");
 	this->setWindowFlags(
 		Qt::X11BypassWindowManagerHint
 		| Qt::WindowStaysOnTopHint
+		| Qt::ToolTip
 		| Qt::FramelessWindowHint
 	);
 	this->setAttribute(Qt::WA_TranslucentBackground, true);
@@ -48,12 +49,13 @@ DMWindow::DMWindow(int screenNumber)
 
 }
 
-DMWindow::DMWindow(): DMWindow(0){};
+DMWindow::DMWindow(DMApp *parent): DMWindow(0, parent){};
 
 void DMWindow::init_slots()
 {
 	int height = this->height();
-	int nlines = (height - 2*VMARGIN) / LINE_HEIGHT_PX;
+	int nlines = (height - 2*VMARGIN) / (this->app->lineHeight);
+	myDebug << nlines << this->app->lineHeight;
 	for(int i=0; i<nlines; i++) {
 		this->fly_slots.append(false);
 		this->fixed_slots.append(false);
@@ -103,6 +105,11 @@ int DMWindow::allocate_slot(Position position) {
 	return slot;
 }
 
+int DMWindow::slot_y(int slot)
+{
+	return (this->app->lineHeight * slot + VMARGIN);
+}
+
 void DMWindow::new_danmaku(QString text, QString color, QString position)
 {
 	Position pos;
@@ -126,7 +133,7 @@ void DMWindow::new_danmaku(QString text, QString color, QString position)
 		return;
 	} 
 
-	Danmaku *l = new Danmaku(text, color, pos, slot, this);
+	Danmaku *l = new Danmaku(text, color, pos, slot, this, this->app);
 	this->connect(l, SIGNAL(exited(Danmaku*)),
 				  this, SLOT(delete_danmaku(Danmaku*)));
 	this->connect(l, SIGNAL(clear_fly_slot(int)),
