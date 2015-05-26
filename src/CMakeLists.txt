@@ -20,6 +20,17 @@ set(QT_USE_QTNETWORK TRUE)
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
+if (WIN32)
+	set(CMAKE_PREFIX_PATH "C:/Program Files/qjson/lib/cmake/qjson/")
+	find_library (QJSON_LIBRARIES
+		"C:/Program Files/qjson/lib"
+		${QJSON_LIBRARY_DIRS}
+		${LIB_INSTALL_DIR}
+	)
+	include_directories("C:/Program Files/qjson/include")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mwindows")
+endif(WIN32)
+
 find_package(QJSON REQUIRED)
 
 add_executable(danmaQ ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC})
