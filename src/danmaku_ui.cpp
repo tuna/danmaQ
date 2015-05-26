@@ -35,6 +35,8 @@ Danmaku::Danmaku(QString text, QString color, Position position, int slot, DMWin
 {
 	this->dmwin = parent;
 	this->app = app;
+	this->setAttribute(Qt::WA_DeleteOnClose);
+
 	QString tcolor = colormap[color].first;
 	QColor bcolor = colormap[color].second;
 	
