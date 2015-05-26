@@ -14,11 +14,15 @@ set(danmaQ_HEADERS
 	danmaku.h
 	)
 
+set(danmaQ_RESOURCES icons.qrc)
+
 set(CMAKE_AUTOMOC ON)
 set(QT_USE_QTNETWORK TRUE)
 
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
+
+QT4_ADD_RESOURCES(danmaQ_RCC_SRCS ${danmaQ_RESOURCES})
 
 if (WIN32)
 	set(CMAKE_PREFIX_PATH "C:/Program Files/qjson/lib/cmake/qjson/")
@@ -33,7 +37,7 @@ endif(WIN32)
 
 find_package(QJSON REQUIRED)
 
-add_executable(danmaQ ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC})
+add_executable(danmaQ ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC} ${danmaQ_RCC_SRCS})
 
 set(DANMAQ_LIBRARIES ${QT_LIBRARIES} ${QT_QTNETWORK_LIBRARY} ${QJSON_LIBRARIES})
 

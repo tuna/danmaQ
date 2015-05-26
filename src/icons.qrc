@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file alias="icon_active.png">icons/statusicon.png</file>
+    <file alias="icon_inactive.png">icons/statusicon_disabled.png</file>
+</qresource>
+</RCC>

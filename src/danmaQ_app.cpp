@@ -5,14 +5,21 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
+#include <QSystemTrayIcon>
+#include <QMenu>
+#include <QAction>
 
 #include "danmaku.h"
 
 DMApp::DMApp() {
 
 	this->setWindowTitle("Danmaku");
+	this->setWindowIcon(QIcon(":icon_active.png"));
+	this->trayIcon = new DMTrayIcon(this);
 	
 	QVBoxLayout* layout = new QVBoxLayout(this);
+
 	QHBoxLayout* hbox = new QHBoxLayout(this);
 	hbox->addWidget(new QLabel("Server: ", this));
 	this->server = new QLineEdit("http://dm.tuna.moe", this);
@@ -35,17 +42,24 @@ DMApp::DMApp() {
 	hbox = new QHBoxLayout(this);
 	this->hideBtn = new QPushButton("&Hide", this);
 	this->configBtn = new QPushButton("&config", this);
+	this->configBtn->setEnabled(false);
 	this->mainBtn = new QPushButton("&Subscribe", this);
 	hbox->addWidget(this->hideBtn);
 	hbox->addWidget(this->configBtn);
 	hbox->addWidget(this->mainBtn);
 	layout->addLayout(hbox);
-
+	
 	this->setLayout(layout);
+
 
 	this->fontSize = 36;
 	this->lineHeight = this->fontSize * 1.2;
-	this->fontFamily = QString("WenQuanYi Micro Hei");
+	this->fontFamily = QString(
+		"WenQuanYi Micro Hei, Source Han Sans CN, WenQuanYi Zen Hei,"
+		"Microsoft YaHei, SimHei, "
+		"STHeiti, Hiragino Sans GB, "
+		"sans-serif"
+	);
 	this->speedScale = 1.0;
 	
 	this->subscriber = NULL;
@@ -53,6 +67,11 @@ DMApp::DMApp() {
 
 	connect(this->mainBtn, SIGNAL(released()), this, SLOT(toggle_subscription()));
 	connect(this->hideBtn, SIGNAL(released()), this, SLOT(hide()));
+	connect(this->trayIcon->toggleAction, SIGNAL(triggered()), this, SLOT(toggle_subscription()));
+	connect(this->trayIcon->showAction, SIGNAL(triggered()), this, SLOT(show()));
+	connect(this->trayIcon->aboutAction, SIGNAL(triggered()), this, SLOT(show_about_dialog()));
+	connect(this->trayIcon->exitAction, SIGNAL(triggered()), this, SLOT(close()));
+
 
 	this->show();
 	QDesktopWidget	desktop;
@@ -81,8 +100,13 @@ void DMApp::toggle_subscription() {
 		this->subscriber->start();
 
 	} else {
-		this->subscriber->terminate();
+		this->subscriber->mark_stop = true;
+		emit stop_subscription();
+		if (this->subscriber->wait(1000) == false) {
+			this->subscriber->terminate();
+		}
 		this->subscriber = NULL;
+		this->reset_windows();
 	}
 
 }
@@ -114,10 +138,76 @@ void DMApp::reset_windows() {
 
 void DMApp::on_subscription_started() {
 	myDebug << "Subscription Started";
-};
+	this->hide();
+	this->trayIcon->set_icon_running();
+	this->mainBtn->setText("&Unsubscribe");
+}
+
 void DMApp::on_subscription_stopped() {
 	myDebug << "Subscription Stopped";
-};
+	this->trayIcon->set_icon_stopped();
+	this->mainBtn->setText("&Subscribe");
+}
+
 void DMApp::on_new_alert(QString msg) {
 	myDebug << "Alert:" << msg;
-};
+}
+
+void DMApp::show_about_dialog() {
+	this->show();
+	QMessageBox::about(
+		this, "About", 
+		"<strong>DanmaQ</strong>"
+		"<p>Copyright &copy; 2015 Justin Wong<br />"
+		"Tsinghua University TUNA Association</p>"
+		"<p> Source Code Available under GPLv3<br />"
+		"<a href='https://github.com/bigeagle/danmaQ'>"
+		"https://github.com/bigeagle/danmaQ"
+		"</a></p>"
+	);
+}
+
+
+DMTrayIcon::DMTrayIcon(QWidget *parent)
+	:QSystemTrayIcon(parent)
+{
+	this->icon_running = QIcon(":icon_active.png");
+	this->icon_stopped = QIcon(":icon_inactive.png");
+	this->setIcon(this->icon_stopped);
+	
+	QMenu* menu = new QMenu(parent);
+	this->toggleAction = menu->addAction("Toggle Subscription");
+	this->showAction = menu->addAction("Show Main Window");
+	this->aboutAction = menu->addAction("About");
+	this->exitAction = menu->addAction("Exit");
+
+	this->setContextMenu(menu);
+
+	connect(
+		this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+		this, SLOT(on_activated(QSystemTrayIcon::ActivationReason))
+	);
+	this->show();
+}
+
+void DMTrayIcon::on_activated(QSystemTrayIcon::ActivationReason e) {
+	if(e == this->Trigger){
+		QWidget *parent = (QWidget *)this->parent();
+		if(parent == NULL) {
+			return;
+		}
+		if(parent->isVisible()) {
+			parent->hide();
+		} else {
+			parent->show();
+		}
+	}
+}
+
+void DMTrayIcon::set_icon_running() {
+	this->setIcon(this->icon_running);
+}
+
+void DMTrayIcon::set_icon_stopped() {
+	this->setIcon(this->icon_stopped);
+}

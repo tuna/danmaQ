@@ -23,6 +23,7 @@ Subscriber::Subscriber(QString server, QString channel, QString passwd, QObject*
 	this->server = server;
 	this->channel = channel;
 	this->passwd = passwd;
+	
 	QUuid uuid = QUuid::createUuid();
 	this->_uuid = uuid.toString();
 	// myDebug << this->_uuid;
@@ -48,12 +49,17 @@ Subscriber::Subscriber(QString server, QString channel, QString passwd, QObject*
 	
 	connect(http, SIGNAL(done(bool)), this, SLOT(parse_response(bool)));
 	connect(this, SIGNAL(terminated()), this, SLOT(deleteLater()));
+	connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
 
 void Subscriber::run() 
 {
+	mark_stop = false;
+	
 	QEventLoop loop;
 	connect(http, SIGNAL(done(bool)), &loop, SLOT(quit()));
+	connect((DMApp *)this->parent(), SIGNAL(stop_subscription()),
+			&loop, SLOT(quit()));
 	
 	// Set HTTP request timeout
 	QTimer timeout;
@@ -66,6 +72,10 @@ void Subscriber::run()
 		http->request(header);
 		loop.exec();
 		timeout.stop();
+		if(mark_stop) {
+			myDebug << "Thread marked to stop";
+			break;
+		}
 		if(http->error()){
 			myDebug << http->errorString() << "Wait 2 secs";
 			this->msleep(2000);

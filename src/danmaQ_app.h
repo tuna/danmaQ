@@ -4,8 +4,31 @@
 #include <QVector>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QSystemTrayIcon>
+#include <QMenu>
+#include <QAction>
 
 class Subscriber;
+
+class DMTrayIcon: public QSystemTrayIcon
+{
+	Q_OBJECT
+
+public:
+	DMTrayIcon(QWidget *parent=0);
+	QAction *toggleAction, *showAction, *aboutAction, *exitAction;
+
+
+public slots:
+	void on_activated(QSystemTrayIcon::ActivationReason e);
+	void set_icon_running();
+	void set_icon_stopped();
+
+private:
+	QIcon icon_running, icon_stopped;
+
+};
+
 
 class DMApp: public QWidget
 {
@@ -28,10 +51,15 @@ public slots:
 	void on_subscription_started();
 	void on_subscription_stopped();
 	void on_new_alert(QString msg);
+	void show_about_dialog();
+
+signals:
+	void stop_subscription();
 
 private:
 	QVector<QWidget*>	dm_windows;
 	Subscriber *subscriber;
+	DMTrayIcon *trayIcon;
 	void init_windows();
 
 

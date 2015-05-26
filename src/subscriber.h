@@ -13,6 +13,7 @@ class Subscriber : public QThread
 public:
 	Subscriber(QString server, QString channel, QString passwd, QObject* parent=0);
 	void run();
+	bool mark_stop;
 
 public slots:
 	void parse_response(bool);
