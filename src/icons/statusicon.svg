@@ -13,9 +13,9 @@
    width="134.64285"
    height="134.64285"
    id="svg2"
-   inkscape:version="0.48.5 r10040"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="statusicon.svg"
-   inkscape:export-filename="/home/bigeagle/workspace/gdanmaku/images/statusicon.png"
+   inkscape:export-filename="/home/bigeagle/workspace/danmaQ/src/icons/statusicon.png"
    inkscape:export-xdpi="42.779842"
    inkscape:export-ydpi="42.779842">
   <sodipodi:namedview
@@ -32,12 +32,12 @@
      id="namedview2997"
      showgrid="false"
      inkscape:zoom="4.3746841"
-     inkscape:cx="79.814536"
-     inkscape:cy="52.395752"
+     inkscape:cx="33.530481"
+     inkscape:cy="58.737604"
      inkscape:window-x="0"
      inkscape:window-y="22"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer3" />
   <defs
      id="defs4">
     <filter
@@ -46,6 +46,43 @@
       <feGaussianBlur
          id="feGaussianBlur3802"
          stdDeviation="0.52908913" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Blur"
+       id="filter4141">
+      <feGaussianBlur
+         stdDeviation="2 2"
+         result="fbSourceGraphic"
+         id="feGaussianBlur4143" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix4145" />
+      <feGaussianBlur
+         id="feGaussianBlur4147"
+         stdDeviation="4.77 5.04"
+         result="blur"
+         in="fbSourceGraphic" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Blur"
+       id="filter4153">
+      <feGaussianBlur
+         stdDeviation="4 4"
+         result="blur"
+         id="feGaussianBlur4155" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Blur"
+       id="filter4153-5">
+      <feGaussianBlur
+         stdDeviation="4 4"
+         result="blur"
+         id="feGaussianBlur4155-8" />
     </filter>
   </defs>
   <metadata
@@ -56,23 +93,41 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(-0.07178591,-0.18650571)"
-     id="layer1">
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 1"
+     sodipodi:insensitive="true">
     <text
-       x="16.574091"
-       y="103.83316"
-       id="text2985"
+       sodipodi:linespacing="125%"
+       style="font-style:normal;font-weight:normal;font-size:101.67680359px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#c5c4bd;fill-opacity:1;stroke:none"
        xml:space="preserve"
-       style="font-size:101.67680359000000578px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#9b9b9b;fill-opacity:1;stroke:none;font-family:Sans"
-       sodipodi:linespacing="125%"><tspan
-         x="16.574091"
-         y="103.83316"
-         id="tspan2987"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#9b9b9b;fill-opacity:1;font-family:Source Han Sans JP;-inkscape-font-specification:Source Han Sans JP Bold">弾</tspan></text>
+       id="text4137-1"
+       y="106.16074"
+       x="17.415586"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Source Han Sans JP';-inkscape-font-specification:'Source Han Sans JP Bold';fill:#c5c4bd;fill-opacity:1"
+         id="tspan4139-9"
+         y="106.16074"
+         x="17.415586">弾</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Layer 2">
+    <text
+       sodipodi:linespacing="125%"
+       style="font-style:normal;font-weight:normal;font-size:101.67680359px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#1d6fb6;fill-opacity:1;stroke:none;"
+       xml:space="preserve"
+       id="text4137"
+       y="105.31335"
+       x="16.239166"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Source Han Sans JP';-inkscape-font-specification:'Source Han Sans JP Bold';fill:#1d6fb6;fill-opacity:1;"
+         id="tspan4139"
+         y="105.31335"
+         x="16.239166">弾</tspan></text>
   </g>
 </svg>
