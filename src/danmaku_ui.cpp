@@ -46,12 +46,21 @@ Danmaku::Danmaku(QString text, QString color, Position position, int slot, DMWin
 		.arg(tcolor);
 
 	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(this);
+	
+#ifndef Q_WS_X11
+	if (position != FLY) {
+#endif
+
 	effect->setBlurRadius(6);
 	effect->setColor(bcolor);
 	effect->setOffset(0, 0);
+	this->setGraphicsEffect(effect);
+
+#ifndef Q_WS_X11
+	}
+#endif
 
 	this->setStyleSheet(style);
-	this->setGraphicsEffect(effect);
 	this->setContentsMargins(0, 0, 0, 0);
 	
 	QSize _msize = this->minimumSizeHint();
