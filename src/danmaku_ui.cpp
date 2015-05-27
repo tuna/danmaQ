@@ -6,6 +6,9 @@
 #include <QWidget>
 #include <QColor>
 #include <QGraphicsDropShadowEffect>
+#include <QAbstractAnimation>
+#include <QPropertyAnimation>
+#include <QRect>
 #include <QTimer>
 #include <QDebug>
 #include <QString>
@@ -85,15 +88,12 @@ QString Danmaku::style_tmpl = QString(
 
 void Danmaku::init_position() {
 	int sw = this->parentWidget()->width();
-	int sh = this->parentWidget()->height();
-	
 	this->_y = this->dmwin->slot_y(this->slot);
 
 	switch(this->position) {
 		case FLY:
 			myDebug << "fly";
 			this->_x = sw;
-			this->_step = (double)(sw + this->width()) / (10 * 1000 / this->_interval);
 			this->fly();
 			break;
 		case TOP:
@@ -106,34 +106,27 @@ void Danmaku::init_position() {
 }
 
 void Danmaku::fly() {
-	int x = static_cast<int>(round(this->_x)), y = this->_y;
-	this->_x -= this->_step;
-	int x_dst = static_cast<int>(round(this->_x));
-	if(x < this->parentWidget()->width() / 2) {
-		if (this->slot > 0) {
-			int s = this->slot;
-			this->slot = 0;
-			emit clear_fly_slot(s);
-		}
-	}
-	if(x < -this->width()) {
-		this->clean_close();
-		return;
-	}
+	QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry", this);
+	animation->setDuration(10 * 1000);
+	animation->setStartValue(
+			QRect(this->_x, this->_y, this->width(), this->height()));
 	
-	QTimer::singleShot(this->_interval, this, SLOT(fly()));
-	if(x != x_dst) {
-		this->move(x, y);
-	}
+	animation->setEndValue(
+			QRect(-this->width(), this->_y, this->width(), this->height()));
+	animation->start(QAbstractAnimation::DeleteWhenStopped);
+	
+	connect(
+		animation, SIGNAL(finished()),
+		this, SLOT(clean_close())
+	);
 }
 
 void Danmaku::clean_close() {
-	if(this->_exited)
-		return;
+	if(this->position == FLY) {
+		emit clear_fly_slot(this->slot);
+	}
 	
-	this->_exited = true;
 	this->close();
-
 	emit exited(this);
 }
 

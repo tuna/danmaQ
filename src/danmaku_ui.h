@@ -34,10 +34,7 @@ signals:
 
 private:
 	static QString style_tmpl;
-	static const int _interval = 30;
-	bool _exited = false;
-	double _x, _step;
-	int _y;
+	int _x, _y;
 	
 	static QString escape_text(QString text);
 	void init_position();
