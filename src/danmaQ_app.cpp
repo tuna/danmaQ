@@ -98,6 +98,10 @@ void DMApp::toggle_subscription() {
 			this->subscriber, SIGNAL(finished()),
 			this, SLOT(on_subscription_stopped())
 		);
+		connect(
+			this->subscriber, SIGNAL(new_alert(QString)),
+			this, SLOT(on_new_alert(QString))
+		);
 		this->subscriber->start();
 
 	} else {
@@ -141,6 +145,7 @@ void DMApp::on_subscription_started() {
 	this->hide();
 	this->trayIcon->set_icon_running();
 	this->mainBtn->setText("&Unsubscribe");
+	this->trayIcon->showMessage("Subscription Started", "Let's Go");
 }
 
 void DMApp::on_subscription_stopped() {
@@ -151,6 +156,12 @@ void DMApp::on_subscription_stopped() {
 
 void DMApp::on_new_alert(QString msg) {
 	myDebug << "Alert:" << msg;
+	this->trayIcon->showMessage("Ooops!", msg, QSystemTrayIcon::Critical);
+	this->subscriber->mark_stop = true;
+	emit stop_subscription();
+	if (this->subscriber->wait(1000) == false) {
+		this->subscriber->terminate();
+	}
 }
 
 void DMApp::show_about_dialog() {

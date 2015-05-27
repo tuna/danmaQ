@@ -5,6 +5,7 @@
 
 #include <QUuid>
 #include <QHttp>
+#include <QHttpHeader>
 #include <QUrl>
 
 #include <QByteArray>
@@ -47,7 +48,7 @@ Subscriber::Subscriber(QString server, QString channel, QString passwd, QObject*
 	header.setValue("X-GDANMAKU-SUBSCRIBER-ID", this->_uuid);
 	header.setValue("X-GDANMAKU-AUTH-KEY", this->passwd);
 	
-	connect(http, SIGNAL(done(bool)), this, SLOT(parse_response(bool)));
+	// connect(http, SIGNAL(done(bool)), this, SLOT(parse_response(bool)));
 	connect(this, SIGNAL(terminated()), this, SLOT(deleteLater()));
 	connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
@@ -79,14 +80,34 @@ void Subscriber::run()
 		if(http->error()){
 			myDebug << http->errorString() << "Wait 2 secs";
 			this->msleep(2000);
+		} else {
+			parse_response();
 		}
 	}
 }
 
 
-void Subscriber::parse_response(bool error) {
-	if (error) {
-		return;
+void Subscriber::parse_response() {
+	QHttpResponseHeader resp = http->lastResponse();
+	if(resp.isValid()) {
+		bool fatal = false;
+		int statusCode = resp.statusCode();
+		if (statusCode >= 400) {
+			fatal = true;
+			QString errMsg;
+			if (statusCode == 403 ) {
+				errMsg = "Wrong Password";
+			} else if (statusCode == 404) {
+				errMsg = "No Such Channel";
+			} else if (statusCode >= 500) {
+				errMsg = "Server Error";
+			}
+			myDebug << errMsg;
+			emit new_alert(errMsg);
+		}
+		if (fatal) {
+			return;
+		}
 	}
 	
 	bool ok;

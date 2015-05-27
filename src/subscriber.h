@@ -16,7 +16,7 @@ public:
 	bool mark_stop;
 
 public slots:
-	void parse_response(bool);
+	void parse_response();
 
 signals:
 	void new_danmaku(QString text, QString color, QString position);
