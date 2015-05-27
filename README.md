@@ -12,26 +12,6 @@ DanmaQ is still under development, documents might be outdated.
 
 `danmaQ` depends on `Qt4` and `qjson`. 
 
-For ArchLinux, run
-```
-yaourt -S danmaQ
-```
-
-For Ubuntu and Debian, run
-```
-sudo apt-get install libqjson0
-```
-
-For Fedora, run
-```
-sudo dnf install qjson
-```
-
-For OpenSUSE, run 
-```
-sudo zypper install libqjson0
-```
-
 if you use Windows, download bundled binary version from 
 [releases page](https://github.com/bigeagle/danmaQ/releases/).
 
@@ -51,16 +31,27 @@ Clone https://github.com/tuna/gdanmaku-server and run `webserver.py` to start a 
 
 ### Installation
 
-## From source
+#### From source
 
 ````
+apt-get install libqjson0-dev cmake  # for ubuntu and debian
+zypper install libqjson cmake        # for openSUSE
+dnf install qjson-devel cmake        # fedora
+
 mkdir build && cd build 
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release 
 make && sudo make install
 ````
 
-- **windows binary**: https://github.com/bigeagle/danmaQ/releases/
-- **Arch Linux**: [AUR](https://aur.archlinux.org/packages/danmaq-git/)
+#### Windows binary
+
+Download from https://github.com/bigeagle/danmaQ/releases/
+
+#### ArchLinux
+
+```
+yaourt -S danmaq-git
+```
 
 ## TODO
 
