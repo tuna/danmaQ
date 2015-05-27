@@ -68,6 +68,7 @@ DMApp::DMApp() {
 	connect(this->mainBtn, SIGNAL(released()), this, SLOT(toggle_subscription()));
 	connect(this->hideBtn, SIGNAL(released()), this, SLOT(hide()));
 	connect(this->trayIcon->toggleAction, SIGNAL(triggered()), this, SLOT(toggle_subscription()));
+	connect(this->trayIcon->refreshScreenAction, SIGNAL(triggered()), this, SLOT(reset_windows()));
 	connect(this->trayIcon->showAction, SIGNAL(triggered()), this, SLOT(show()));
 	connect(this->trayIcon->aboutAction, SIGNAL(triggered()), this, SLOT(show_about_dialog()));
 	connect(this->trayIcon->exitAction, SIGNAL(triggered()), this, SLOT(close()));
@@ -112,8 +113,8 @@ void DMApp::toggle_subscription() {
 }
 
 void DMApp::init_windows() {
-	QDesktopWidget	desktop;
-	
+	QDesktopWidget desktop;
+	this->screenCount = desktop.screenCount();
 	for (int i=0; i<desktop.screenCount(); i++) {
 		DMWindow* w = new DMWindow(i, this);
 		this->dm_windows.append(w);
@@ -125,7 +126,6 @@ void DMApp::init_windows() {
 		   );
 		}
 	}
-
 }
 
 void DMApp::reset_windows() {
@@ -177,6 +177,7 @@ DMTrayIcon::DMTrayIcon(QWidget *parent)
 	
 	QMenu* menu = new QMenu(parent);
 	this->toggleAction = menu->addAction("Toggle Subscription");
+	this->refreshScreenAction = menu->addAction("Refresh Screen");
 	this->showAction = menu->addAction("Show Main Window");
 	this->aboutAction = menu->addAction("About");
 	this->exitAction = menu->addAction("Exit");

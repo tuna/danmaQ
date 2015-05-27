@@ -16,7 +16,8 @@ class DMTrayIcon: public QSystemTrayIcon
 
 public:
 	DMTrayIcon(QWidget *parent=0);
-	QAction *toggleAction, *showAction, *aboutAction, *exitAction;
+	QAction *toggleAction, *showAction, *aboutAction, *exitAction,
+			*refreshScreenAction;
 
 
 public slots:
@@ -37,7 +38,7 @@ class DMApp: public QWidget
 public:
 	DMApp();
 
-	int lineHeight, fontSize;
+	int lineHeight, fontSize, screenCount;
 	QString fontFamily;
 	float speedScale;
 

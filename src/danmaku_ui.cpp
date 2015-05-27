@@ -17,6 +17,10 @@
 #include <map>
 #include <utility>
 
+#if defined _WIN32 || defined __CYGWIN__
+#include <Windows.h>
+#endif
+
 #include "danmaku.h"
 
 
@@ -50,18 +54,37 @@ Danmaku::Danmaku(QString text, QString color, Position position, int slot, DMWin
 
 	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(this);
 	
+	bool enableShadow = false;
+
 #ifndef Q_WS_X11
-	if (position != FLY) {
+	if (this->app->screenCount == 1) {
+		this->setWindowFlags(
+			Qt::ToolTip
+			| Qt::FramelessWindowHint
+		);
+		this->setAttribute(Qt::WA_TranslucentBackground, true);
+		this->setAttribute(Qt::WA_Disabled, true);
+		this->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+#if defined _WIN32 || defined __CYGWIN__
+		// remove CS_DROPSHADOW
+		SetClassLong(this->winId(), -26, 0x0008 & ~0x00020000);
 #endif
-
-	effect->setBlurRadius(6);
-	effect->setColor(bcolor);
-	effect->setOffset(0, 0);
-	this->setGraphicsEffect(effect);
-
-#ifndef Q_WS_X11
+		enableShadow = true;
+	} else if (position != FLY) {
+		enableShadow = true;
 	}
+#else
+	enableShadow = true;
 #endif
+	
+	myDebug << "enableShadow:" << enableShadow;
+
+	if(enableShadow) {
+		effect->setBlurRadius(6);
+		effect->setColor(bcolor);
+		effect->setOffset(0, 0);
+		this->setGraphicsEffect(effect);
+	}
 
 	this->setStyleSheet(style);
 	this->setContentsMargins(0, 0, 0, 0);
