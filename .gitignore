@@ -1,7 +1,9 @@
 *.pyc
 *.egg-info
 /build
+/win-build
 /dist
 __pycache__
+CMakeLists.txt.user
 *.swp
 *~
