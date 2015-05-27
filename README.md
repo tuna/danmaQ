@@ -10,8 +10,29 @@ DanmaQ is still under development, documents might be outdated.
 
 ### Dependencies
 
-`danmaQ` depends on `requests` and `PyQt4`, you can either install via `pip` or system package manager,
-if you use Windows, please download and install python3.4 and PyQt4 manually or download binary version from 
+`danmaQ` depends on `Qt4` and `qjson`. 
+
+For ArchLinux, run
+```
+yaourt -S danmaQ
+```
+
+For Ubuntu and Debian, run
+```
+sudo apt-get install libqjson0
+```
+
+For Fedora, run
+```
+sudo dnf install qjson
+```
+
+For OpenSUSE, run 
+```
+sudo zypper install libqjson0
+```
+
+if you use Windows, download bundled binary version from 
 [releases page](https://github.com/bigeagle/danmaQ/releases/).
 
 ### Use TUNA Service
@@ -19,12 +40,8 @@ if you use Windows, please download and install python3.4 and PyQt4 manually or 
 First u need to create a channel, go to http://dm.tuna.moe/ and create a channel, 
 (let's use `ooxx` as the channel name and `passw0rd` as the password)
 
-then run `python danmaQ.py` and fill `http://dm.tuna.moe` to server, 
+then run `danmaQ` and fill `http://dm.tuna.moe` to server, 
 and your channel name (`ooxx`) and channel password (`passw0rd)`. 
-
-You can configure font and speed by through "preference" dialog.
-
-![](https://raw.githubusercontent.com/bigeagle/danmaQ/master/screenshots/window.png)
 
 then open http://dm.tuna.moe/ and click to your channel page, then post.
 
@@ -34,13 +51,13 @@ Clone https://github.com/tuna/gdanmaku-server and run `webserver.py` to start a 
 
 ### Installation
 
-- **from source**: run `python setup.py install`.
+- **from source**: run `mkdir build && cd build && cmake .. && make && make install`.
 - **windows binary**: https://github.com/bigeagle/danmaQ/releases/
 - **Arch Linux**: [AUR](https://aur.archlinux.org/packages/danmaq-git/)
 
 ## TODO
 
-- [ ] Multi-Screen support
+- [x] Multi-Screen support
 - [x] Chatting
 - [ ] Deb package
 - [ ] RPM package
