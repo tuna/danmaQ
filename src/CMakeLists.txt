@@ -47,3 +47,4 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 endif()
 
 target_link_libraries(danmaQ ${DANMAQ_LIBRARIES})
+install(TARGETS danmaQ DESTINATION bin)

@@ -51,7 +51,14 @@ Clone https://github.com/tuna/gdanmaku-server and run `webserver.py` to start a 
 
 ### Installation
 
-- **from source**: run `mkdir build && cd build && cmake .. && make && make install`.
+## From source
+
+````
+mkdir build && cd build 
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release 
+make && sudo make install
+````
+
 - **windows binary**: https://github.com/bigeagle/danmaQ/releases/
 - **Arch Linux**: [AUR](https://aur.archlinux.org/packages/danmaq-git/)
 
