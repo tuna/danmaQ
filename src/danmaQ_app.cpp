@@ -133,6 +133,7 @@ void DMApp::init_windows() {
 }
 
 void DMApp::reset_windows() {
+	myDebug << "Resetting windows";
 	for(auto w=this->dm_windows.begin(); w != this->dm_windows.end(); ++w) {
 		delete *w;
 	}
@@ -162,6 +163,7 @@ void DMApp::on_new_alert(QString msg) {
 	if (this->subscriber->wait(1000) == false) {
 		this->subscriber->terminate();
 	}
+	this->subscriber = NULL;
 }
 
 void DMApp::show_about_dialog() {
