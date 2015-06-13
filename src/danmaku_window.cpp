@@ -1,8 +1,10 @@
 #include <QtCore>
+#include <QtGui/qtextdocument.h>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QX11Info>
 #include <QVector>
+#include <QRegExp>
 #include <QDebug>
 
 #ifdef	__linux
@@ -112,6 +114,16 @@ int DMWindow::slot_y(int slot)
 	return (this->app->lineHeight * slot + VMARGIN);
 }
 
+QString DMWindow::escape_text(QString & text) {
+	QString escaped = Qt::escape(text);
+
+	escaped.replace(QRegExp("([^\\\\])\\\\n"), "\\1<br/>");
+	escaped.replace(QRegExp("\\\\\\\\n"), "\\n");
+	escaped.replace(QRegExp("\\[s\\](.+)\\[/s\\]"), "<s>\\1</s>");
+
+	return escaped;
+}
+
 void DMWindow::new_danmaku(QString text, QString color, QString position)
 {
 	Position pos;
@@ -135,7 +147,7 @@ void DMWindow::new_danmaku(QString text, QString color, QString position)
 		return;
 	} 
 
-	Danmaku *l = new Danmaku(text, color, pos, slot, this, this->app);
+	Danmaku *l = new Danmaku(escape_text(text), color, pos, slot, this, this->app);
 	this->connect(l, SIGNAL(exited(Danmaku*)),
 				  this, SLOT(delete_danmaku(Danmaku*)));
 	this->connect(l, SIGNAL(clear_fly_slot(int)),

@@ -27,6 +27,7 @@ private:
 	QVector<bool> fly_slots, fixed_slots;
 	void init_slots();
 	int allocate_slot(Position);
+	QString escape_text(QString &);
 
 };
 
