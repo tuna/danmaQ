@@ -7,6 +7,8 @@
 
 #ifdef	__linux
 #include <X11/Xlib.h>
+#include <X11/Xregion.h>
+#include <X11/Xutil.h>
 #include <X11/extensions/shape.h>
 #endif
 
@@ -41,10 +43,10 @@ DMWindow::DMWindow(int screenNumber, DMApp *parent)
 	this->show();
 
 #ifdef __linux
-	QRegion region;
+	Region region = XCreateRegion();
 	XShapeCombineRegion(
 			QX11Info::display(), this->winId(),
-			ShapeInput, 0, 0, region.handle(), ShapeSet);
+			ShapeInput, 0, 0, region, ShapeSet);
 #endif
 
 }

@@ -42,8 +42,11 @@ add_executable(danmaQ ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC} ${danmaQ_RCC_SRCS}
 set(DANMAQ_LIBRARIES ${QT_LIBRARIES} ${QT_QTNETWORK_LIBRARY} ${QJSON_LIBRARIES})
 
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
-	find_library(X_LIB Xext)
-	set(DANMAQ_LIBRARIES ${DANMAQ_LIBRARIES} ${X_LIB})
+	find_package(X11 REQUIRED)
+	set(DANMAQ_LIBRARIES ${DANMAQ_LIBRARIES} ${X11_LIBRARIES})
+
+	# find_library(X_LIB X11 Xext)
+	# set(DANMAQ_LIBRARIES ${DANMAQ_LIBRARIES} ${X_LIB})
 endif()
 
 target_link_libraries(danmaQ ${DANMAQ_LIBRARIES})
