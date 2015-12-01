@@ -21,7 +21,7 @@ First u need to create a channel, go to http://dm.tuna.moe/ and create a channel
 (let's use `ooxx` as the channel name and `passw0rd` as the password)
 
 then run `danmaQ` and fill `http://dm.tuna.moe` to server, 
-and your channel name (`ooxx`) and channel password (`passw0rd)`. 
+and your channel name (`ooxx`) and channel password (`passw0rd`). 
 
 then open http://dm.tuna.moe/ and click to your channel page, then post.
 
