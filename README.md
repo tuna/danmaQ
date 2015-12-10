@@ -1,4 +1,4 @@
-# DanmaQ
+# DanmaQ ![Travis CI status](https://travis-ci.org/hexchain/danmaQ.svg)
 
 DanmaQ, pronounced as `/danmakju:/` is a small QT program to play danmaku on any screen.
 

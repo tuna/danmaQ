@@ -1,0 +1,21 @@
+sudo: required
+dist: trusty
+language: cpp
+
+env:
+    - BUILDTYPE=Release
+    - BUILDTYPE=Debug
+
+install:
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq libqjson-dev
+
+script:
+    - mkdir build/
+    - cd build/
+    - cmake .. -DCMAKE_BUILD_TYPE=$BUILDTYPE
+    - make
+
+compiler:
+    - gcc
+    - clang
