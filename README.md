@@ -1,57 +1,52 @@
+
 # DanmaQ ![Travis CI status](https://travis-ci.org/bigeagle/danmaQ.svg?branch=master)
 
 DanmaQ, pronounced as `/danmakju:/` is a small QT program to play danmaku on any screen.
 
-## Warning
+![](https://raw.githubusercontent.com/bigeagle/danmaQ/master/screenshots/xiaowang.png)
 
-DanmaQ is still under development, documents might be outdated.
+DanmaQ is **still under development**, documents might be outdated.
 
-## Run Demo
-
-### Dependencies
+## Dependencies
 
 `danmaQ` depends on `Qt4` and `qjson`. 
 
-if you use Windows, download bundled binary version from 
-[releases page](https://github.com/bigeagle/danmaQ/releases/).
+## Installation
+
+### Source
+
+    apt-get install libqjson0-dev cmake  # for ubuntu and debian
+    zypper install libqjson cmake        # for openSUSE
+    dnf install qjson-devel cmake        # fedora
+    
+    mkdir build && cd build 
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release 
+    make && sudo make install
+
+### Windows
+
+Download binary from [releases page](https://github.com/bigeagle/danmaQ/releases/).
+
+### Arch Linux
+
+    yaourt -S danmaq-git
+
+## Usage
 
 ### Use TUNA Service
 
-First u need to create a channel, go to http://dm.tuna.moe/ and create a channel, 
+First you need to create a channel, go to http://dm.tuna.moe/ and create a channel, 
 (let's use `ooxx` as the channel name and `passw0rd` as the password)
 
-then run `danmaQ` and fill `http://dm.tuna.moe` to server, 
-and your channel name (`ooxx`) and channel password (`passw0rd`). 
+Then run `danmaQ` and fill `http://dm.tuna.moe` to server, 
+and channel name (`ooxx`) & channel password (`passw0rd`). 
 
-then open http://dm.tuna.moe/ and click to your channel page, then post.
+Then any audiences can open http://dm.tuna.moe/ and click to your channel page,
+lauch danmaku in your screen!
 
 ### Self Hosted Service
 
-Clone https://github.com/tuna/gdanmaku-server and run `webserver.py` to start a publishing server.
-
-### Installation
-
-#### From source
-
-````
-apt-get install libqjson0-dev cmake  # for ubuntu and debian
-zypper install libqjson cmake        # for openSUSE
-dnf install qjson-devel cmake        # fedora
-
-mkdir build && cd build 
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release 
-make && sudo make install
-````
-
-#### Windows binary
-
-Download from https://github.com/bigeagle/danmaQ/releases/
-
-#### ArchLinux
-
-```
-yaourt -S danmaq-git
-```
+See [gdanmaku-server](https://github.com/tuna/gdanmaku-server).
 
 ## TODO
 
@@ -59,7 +54,3 @@ yaourt -S danmaq-git
 - [x] Chatting
 - [ ] Deb package
 - [ ] RPM package
-
-## Screenshot
-
-![](https://raw.githubusercontent.com/bigeagle/danmaQ/master/screenshots/xiaowang.png)
