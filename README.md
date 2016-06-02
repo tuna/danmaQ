@@ -13,6 +13,13 @@ DanmaQ is **still under development**, documents might be outdated.
 
 ## Installation
 
+### AppImage
+On Linux X86-64, you can download the bundled AppImage.
+   
+    wget https://github.com/bigeagle/danmaQ/releases/download/cpp-0.1/danmaQ.AppImage
+    chmod +x danmaQ.AppImage
+    ./danmaQ.AppImage
+
 ### Source
 
     apt-get install libqjson0-dev cmake  # for ubuntu and debian
