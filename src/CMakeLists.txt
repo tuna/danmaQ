@@ -22,7 +22,7 @@ qt5_add_resources(danmaQ_RCC_SRCS ${danmaQ_RESOURCES})
 
 add_executable(danmaQ ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC} ${danmaQ_RCC_SRCS})
 
-set(DANMAQ_LIBRARIES Qt5::Widgets Qt5::Core Qt5::Network)
+set(DANMAQ_LIBRARIES Qt5::Widgets Qt5::Core Qt5::Network Qt5::X11Extras)
 
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 	find_package(X11 REQUIRED)
