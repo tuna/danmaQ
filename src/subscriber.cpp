@@ -6,6 +6,8 @@
 
 #include <QUuid>
 #include <QUrl>
+#include <QJsonArray>
+#include <QJsonObject>
 
 #include <QByteArray>
 #include <QVariant>
