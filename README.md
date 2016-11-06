@@ -9,7 +9,7 @@ DanmaQ is **still under development**, documents might be outdated.
 
 ## Dependencies
 
-`danmaQ` depends on `Qt4` and `qjson`. 
+`danmaQ` depends on `Qt5`. 
 
 ## Installation
 
@@ -22,9 +22,9 @@ On Linux X86-64, you can download the bundled AppImage.
 
 ### Source
 
-    apt-get install libqjson0-dev cmake  # for ubuntu and debian
-    zypper install libqjson cmake        # for openSUSE
-    dnf install qjson-devel cmake        # fedora
+    apt-get install qt5-default libqt5x11extras5-dev cmake  # for ubuntu and debian
+    zypper install  libQt5X11Extras5 cmake          # for openSUSE
+    dnf install  qt5-qtx11extras-devel cmake        # fedora
     
     mkdir build && cd build 
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release 

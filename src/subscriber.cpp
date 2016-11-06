@@ -6,6 +6,8 @@
 
 #include <QUuid>
 #include <QUrl>
+#include <QJsonArray>
+#include <QJsonObject>
 
 #include <QByteArray>
 #include <QVariant>
@@ -112,7 +114,7 @@ void Subscriber::parse_response(QNetworkReply* reply) {
 	if(json.isArray()) {
 		QJsonArray dms = json.array();
 		for(QJsonArray::iterator i = dms.begin(); i != dms.end(); ++i) {
-			QJsonObject dm = i->toObject();
+			QJsonObject dm = (*i).toObject();
 			QString text = dm["text"].toString(),
 					color = dm["style"].toString(),
 					position = dm["position"].toString();
