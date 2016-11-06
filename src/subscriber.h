@@ -2,8 +2,9 @@
 #define __DANMAKU_SUBSCRIBER_H__
 #include <QtCore>
 #include <QThread>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
 #include <QTime>
-#include <QHttp>
 
 
 class Subscriber : public QThread
@@ -16,15 +17,15 @@ public:
 	bool mark_stop;
 
 public slots:
-	void parse_response();
+	void parse_response(QNetworkReply* reply);
 
 signals:
 	void new_danmaku(QString text, QString color, QString position);
 	void new_alert(QString msg);
 
 private:
-	QHttp* http;
-	QHttpRequestHeader header;
+	QNetworkAccessManager* http;
+	QNetworkRequest request;
 	QString server, channel, passwd, _uuid;
 	
 };

@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QDesktopWidget>
 #include <ctime>
+#include <cstdlib>
 
 #include "danmaQ_app.h"
 
