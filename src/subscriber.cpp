@@ -2,10 +2,9 @@
 #include <QEventLoop>
 #include <QThread>
 #include <QTimer>
+#include <QNetworkReply>
 
 #include <QUuid>
-#include <QHttp>
-#include <QHttpHeader>
 #include <QUrl>
 
 #include <QByteArray>
@@ -13,7 +12,6 @@
 #include <QVariantList>
 #include <QVariantMap>
 #include <QDebug>
-#include <qjson/parser.h> 
 
 #include "danmaku.h"
 
@@ -29,27 +27,17 @@ Subscriber::Subscriber(QString server, QString channel, QString passwd, QObject*
 	this->_uuid = uuid.toString();
 	// myDebug << this->_uuid;
 	
-	QString uri = QString("/api/v1.1/channels/%1/danmaku").arg(this->channel);
-	QUrl baseUrl = QUrl(this->server);
-	// myDebug << baseUrl.host() << baseUrl.port();
+	QUrl uri = QUrl((this->server+"/api/v1.1/channels/%1/danmaku").arg(this->channel));
 
-	qint16 port = baseUrl.port(80);
-	QHttp::ConnectionMode mode = QHttp::ConnectionModeHttp;
-
-	if(baseUrl.scheme().compare("https") == 0) {
-		port = baseUrl.port(443);
-		mode = QHttp::ConnectionModeHttps;
+	if(uri.scheme().compare("https") == 0) {
+		uri.port(443);
 	}
 	
+	request.setUrl(uri);
+	// myDebug << uri;
+	request.setRawHeader("X-GDANMAKU-SUBSCRIBER-ID", this->_uuid.toUtf8() );
+	request.setRawHeader("X-GDANMAKU-AUTH-KEY", this->passwd.toUtf8() );
 	
-	http = new QHttp(baseUrl.host(), mode, port, this);
-	header = QHttpRequestHeader("GET", uri);
-	header.setValue("Host", baseUrl.host());
-	header.setValue("X-GDANMAKU-SUBSCRIBER-ID", this->_uuid);
-	header.setValue("X-GDANMAKU-AUTH-KEY", this->passwd);
-	
-	// connect(http, SIGNAL(done(bool)), this, SLOT(parse_response(bool)));
-	connect(this, SIGNAL(terminated()), this, SLOT(deleteLater()));
 	connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
 
@@ -57,41 +45,46 @@ void Subscriber::run()
 {
 	mark_stop = false;
 	
+	http = new QNetworkAccessManager(NULL);
+
 	QEventLoop loop;
-	connect(http, SIGNAL(done(bool)), &loop, SLOT(quit()));
 	connect((DMApp *)this->parent(), SIGNAL(stop_subscription()),
 			&loop, SLOT(quit()));
 	
 	// Set HTTP request timeout
 	QTimer timeout;
 	timeout.setSingleShot(true);
-	// If timeout signaled, let http request abort
-	connect(&timeout, SIGNAL(timeout()), http, SLOT(abort()));
 	
 	while(1) {
 		timeout.start(10000);
-		http->request(header);
+		QNetworkReply *reply = http->get(request);
+		// If timeout signaled, let http request abort
+		connect(&timeout, SIGNAL(timeout()), reply, SLOT(abort()));
+		connect(reply, SIGNAL(finished()),
+				 &loop, SLOT(quit()));
 		loop.exec();
 		timeout.stop();
 		if(mark_stop) {
 			myDebug << "Thread marked to stop";
 			break;
 		}
-		if(http->error()){
-			myDebug << http->errorString() << "Wait 2 secs";
+		if(reply->error()){
+			myDebug << reply->errorString() << "Wait 2 secs";
 			this->msleep(2000);
 		} else {
-			parse_response();
+			parse_response(reply);
 		}
 	}
+	delete http;
+	http = nullptr;
 }
 
 
-void Subscriber::parse_response() {
-	QHttpResponseHeader resp = http->lastResponse();
+void Subscriber::parse_response(QNetworkReply* reply) {
+	QVariant resp = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
 	if(resp.isValid()) {
 		bool fatal = false;
-		int statusCode = resp.statusCode();
+		int statusCode = resp.toInt();
 		if (statusCode >= 400) {
 			fatal = true;
 			QString errMsg;
@@ -110,21 +103,16 @@ void Subscriber::parse_response() {
 		}
 	}
 	
-	bool ok;
-	QJson::Parser  parser;
-	
 	// QByteArray json = QByteArray(
 	// 		"[{\"text\": \"test\", \"style\": \"white\", \"position\": \"fly\"},"
 	// 		"{\"text\": \"test2\", \"style\": \"white\", \"position\": \"fly\"}]"
 	// );
-	QByteArray json = http->readAll();
+	QJsonDocument json = QJsonDocument::fromJson(reply->readAll());
 
-	QVariant res = parser.parse(json, &ok);
-
-	if(ok) {
-		QVariantList dms = res.toList();
-		for(QVariantList::iterator i = dms.begin(); i != dms.end(); ++i) {
-			QVariantMap dm = i->toMap();
+	if(json.isArray()) {
+		QJsonArray dms = json.array();
+		for(QJsonArray::iterator i = dms.begin(); i != dms.end(); ++i) {
+			QJsonObject dm = i->toObject();
 			QString text = dm["text"].toString(),
 					color = dm["style"].toString(),
 					position = dm["position"].toString();

@@ -2,17 +2,19 @@
 #include <QtGui/qtextdocument.h>
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QX11Info>
 #include <QVector>
 #include <QRegExp>
 #include <QDebug>
 
 #ifdef	__linux
+#include <QtX11Extras/qx11info_x11.h>
 #include <X11/Xlib.h>
 #include <X11/Xregion.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/shape.h>
 #endif
+
+#include <cstdlib>
 
 #include "danmaku.h"
 
@@ -115,7 +117,7 @@ int DMWindow::slot_y(int slot)
 }
 
 QString DMWindow::escape_text(QString & text) {
-	QString escaped = Qt::escape(text);
+	QString escaped = text.toHtmlEscaped();
 
 	escaped.replace(QRegExp("([^\\\\])\\\\n"), "\\1<br/>");
 	escaped.replace(QRegExp("\\\\\\\\n"), "\\n");
