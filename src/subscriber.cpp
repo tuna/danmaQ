@@ -76,6 +76,7 @@ void Subscriber::run()
 		} else {
 			parse_response(reply);
 		}
+		reply->deleteLater();
 	}
 	delete http;
 	http = nullptr;
