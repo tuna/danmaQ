@@ -1,9 +1,9 @@
 
-# DanmaQ ![Travis CI status](https://travis-ci.org/bigeagle/danmaQ.svg?branch=master)
+# DanmaQ ![Travis CI status](https://travis-ci.org/tuna/danmaQ.svg?branch=master)
 
 DanmaQ, pronounced as `/danmakju:/` is a small QT program to play danmaku on any screen.
 
-![](https://raw.githubusercontent.com/bigeagle/danmaQ/master/screenshots/xiaowang.png)
+![](https://raw.githubusercontent.com/tuna/danmaQ/master/screenshots/xiaowang.png)
 
 DanmaQ is **still under development**, documents might be outdated.
 
@@ -16,7 +16,7 @@ DanmaQ is **still under development**, documents might be outdated.
 ### AppImage
 On Linux X86-64, you can download the bundled AppImage.
    
-    wget https://github.com/bigeagle/danmaQ/releases/download/cpp-0.1/danmaQ.AppImage
+    wget https://github.com/tuna/danmaQ/releases/download/cpp-0.1/danmaQ.AppImage
     chmod +x danmaQ.AppImage
     ./danmaQ.AppImage
 
@@ -32,7 +32,7 @@ On Linux X86-64, you can download the bundled AppImage.
 
 ### Windows
 
-Download binary from [releases page](https://github.com/bigeagle/danmaQ/releases/).
+Download binary from [releases page](https://github.com/tuna/danmaQ/releases/).
 
 ### Arch Linux
 
