@@ -38,6 +38,16 @@ Download binary from [releases page](https://github.com/tuna/danmaQ/releases/).
 
     yaourt -S danmaq-git
 
+### Fedora
+
+Please enable [FZUG repo](https://github.com/FZUG/repo/wiki/Add-FZUG-Repository)
+
+    dnf config-manager --add-repo=http://repo.fdzh.org/FZUG/FZUG.repo
+
+Then install by dnf
+
+    dnf install danmaQ
+
 ## Usage
 
 ### Use TUNA Service
@@ -59,5 +69,5 @@ See [gdanmaku-server](https://github.com/tuna/gdanmaku-server).
 
 - [x] Multi-Screen support
 - [x] Chatting
+- [x] RPM package
 - [ ] Deb package
-- [ ] RPM package
