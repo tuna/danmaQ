@@ -1,4 +1,4 @@
-#ifndef __DANMAKU_H__
+﻿#ifndef __DANMAKU_H__
 #define __DANMAKU_H__
 
 #include "danmaku_ui.h"
@@ -6,6 +6,10 @@
 #include "subscriber.h"
 #include "danmaQ_app.h"
 
+#if defined _WIN32 || defined __CYGWIN__
+#define myDebug (qDebug() << __LINE__)
+#else
 #define myDebug (qDebug() << "\x1b[34;1m" <<__PRETTY_FUNCTION__ << ":" << __LINE__ << "\x1b[0m")
+#endif
 
 #endif 

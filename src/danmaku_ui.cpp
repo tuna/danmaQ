@@ -1,4 +1,4 @@
-#include <QtCore>
+﻿#include <QtCore>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QRect>
@@ -67,7 +67,7 @@ Danmaku::Danmaku(QString text, QString color, Position position, int slot, DMWin
 		this->setAttribute(Qt::WA_TransparentForMouseEvents, true);
 #if defined _WIN32 || defined __CYGWIN__
 		// remove CS_DROPSHADOW
-		SetClassLong(this->winId(), -26, 0x0008 & ~0x00020000);
+        SetClassLong((HWND)this->winId(), -26, 0x0008 & ~0x00020000);
 #endif
 		enableShadow = true;
 	} else if (position != FLY) {

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+﻿cmake_minimum_required(VERSION 2.8.11)
 
 option(ENABLE_TEST "Enable test program build" Off)
 
@@ -6,7 +6,10 @@ find_package(Qt5Core)
 find_package(Qt5Widgets)
 find_package(Qt5Network)
 
-set(CMAKE_CXX_FLAGS "-Wall --std=c++11 ${CMAKE_CXX_FLAGS}")
+IF (UNIX)
+        set(CMAKE_CXX_FLAGS "-Wall --std=c++11 ${CMAKE_CXX_FLAGS}")
+ENDIF ()
+
 
 add_subdirectory(src)
 

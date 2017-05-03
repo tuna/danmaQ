@@ -1,4 +1,4 @@
-#include <QDesktopWidget>
+﻿#include <QDesktopWidget>
 #include <QIcon>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -171,11 +171,11 @@ void DMApp::show_about_dialog() {
 	QMessageBox::about(
 		this, "About", 
 		"<strong>DanmaQ</strong>"
-		"<p>Copyright &copy; 2015 Justin Wong<br />"
+        "<p>Copyright &copy; 2015-2017 Justin Wong & TUNA members<br />"
 		"Tsinghua University TUNA Association</p>"
 		"<p> Source Code Available under GPLv3<br />"
-		"<a href='https://github.com/bigeagle/danmaQ'>"
-		"https://github.com/bigeagle/danmaQ"
+        "<a href='https://github.com/tuna/danmaQ'>"
+        "https://github.com/tuna/danmaQ"
 		"</a></p>"
 	);
 }
