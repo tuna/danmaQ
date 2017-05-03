@@ -1,4 +1,4 @@
-#include <QApplication>
+﻿#include <QApplication>
 #include <QDebug>
 #include <QDesktopWidget>
 #include <ctime>
@@ -6,11 +6,13 @@
 
 #include "danmaQ_app.h"
 
-
+#if defined _WIN32 || defined __CYGWIN__
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#endif
 int main(int argc, char *argv[])
 {
-	QApplication app(argc, argv);
-	std::srand(std::time(0));
+    QApplication app(argc, argv);
+    std::srand(std::time(0));
 
 	QDesktopWidget* desktop = QApplication::desktop();
 	DMApp* dm_app = new DMApp();
