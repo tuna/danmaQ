@@ -36,7 +36,7 @@ Download binary from [releases page](https://github.com/tuna/danmaQ/releases/).
 
 ### Arch Linux
 
-    yaourt -S danmaq-git
+    pacman -S danmaq
 
 ### Fedora
 
