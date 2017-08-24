@@ -40,13 +40,11 @@ Download binary from [releases page](https://github.com/tuna/danmaQ/releases/).
 
 ### Fedora
 
-Please enable [FZUG repo](https://github.com/FZUG/repo/wiki/Add-FZUG-Repository)
+    dnf install danmaq
 
-    dnf config-manager --add-repo=http://repo.fdzh.org/FZUG/FZUG.repo
+### AOSC OS
 
-Then install by dnf
-
-    dnf install danmaQ
+    apt install danmaq
 
 ## Usage
 
