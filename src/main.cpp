@@ -11,6 +11,7 @@
 #endif
 int main(int argc, char *argv[])
 {
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
     std::srand(std::time(0));
 
