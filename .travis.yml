@@ -7,7 +7,7 @@ env:
     - BUILDTYPE=Debug
 
 before_install:
-    - sudo add-apt-repository --yes ppa:beineri/opt-qt591-xenial
+    - sudo add-apt-repository --yes ppa:beineri/opt-qt591-trusty
     - sudo apt-get update -qq
 
 install:
