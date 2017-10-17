@@ -1,5 +1,5 @@
 sudo: required
-dist: xenial
+dist: trusty
 language: cpp
 
 env:
@@ -7,14 +7,12 @@ env:
     - BUILDTYPE=Debug
 
 before_install:
-    - sudo add-apt-repository --yes ppa:beineri/opt-qt591-xenial
     - sudo apt-get update -qq
 
 install:
-    - sudo apt-get install -qq qt59-meta-full libqt5x11extras5-dev
+    - sudo apt-get install -qq qt5-default libqt5x11extras5-dev
 
 script:
-    - source /opt/qt59/bin/qt59-env.sh
     - mkdir build/
     - cd build/
     - cmake .. -DCMAKE_BUILD_TYPE=$BUILDTYPE
