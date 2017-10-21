@@ -26,7 +26,7 @@ if (APPLE)
             COMMAND mkdir -p danmaQ.app/Contents/MacOS
             COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/macOS/Info.plist danmaQ.app/Contents/Info.plist
             COMMAND cp src/danmaQ danmaQ.app/Contents/MacOS/
-            COMMAND sed -i 's/VERSION/${VERSION}/g' danmaQ.app/Contents/Info.plist
+            COMMAND sed -i.bak 's/VERSION/${VERSION}/g' danmaQ.app/Contents/Info.plist
             COMMAND mkdir -p Icon.iconset
             COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/src/icons/statusicon.png icon.png
             COMMAND sips -z 16 16   icon.png --out Icon.iconset/icon_16x16.png
