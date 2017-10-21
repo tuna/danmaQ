@@ -2,6 +2,14 @@
 
 option(ENABLE_TEST "Enable test program build" Off)
 
+# From https://github.com/Homebrew/homebrew-core/issues/8392
+if(APPLE AND EXISTS /usr/local/opt/qt)
+	# Because Qt5 is key-only, Homebrew installs Qt5 in
+	# /usr/local/qt5, ensure it can be found by CMake since
+	# it is not in the default /usr/local prefix.
+	list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt")
+endif()
+
 find_package(Qt5Core)
 find_package(Qt5Widgets)
 find_package(Qt5Network)
