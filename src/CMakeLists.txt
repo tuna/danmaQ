@@ -22,7 +22,6 @@ add_subdirectory(translations)
 
 set(danmaQ_RESOURCES icons.qrc i18n.qrc)
 
-add_custom_target(translations ALL DEPENDS ${danmaQ_I18N_FILES})
 add_custom_target(resources ALL DEPENDS ${danmaQ_RESOURCES})
 add_dependencies(resources translations)
 
