@@ -22,12 +22,16 @@ add_subdirectory(translations)
 
 set(danmaQ_RESOURCES icons.qrc i18n.qrc)
 
+add_custom_target(translations ALL DEPENDS ${danmaQ_I18N_FILES})
+add_custom_target(resources ALL DEPENDS ${danmaQ_RESOURCES})
+add_dependencies(resources translations)
+
 set(CMAKE_AUTOMOC ON)
 
 qt5_add_resources(danmaQ_RCC_SRCS ${danmaQ_RESOURCES})
 
-add_executable(danmaQ ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC} ${danmaQ_RCC_SRCS})
-add_dependencies(danmaQ i18n)
+add_executable(${CMAKE_PROJECT_NAME} ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC} ${danmaQ_RCC_SRCS})
+add_dependencies(${CMAKE_PROJECT_NAME} resources)
 
 set(DANMAQ_LIBRARIES Qt5::Widgets Qt5::Core Qt5::Network)
 
@@ -42,5 +46,5 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 	# set(DANMAQ_LIBRARIES ${DANMAQ_LIBRARIES} ${X_LIB})
 endif()
 
-target_link_libraries(danmaQ ${DANMAQ_LIBRARIES})
-install(TARGETS danmaQ DESTINATION bin)
+target_link_libraries(${CMAKE_PROJECT_NAME} ${DANMAQ_LIBRARIES})
+install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION bin)
