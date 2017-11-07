@@ -15,7 +15,7 @@ before_install:
 
 install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq qt5-default libqt5x11extras5-dev ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq qt5-default libqt5x11extras5-dev qttools5-dev-tools ; fi
 
 script:
     - mkdir build/
