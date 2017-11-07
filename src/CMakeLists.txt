@@ -6,6 +6,10 @@ set(danmaQ_SOURCES
 	subscriber.cpp
 	)
 
+IF (WIN32 AND NOT MINGW AND NOT CYGWIN)
+	SET(danmaQ_SOURCES ${danmaQ_SOURCES} danmaQ.rc)
+ENDIF()
+
 set(danmaQ_HEADERS
 	subscriber.h
 	danmaku_ui.h
