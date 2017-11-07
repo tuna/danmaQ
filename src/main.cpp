@@ -24,7 +24,7 @@
 
 #include "danmaQ_app.h"
 
-#if defined _WIN32 || defined __CYGWIN__
+#if defined NDEBUG && (defined _WIN32 || defined __CYGWIN__)
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 int main(int argc, char *argv[])

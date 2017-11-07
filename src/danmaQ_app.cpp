@@ -39,7 +39,7 @@ DMApp::DMApp() {
 
 	QHBoxLayout* hbox = new QHBoxLayout(this);
 	hbox->addWidget(new QLabel("Server: ", this));
-	this->server = new QLineEdit("http://dm.tuna.moe", this);
+	this->server = new QLineEdit("https://dm.tuna.moe", this);
 	hbox->addWidget(this->server);
 	layout->addLayout(hbox);
 	
