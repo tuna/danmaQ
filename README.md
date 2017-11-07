@@ -1,5 +1,7 @@
 
-# DanmaQ ![Travis CI status](https://travis-ci.org/tuna/danmaQ.svg?branch=master)
+# DanmaQ  
+
+[![Travis CI status](https://travis-ci.org/tuna/danmaQ.svg?branch=master)](https://travis-ci.org/tuna/danmaQ?branch=master)
 
 DanmaQ, pronounced as `/danmakju:/` is a small QT program to play danmaku on any screen.
 
@@ -34,6 +36,8 @@ On Linux X86-64, you can download the bundled AppImage.
 ### Windows
 
 Download binary from [releases page](https://github.com/tuna/danmaQ/releases/).
+
+Or you can also use CMake and Qt to build it yourself, but there is no help available temporarily.
 
 ### Arch Linux
 
