@@ -38,29 +38,29 @@ DMApp::DMApp() {
 	QVBoxLayout* layout = new QVBoxLayout(this);
 
 	QHBoxLayout* hbox = new QHBoxLayout(this);
-	hbox->addWidget(new QLabel("Server: ", this));
+	hbox->addWidget(new QLabel(tr("Server: "), this));
 	this->server = new QLineEdit("https://dm.tuna.moe", this);
 	hbox->addWidget(this->server);
 	layout->addLayout(hbox);
 	
 	hbox = new QHBoxLayout(this);
-	hbox->addWidget(new QLabel("Channel: ", this));
+	hbox->addWidget(new QLabel(tr("Channel: "), this));
 	this->channel = new QLineEdit("demo", this);
 	hbox->addWidget(this->channel);
 	layout->addLayout(hbox);
 	
 	hbox = new QHBoxLayout(this);
-	hbox->addWidget(new QLabel("Password: ", this));
+	hbox->addWidget(new QLabel(tr("Password: "), this));
 	this->passwd = new QLineEdit("", this);
 	this->passwd->setEchoMode(QLineEdit::Password);
 	hbox->addWidget(this->passwd);
 	layout->addLayout(hbox);
 
 	hbox = new QHBoxLayout(this);
-	this->hideBtn = new QPushButton("&Hide", this);
-	this->configBtn = new QPushButton("&config", this);
+	this->hideBtn = new QPushButton(tr("&Hide"), this);
+	this->configBtn = new QPushButton(tr("&Config"), this);
 	this->configBtn->setEnabled(false);
-	this->mainBtn = new QPushButton("&Subscribe", this);
+	this->mainBtn = new QPushButton(tr("&Subscribe"), this);
 	hbox->addWidget(this->hideBtn);
 	hbox->addWidget(this->configBtn);
 	hbox->addWidget(this->mainBtn);
@@ -162,19 +162,19 @@ void DMApp::on_subscription_started() {
 	myDebug << "Subscription Started";
 	this->hide();
 	this->trayIcon->set_icon_running();
-	this->mainBtn->setText("&Unsubscribe");
-	this->trayIcon->showMessage("Subscription Started", "Let's Go");
+	this->mainBtn->setText(tr("&Unsubscribe"));
+	this->trayIcon->showMessage(tr("Subscription Started"), tr("Let's Go"));
 }
 
 void DMApp::on_subscription_stopped() {
 	myDebug << "Subscription Stopped";
 	this->trayIcon->set_icon_stopped();
-	this->mainBtn->setText("&Subscribe");
+	this->mainBtn->setText(tr("&Subscribe"));
 }
 
 void DMApp::on_new_alert(QString msg) {
 	myDebug << "Alert:" << msg;
-	this->trayIcon->showMessage("Ooops!", msg, QSystemTrayIcon::Critical);
+	this->trayIcon->showMessage(tr("Ooops!"), msg, QSystemTrayIcon::Critical);
 	this->subscriber->mark_stop = true;
 	emit stop_subscription();
 	if (this->subscriber->wait(1000) == false) {
@@ -206,11 +206,11 @@ DMTrayIcon::DMTrayIcon(QWidget *parent)
 	this->setIcon(this->icon_stopped);
 	
 	QMenu* menu = new QMenu(parent);
-	this->toggleAction = menu->addAction("Toggle Subscription");
-	this->refreshScreenAction = menu->addAction("Refresh Screen");
-	this->showAction = menu->addAction("Show Main Window");
-	this->aboutAction = menu->addAction("About");
-	this->exitAction = menu->addAction("Exit");
+	this->toggleAction = menu->addAction(tr("Toggle Subscription"));
+	this->refreshScreenAction = menu->addAction(tr("Refresh Screen"));
+	this->showAction = menu->addAction(tr("Show Main Window"));
+	this->aboutAction = menu->addAction(tr("About"));
+	this->exitAction = menu->addAction(tr("Exit"));
 
 	this->setContextMenu(menu);
 

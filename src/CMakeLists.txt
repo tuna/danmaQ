@@ -18,13 +18,16 @@ set(danmaQ_HEADERS
 	danmaku.h
 	)
 
-set(danmaQ_RESOURCES icons.qrc)
+add_subdirectory(translations)
+
+set(danmaQ_RESOURCES icons.qrc i18n.qrc)
 
 set(CMAKE_AUTOMOC ON)
 
 qt5_add_resources(danmaQ_RCC_SRCS ${danmaQ_RESOURCES})
 
 add_executable(danmaQ ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC} ${danmaQ_RCC_SRCS})
+add_dependencies(danmaQ i18n)
 
 set(DANMAQ_LIBRARIES Qt5::Widgets Qt5::Core Qt5::Network)
 
