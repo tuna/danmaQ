@@ -55,6 +55,7 @@ if (APPLE)
 endif ()
 
 add_subdirectory(src)
+add_subdirectory(man)
 
 
 if (ENABLE_TEST)
