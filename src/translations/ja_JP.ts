@@ -6,7 +6,7 @@
     <message>
         <location filename="../danmaQ_app.cpp" line="41"/>
         <source>Server: </source>
-        <translation>サーバーアドレス：</translation>
+        <translation>サーバー：</translation>
     </message>
     <message>
         <location filename="../danmaQ_app.cpp" line="47"/>
@@ -47,7 +47,7 @@
     <message>
         <location filename="../danmaQ_app.cpp" line="166"/>
         <source>Let&apos;s Go</source>
-        <translation>コメントしてみてください</translation>
+        <translation>コメントしてみよう</translation>
     </message>
     <message>
         <location filename="../danmaQ_app.cpp" line="177"/>
@@ -60,17 +60,17 @@
     <message>
         <location filename="../danmaQ_app.cpp" line="209"/>
         <source>Toggle Subscription</source>
-        <translation>登録を切り替える</translation>
+        <translation>登録の切り替え</translation>
     </message>
     <message>
         <location filename="../danmaQ_app.cpp" line="210"/>
         <source>Refresh Screen</source>
-        <translation>画面を更新する</translation>
+        <translation>画面を更新</translation>
     </message>
     <message>
         <location filename="../danmaQ_app.cpp" line="211"/>
         <source>Show Main Window</source>
-        <translation>主画面を表示する</translation>
+        <translation>主画面を表示</translation>
     </message>
     <message>
         <location filename="../danmaQ_app.cpp" line="212"/>
@@ -80,7 +80,7 @@
     <message>
         <location filename="../danmaQ_app.cpp" line="213"/>
         <source>Exit</source>
-        <translation>終了する</translation>
+        <translation>終了</translation>
     </message>
 </context>
 </TS>
