@@ -1,5 +1,6 @@
 set(danmaQ_I18N_SRC
     zh_CN.ts
+    zh_TW.ts
     ja_JP.ts)
 
 find_program(LRELEASE lrelease)
