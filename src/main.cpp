@@ -47,6 +47,8 @@ int main(int argc, char *argv[])
 
 	QString systemLocale = QLocale::system().name();
 	myDebug << "System locale:" << systemLocale;
+
+	// if system language is zh_CN, then first look for zh_CN, then zh_*
 	QRegularExpression filter(QString("^(%1|%2.*)$").arg(systemLocale).arg(systemLocale.split('-').at(0)));
 	auto availableTranslation = fileNames.filter(filter);
 	if(availableTranslation.length() > 0){
@@ -59,23 +61,6 @@ int main(int argc, char *argv[])
 	else{
 		myDebug << "No available translation found.";
 	}
-	//auto languageCountry = 
-	
-	//defaultLocale.truncate(defaultLocale.lastIndexOf('_'));
-	//myDebug << defaultLocale;
-	/*while (i.hasNext()) {
-		QString file = i.next();
-		QString current = file;
-		current.truncate(current.lastIndexOf('.'));
-		current.remove(0, current.indexOf('_') + 1);
-		if (defaultLocale == current) {
-			myDebug << "Using translation file " << dir.filePath(file);
-			QTranslator *translator = new QTranslator();
-			translator->load(dir.filePath(file));
-			app.installTranslator(translator);
-			break;
-		}
-	}*/
 
 	QDesktopWidget* desktop = QApplication::desktop();
 	DMApp* dm_app = new DMApp();
