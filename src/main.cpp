@@ -20,9 +20,11 @@
 #include <QDebug>
 #include <QTranslator>
 #include <QDesktopWidget>
+#include <QRegularExpression>
+#include <QDir>
+
 #include <ctime>
 #include <cstdlib>
-#include <QDir>
 
 #include "danmaQ_app.h"
 #include "danmaku.h"
@@ -42,11 +44,26 @@ int main(int argc, char *argv[])
 	QDir dir(":translations");
 	QStringList fileNames = dir.entryList(QStringList("*.qm"), QDir::Files,
 										  QDir::Name);
-	QStringListIterator i(fileNames);
-	QString defaultLocale = QLocale::system().name();
-	defaultLocale.truncate(defaultLocale.lastIndexOf('_'));
-	myDebug << defaultLocale;
-	while (i.hasNext()) {
+
+	QString systemLocale = QLocale::system().name();
+	myDebug << "System locale:" << systemLocale;
+	QRegularExpression filter(QString("^(%1|%2.*)$").arg(systemLocale).arg(systemLocale.split('-').at(0)));
+	auto availableTranslation = fileNames.filter(filter);
+	if(availableTranslation.length() > 0){
+		QString translationPath = dir.filePath(availableTranslation.at(0));
+		myDebug << "Using translation:" << translationPath;
+		QTranslator *translator = new QTranslator();
+		translator->load(translationPath);
+		app.installTranslator(translator);
+	}
+	else{
+		myDebug << "No available translation found.";
+	}
+	//auto languageCountry = 
+	
+	//defaultLocale.truncate(defaultLocale.lastIndexOf('_'));
+	//myDebug << defaultLocale;
+	/*while (i.hasNext()) {
 		QString file = i.next();
 		QString current = file;
 		current.truncate(current.lastIndexOf('.'));
@@ -58,7 +75,7 @@ int main(int argc, char *argv[])
 			app.installTranslator(translator);
 			break;
 		}
-	}
+	}*/
 
 	QDesktopWidget* desktop = QApplication::desktop();
 	DMApp* dm_app = new DMApp();

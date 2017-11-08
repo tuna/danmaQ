@@ -1,6 +1,6 @@
 set(danmaQ_I18N_SRC
-    i18n_zh.ts
-    i18n_ja.ts)
+    zh_CN.ts
+    ja_JP.ts)
 
 find_program(LRELEASE lrelease)
 find_program(LUPDATE lupdate)
