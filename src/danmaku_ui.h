@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of danmaQ.
  * 
  * DanmaQ is free software: you can redistribute it and/or modify
@@ -27,19 +27,19 @@ enum Position { TOP=1, BOTTOM, FLY };
 const int VMARGIN = 20;
 
 class DMWindow;
-class DMApp;
+class DMMainWindow;
 
 class Danmaku: public QLabel
 {
 Q_OBJECT
 
 public:
-	Danmaku(QString text, QString color, Position position, int slot, DMWindow *parent, DMApp *app);
+    Danmaku(QString text, QString color, Position position, int slot, DMWindow *parent, DMMainWindow *mainWindow);
 	// Danmaku(QString text, QWidget *parent=0);
 	Position position;
 	int slot;
 	DMWindow *dmwin;
-	DMApp *app;
+    DMMainWindow *app;
 
 public slots:
 	void fly();

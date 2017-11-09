@@ -54,11 +54,11 @@ static std::map<QString, std::pair<QString, QColor>> colormap = {
 
 // Danmaku::Danmaku(QString text, QWidget *parent): Danmaku(text, "blue", FLY, -1, parent){};
 
-Danmaku::Danmaku(QString text, QString color, Position position, int slot, DMWindow *parent, DMApp* app)
+Danmaku::Danmaku(QString text, QString color, Position position, int slot, DMWindow *parent, DMMainWindow* mainWindow)
 	:QLabel(escape_text(text), parent)
 {
 	this->dmwin = parent;
-	this->app = app;
+    this->app = mainWindow;
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	QString tcolor = colormap[color].first;

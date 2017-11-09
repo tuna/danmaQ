@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of danmaQ.
  * 
  * DanmaQ is free software: you can redistribute it and/or modify
@@ -67,7 +67,7 @@ void Subscriber::run()
 	http = new QNetworkAccessManager(NULL);
 
 	QEventLoop loop;
-	connect((DMApp *)this->parent(), &DMApp::stop_subscription,
+    connect(qobject_cast<DMMainWindow*>(this->parent()), &DMMainWindow::stop_subscription,
 			&loop, &QEventLoop::quit);
 	
 	// Set HTTP request timeout

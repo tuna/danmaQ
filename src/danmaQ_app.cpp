@@ -30,9 +30,9 @@
 
 #include "danmaku.h"
 
-DMApp::DMApp(QApplication *callback) {
+DMMainWindow::DMMainWindow(QApplication *app) {
 
-	this->callback = callback;
+    this->app = app;
 
 	this->setWindowTitle("Danmaku");
 	this->setWindowIcon(QIcon(":icon_active.png"));
@@ -85,13 +85,13 @@ DMApp::DMApp(QApplication *callback) {
 	this->subscriber = NULL;
 	this->init_windows();
 
-	connect(this->mainBtn, &QPushButton::released, this, &DMApp::toggle_subscription);
-	connect(this->hideBtn, &QPushButton::released, this, &DMApp::hide);
-	connect(this->trayIcon->toggleAction, &QAction::triggered, this, &DMApp::toggle_subscription);
-	connect(this->trayIcon->refreshScreenAction, &QAction::triggered, this, &DMApp::reset_windows);
-	connect(this->trayIcon->showAction, &QAction::triggered, this, &DMApp::show);
-	connect(this->trayIcon->aboutAction, &QAction::triggered, this, &DMApp::show_about_dialog);
-	connect(this->trayIcon->exitAction, &QAction::triggered, this->callback, &QApplication::quit);
+	connect(this->mainBtn, &QPushButton::released, this, &DMMainWindow::toggle_subscription);
+	connect(this->hideBtn, &QPushButton::released, this, &DMMainWindow::hide);
+	connect(this->trayIcon->toggleAction, &QAction::triggered, this, &DMMainWindow::toggle_subscription);
+	connect(this->trayIcon->refreshScreenAction, &QAction::triggered, this, &DMMainWindow::reset_windows);
+	connect(this->trayIcon->showAction, &QAction::triggered, this, &DMMainWindow::show);
+	connect(this->trayIcon->aboutAction, &QAction::triggered, this, &DMMainWindow::show_about_dialog);
+    connect(this->trayIcon->exitAction, &QAction::triggered, this->app, &QApplication::quit);
 
 
 	this->show();
@@ -100,7 +100,7 @@ DMApp::DMApp(QApplication *callback) {
 	this->move(center.x() - this->width()/2, center.y() - this->height()/2);
 }
 
-void DMApp::toggle_subscription() {
+void DMMainWindow::toggle_subscription() {
 	if (this->subscriber == NULL || this->subscriber->isFinished())
 	{
 		this->subscriber = new Subscriber(server->text(), channel->text(), passwd->text(), this);
@@ -112,15 +112,15 @@ void DMApp::toggle_subscription() {
 		}
 		connect(
 			this->subscriber, &Subscriber::started,
-			this, &DMApp::on_subscription_started
+			this, &DMMainWindow::on_subscription_started
 		);
 		connect(
 			this->subscriber, &Subscriber::finished,
-			this, &DMApp::on_subscription_stopped
+			this, &DMMainWindow::on_subscription_stopped
 		);
 		connect(
 			this->subscriber, &Subscriber::new_alert,
-			this, &DMApp::on_new_alert
+			this, &DMMainWindow::on_new_alert
 		);
 		this->subscriber->start();
 
@@ -136,7 +136,7 @@ void DMApp::toggle_subscription() {
 
 }
 
-void DMApp::init_windows() {
+void DMMainWindow::init_windows() {
 	QDesktopWidget desktop;
 	this->screenCount = desktop.screenCount();
 	for (int i=0; i<desktop.screenCount(); i++) {
@@ -152,7 +152,7 @@ void DMApp::init_windows() {
 	}
 }
 
-void DMApp::reset_windows() {
+void DMMainWindow::reset_windows() {
 	myDebug << "Resetting windows";
 	for(auto w=this->dm_windows.begin(); w != this->dm_windows.end(); ++w) {
 		delete *w;
@@ -161,7 +161,7 @@ void DMApp::reset_windows() {
 	this->init_windows();
 }
 
-void DMApp::on_subscription_started() {
+void DMMainWindow::on_subscription_started() {
 	myDebug << "Subscription Started";
 	this->hide();
 	this->trayIcon->set_icon_running();
@@ -169,13 +169,13 @@ void DMApp::on_subscription_started() {
 	this->trayIcon->showMessage(tr("Subscription Started"), tr("Let's Go"));
 }
 
-void DMApp::on_subscription_stopped() {
+void DMMainWindow::on_subscription_stopped() {
 	myDebug << "Subscription Stopped";
 	this->trayIcon->set_icon_stopped();
 	this->mainBtn->setText(tr("&Subscribe"));
 }
 
-void DMApp::on_new_alert(QString msg) {
+void DMMainWindow::on_new_alert(QString msg) {
 	myDebug << "Alert:" << msg;
 	this->trayIcon->showMessage(tr("Ooops!"), msg, QSystemTrayIcon::Critical);
 	this->subscriber->mark_stop = true;
@@ -186,17 +186,19 @@ void DMApp::on_new_alert(QString msg) {
 	this->subscriber = NULL;
 }
 
-void DMApp::show_about_dialog() {
+void DMMainWindow::show_about_dialog() {
 	this->show();
 	QMessageBox::about(
-		this, "About", 
-		"<strong>DanmaQ</strong>"
-        "<p>Copyright &copy; 2015-2017 Justin Wong & TUNA members<br />"
-		"Tsinghua University TUNA Association</p>"
-		"<p> Source Code Available under GPLv3<br />"
-        "<a href='https://github.com/tuna/danmaQ'>"
-        "https://github.com/tuna/danmaQ"
-		"</a></p>"
+        this, "About",
+                R"(
+                <strong>DanmaQ</strong>
+                <p>Copyright &copy; 2015-2017 Justin Wong & TUNA members<br />
+                Tsinghua University TUNA Association</p>
+                <p> Source Code Available under GPLv3<br />
+                <a href='https://github.com/tuna/danmaQ'>
+                https://github.com/tuna/danmaQ
+                </a></p>
+                )"
 	);
 }
 

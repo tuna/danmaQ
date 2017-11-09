@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of danmaQ.
  * 
  * DanmaQ is free software: you can redistribute it and/or modify
@@ -49,12 +49,12 @@ private:
 };
 
 
-class DMApp: public QWidget
+class DMMainWindow: public QWidget
 {
 	Q_OBJECT
 
 public:
-	DMApp(QApplication* callback);
+    DMMainWindow(QApplication* app);
 
 	int lineHeight, fontSize, screenCount;
 	QString fontFamily;
@@ -76,7 +76,7 @@ signals:
 	void stop_subscription();
 
 private:
-	QApplication* callback;
+	QApplication* app;
 	QVector<QWidget*>	dm_windows;
 	Subscriber *subscriber;
 	DMTrayIcon *trayIcon;

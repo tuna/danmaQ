@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of danmaQ.
  * 
  * DanmaQ is free software: you can redistribute it and/or modify
@@ -27,10 +27,10 @@ class DMWindow: public QWidget
 	Q_OBJECT
 
 public:
-	DMWindow(DMApp *parent);
-	DMWindow(int screenNumber, DMApp *parent);
+    DMWindow(DMMainWindow *parent);
+    DMWindow(int screenNumber, DMMainWindow *parent);
 	~DMWindow();
-	DMApp *app;
+    DMMainWindow *app;
 
 	int slot_y(int slot);
 

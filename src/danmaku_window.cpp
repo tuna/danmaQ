@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of danmaQ.
  * 
  * DanmaQ is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@
 #include "danmaku.h"
 
 
-DMWindow::DMWindow(int screenNumber, DMApp *parent)
+DMWindow::DMWindow(int screenNumber, DMMainWindow *parent)
 {
 	this->setParent(parent);
 	this->app = parent;
@@ -72,7 +72,7 @@ DMWindow::DMWindow(int screenNumber, DMApp *parent)
 
 }
 
-DMWindow::DMWindow(DMApp *parent): DMWindow(0, parent){};
+DMWindow::DMWindow(DMMainWindow *parent): DMWindow(0, parent){};
 
 void DMWindow::init_slots()
 {
