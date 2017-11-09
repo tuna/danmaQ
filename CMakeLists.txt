@@ -25,12 +25,8 @@ ENDIF ()
 
 if (APPLE)
     add_custom_command(
-            COMMAND mkdir -p ${CMAKE_PROJECT_NAME}.app/Contents/MacOS
-            COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/macOS/Info.plist ${CMAKE_PROJECT_NAME}.app/Contents/Info.plist
-            COMMAND cp src/${CMAKE_PROJECT_NAME} ${CMAKE_PROJECT_NAME}.app/Contents/MacOS/
-            COMMAND sed -i.bak 's/VERSION/${VERSION}/g' ${CMAKE_PROJECT_NAME}.app/Contents/Info.plist
             COMMAND mkdir -p Icon.iconset
-            COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/src/icons/statusicon.png icon.png
+            COMMAND cp ${CMAKE_SOURCE_DIR}/src/icons/statusicon.png icon.png
             COMMAND sips -z 16 16   icon.png --out Icon.iconset/icon_16x16.png
             COMMAND sips -z 32 32   icon.png --out Icon.iconset/icon_16x16@2x.png
             COMMAND sips -z 32 32   icon.png --out Icon.iconset/icon_32x32.png
@@ -43,17 +39,30 @@ if (APPLE)
             COMMAND sips -z 1024 1024 icon.png --out Icon.iconset/icon_512x512@2x.png
             COMMAND iconutil -c icns Icon.iconset
             COMMAND mkdir -p ${CMAKE_PROJECT_NAME}.app/Contents/Resources
-            COMMAND cp Icon.icns ${CMAKE_PROJECT_NAME}.app/Contents/Resources/
-            DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/src/${CMAKE_PROJECT_NAME}
-            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app
+            DEPENDS ${CMAKE_SOURCE_DIR}/src/icons/statusicon.png
+            OUTPUT ${CMAKE_BINARY_DIR}/Icon.icns
     )
     add_custom_command(
+            COMMAND mkdir -p ${CMAKE_PROJECT_NAME}.app/Contents/MacOS
+            COMMAND cp -r ${CMAKE_SOURCE_DIR}/macOS/Info.plist ${CMAKE_PROJECT_NAME}.app/Contents/Info.plist
+            COMMAND cp src/${CMAKE_PROJECT_NAME} ${CMAKE_PROJECT_NAME}.app/Contents/MacOS/
+            COMMAND sed -i.bak 's/VERSION/${VERSION}/g' ${CMAKE_PROJECT_NAME}.app/Contents/Info.plist
+            COMMAND cp Icon.icns ${CMAKE_PROJECT_NAME}.app/Contents/Resources/
+            COMMAND /usr/local/opt/qt/bin/macdeployqt ${CMAKE_PROJECT_NAME}.app -no-strip
+            DEPENDS ${CMAKE_BINARY_DIR}/src/${CMAKE_PROJECT_NAME}
+            DEPENDS ${CMAKE_BINARY_DIR}/Icon.icns
+            OUTPUT ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app
+    )
+    add_custom_command(
+            COMMAND cp -r ${CMAKE_PROJECT_NAME}.app ${CMAKE_PROJECT_NAME}.app.bak
             COMMAND /usr/local/opt/qt/bin/macdeployqt ${CMAKE_PROJECT_NAME}.app -dmg
-            DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app
-            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.dmg
+            COMMAND rm -rf ${CMAKE_PROJECT_NAME}.app
+            COMMAND mv ${CMAKE_PROJECT_NAME}.app.bak ${CMAKE_PROJECT_NAME}.app
+            DEPENDS ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app
+            OUTPUT ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.dmg
     )
     add_custom_target(app ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app)
-    add_custom_target(dmg ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.dmg)
+    add_custom_target(dmg DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.dmg)
 endif ()
 
 add_subdirectory(src)
