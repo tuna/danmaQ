@@ -58,10 +58,10 @@ DMWindow::DMWindow(int screenNumber, DMApp *parent)
 	this->setAttribute(Qt::WA_TransparentForMouseEvents, true);
 	this->setStyleSheet("background: transparent");
 
-	this->move(geo.topLeft());
 	this->init_slots();
 	
 	this->show();
+	this->move(geo.topLeft());
 
 #ifdef __linux
 	Region region = XCreateRegion();
