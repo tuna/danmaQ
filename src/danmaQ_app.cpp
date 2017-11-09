@@ -34,7 +34,7 @@ DMMainWindow::DMMainWindow(QApplication *app) {
 
     this->app = app;
 
-	this->setWindowTitle("Danmaku");
+    this->setWindowTitle("DanmaQ");
 	this->setWindowIcon(QIcon(":icon_active.png"));
 	this->trayIcon = new DMTrayIcon(this);
 	
@@ -82,7 +82,7 @@ DMMainWindow::DMMainWindow(QApplication *app) {
 	);
 	this->speedScale = 1.0;
 	
-	this->subscriber = NULL;
+    this->subscriber = nullptr;
 	this->init_windows();
 
 	connect(this->mainBtn, &QPushButton::released, this, &DMMainWindow::toggle_subscription);
@@ -95,13 +95,13 @@ DMMainWindow::DMMainWindow(QApplication *app) {
 
 
 	this->show();
-	QDesktopWidget	desktop;
+    QDesktopWidget desktop;
 	auto center = desktop.screenGeometry(desktop.primaryScreen()).center();
 	this->move(center.x() - this->width()/2, center.y() - this->height()/2);
 }
 
 void DMMainWindow::toggle_subscription() {
-	if (this->subscriber == NULL || this->subscriber->isFinished())
+    if (this->subscriber == nullptr || this->subscriber->isFinished())
 	{
 		this->subscriber = new Subscriber(server->text(), channel->text(), passwd->text(), this);
 		for(auto w=this->dm_windows.begin(); w != this->dm_windows.end(); ++w) {
@@ -130,7 +130,7 @@ void DMMainWindow::toggle_subscription() {
 		if (this->subscriber->wait(1000) == false) {
 			this->subscriber->terminate();
 		}
-		this->subscriber = NULL;
+        this->subscriber = nullptr;
 		this->reset_windows();
 	}
 
@@ -143,7 +143,7 @@ void DMMainWindow::init_windows() {
 		DMWindow* w = new DMWindow(i, this);
 		this->dm_windows.append(w);
 
-		if (!(this->subscriber == NULL || this->subscriber->isFinished())) {
+        if (!(this->subscriber == nullptr || this->subscriber->isFinished())) {
 			connect(
 				this->subscriber, &Subscriber::new_danmaku,
 				w, &DMWindow::new_danmaku
@@ -154,7 +154,7 @@ void DMMainWindow::init_windows() {
 
 void DMMainWindow::reset_windows() {
 	myDebug << "Resetting windows";
-	for(auto w=this->dm_windows.begin(); w != this->dm_windows.end(); ++w) {
+    for(auto w = this->dm_windows.begin(); w != this->dm_windows.end(); ++w) {
 		delete *w;
 	}
 	this->dm_windows.clear();
@@ -183,7 +183,7 @@ void DMMainWindow::on_new_alert(QString msg) {
 	if (this->subscriber->wait(1000) == false) {
 		this->subscriber->terminate();
 	}
-	this->subscriber = NULL;
+    this->subscriber = nullptr;
 }
 
 void DMMainWindow::show_about_dialog() {
@@ -228,8 +228,8 @@ DMTrayIcon::DMTrayIcon(QWidget *parent)
 
 void DMTrayIcon::on_activated(QSystemTrayIcon::ActivationReason e) {
 	if(e == this->Trigger){
-		QWidget *parent = (QWidget *)this->parent();
-		if(parent == NULL) {
+        auto *parent = qobject_cast<QWidget*>(this->parent());
+        if(parent == nullptr) {
 			return;
 		}
 		if(parent->isVisible()) {

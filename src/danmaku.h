@@ -24,9 +24,9 @@
 #include "danmaQ_app.h"
 
 #if defined _WIN32 || defined __CYGWIN__
-#define myDebug (qDebug() << __LINE__)
+#define myDebug (qDebug() << "[" << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << "]")
 #else
-#define myDebug (qDebug() << "\x1b[34;1m" <<__PRETTY_FUNCTION__ << ":" << __LINE__ << "\x1b[0m")
+#define myDebug (qDebug() << "\x1b[34;1m" << __FILE__ << ":" << __LINE__ << ":" <<__PRETTY_FUNCTION__ << "\x1b[0m")
 #endif
 
 #endif 

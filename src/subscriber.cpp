@@ -64,7 +64,7 @@ void Subscriber::run()
 {
 	mark_stop = false;
 	
-	http = new QNetworkAccessManager(NULL);
+    http = new QNetworkAccessManager(nullptr);
 
 	QEventLoop loop;
     connect(qobject_cast<DMMainWindow*>(this->parent()), &DMMainWindow::stop_subscription,
@@ -96,7 +96,7 @@ void Subscriber::run()
 		reply->deleteLater();
 	}
 	delete http;
-	http = nullptr;
+    http = nullptr;
 }
 
 
