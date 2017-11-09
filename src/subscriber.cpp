@@ -57,7 +57,7 @@ Subscriber::Subscriber(QString server, QString channel, QString passwd, QObject*
 	request.setRawHeader("X-GDANMAKU-SUBSCRIBER-ID", this->_uuid.toUtf8() );
 	request.setRawHeader("X-GDANMAKU-AUTH-KEY", this->passwd.toUtf8() );
 	
-	connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
+	connect(this, &Subscriber::finished, this, &Subscriber::deleteLater);
 }
 
 void Subscriber::run() 
@@ -67,8 +67,8 @@ void Subscriber::run()
 	http = new QNetworkAccessManager(NULL);
 
 	QEventLoop loop;
-	connect((DMApp *)this->parent(), SIGNAL(stop_subscription()),
-			&loop, SLOT(quit()));
+	connect((DMApp *)this->parent(), &DMApp::stop_subscription,
+			&loop, &QEventLoop::quit);
 	
 	// Set HTTP request timeout
 	QTimer timeout;
@@ -78,9 +78,9 @@ void Subscriber::run()
 		timeout.start(10000);
 		QNetworkReply *reply = http->get(request);
 		// If timeout signaled, let http request abort
-		connect(&timeout, SIGNAL(timeout()), reply, SLOT(abort()));
-		connect(reply, SIGNAL(finished()),
-				 &loop, SLOT(quit()));
+		connect(&timeout, &QTimer::timeout, reply, &QNetworkReply::abort);
+		connect(reply, &QNetworkReply::finished,
+				 &loop, &QEventLoop::quit);
 		loop.exec();
 		timeout.stop();
 		if(mark_stop) {

@@ -117,8 +117,8 @@ void DMApp::toggle_subscription() {
 			this, &DMApp::on_subscription_stopped
 		);
 		connect(
-			this->subscriber, SIGNAL(new_alert(QString)),
-			this, SLOT(on_new_alert(QString))
+			this->subscriber, &Subscriber::new_alert,
+			this, &DMApp::on_new_alert
 		);
 		this->subscriber->start();
 
@@ -143,8 +143,8 @@ void DMApp::init_windows() {
 
 		if (!(this->subscriber == NULL || this->subscriber->isFinished())) {
 			connect(
-				this->subscriber, SIGNAL(new_danmaku(QString, QString, QString)),
-				w, SLOT(new_danmaku(QString, QString, QString))
+				this->subscriber, &Subscriber::new_danmaku,
+				w, &DMWindow::new_danmaku
 		   );
 		}
 	}
@@ -216,8 +216,8 @@ DMTrayIcon::DMTrayIcon(QWidget *parent)
 	this->setContextMenu(menu);
 
 	connect(
-		this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-		this, SLOT(on_activated(QSystemTrayIcon::ActivationReason))
+		this, &DMTrayIcon::activated,
+		this, &DMTrayIcon::on_activated
 	);
 	this->show();
 }
