@@ -64,7 +64,7 @@ void Subscriber::run()
 {
 	mark_stop = false;
 	
-	http = new QNetworkAccessManager(NULL);
+	http = new QNetworkAccessManager();
 
 	QEventLoop loop;
 	connect((DMApp *)this->parent(), &DMApp::stop_subscription,
@@ -75,6 +75,12 @@ void Subscriber::run()
 	timeout.setSingleShot(true);
 	
 	while(1) {
+		if (http->networkAccessible() != QNetworkAccessManager::Accessible) {
+            // try to re-connect
+			myDebug << "Network now unaccessible. Trying to re-connect.";
+			http->setNetworkAccessible(QNetworkAccessManager::Accessible);
+		}
+
 		timeout.start(10000);
 		QNetworkReply *reply = http->get(request);
 		// If timeout signaled, let http request abort
