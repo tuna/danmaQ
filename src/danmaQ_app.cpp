@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QApplication>
 #include <QDesktopWidget>
 #include <QIcon>
 #include <QVBoxLayout>
@@ -29,7 +30,9 @@
 
 #include "danmaku.h"
 
-DMApp::DMApp() {
+DMApp::DMApp(QApplication *callback) {
+	
+	this->callback = callback;
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 	this->setWindowTitle("Danmaku");
@@ -89,7 +92,7 @@ DMApp::DMApp() {
 	connect(this->trayIcon->refreshScreenAction, &QAction::triggered, this, &DMApp::reset_windows);
 	connect(this->trayIcon->showAction, &QAction::triggered, this, &DMApp::show);
 	connect(this->trayIcon->aboutAction, &QAction::triggered, this, &DMApp::show_about_dialog);
-	connect(this->trayIcon->exitAction, &QAction::triggered, this, &DMApp::close);
+	connect(this->trayIcon->exitAction, &QAction::triggered, this->callback, &QApplication::quit);
 
 
 	this->show();
