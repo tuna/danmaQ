@@ -167,10 +167,10 @@ void DMWindow::new_danmaku(QString text, QString color, QString position)
 	} 
 
 	Danmaku *l = new Danmaku(escape_text(text), color, pos, slot, this, this->app);
-	this->connect(l, SIGNAL(exited(Danmaku*)),
-				  this, SLOT(delete_danmaku(Danmaku*)));
-	this->connect(l, SIGNAL(clear_fly_slot(int)),
-				this, SLOT(clear_fly_slot(int)));
+	this->connect(l, &Danmaku::exited,
+				  this, &DMWindow::delete_danmaku);
+	this->connect(l, &Danmaku::clear_fly_slot,
+				this, &DMWindow::clear_fly_slot);
 	l->show();
 	// l->move(200, 200);
 }

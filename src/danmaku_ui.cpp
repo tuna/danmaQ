@@ -140,7 +140,7 @@ void Danmaku::init_position() {
 		case BOTTOM:
 			this->_x = (sw / 2) - (this->width() / 2);
 			this->move(this->_x, this->_y);
-			QTimer::singleShot(10 * 1000, this, SLOT(clean_close()));
+			QTimer::singleShot(10 * 1000, this, &Danmaku::clean_close);
 			break;
 	}
 }
@@ -156,8 +156,8 @@ void Danmaku::fly() {
 	animation->start(QAbstractAnimation::DeleteWhenStopped);
 	
 	connect(
-		animation, SIGNAL(finished()),
-		this, SLOT(clean_close())
+		animation, &QPropertyAnimation::finished,
+		this, &Danmaku::clean_close
 	);
 }
 
