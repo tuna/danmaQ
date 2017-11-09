@@ -82,13 +82,13 @@ DMApp::DMApp() {
 	this->subscriber = NULL;
 	this->init_windows();
 
-	connect(this->mainBtn, SIGNAL(released()), this, SLOT(toggle_subscription()));
-	connect(this->hideBtn, SIGNAL(released()), this, SLOT(hide()));
-	connect(this->trayIcon->toggleAction, SIGNAL(triggered()), this, SLOT(toggle_subscription()));
-	connect(this->trayIcon->refreshScreenAction, SIGNAL(triggered()), this, SLOT(reset_windows()));
-	connect(this->trayIcon->showAction, SIGNAL(triggered()), this, SLOT(show()));
-	connect(this->trayIcon->aboutAction, SIGNAL(triggered()), this, SLOT(show_about_dialog()));
-	connect(this->trayIcon->exitAction, SIGNAL(triggered()), this, SLOT(close()));
+	connect(this->mainBtn, &QPushButton::released, this, &DMApp::toggle_subscription);
+	connect(this->hideBtn, &QPushButton::released, this, &DMApp::hide);
+	connect(this->trayIcon->toggleAction, &QAction::triggered, this, &DMApp::toggle_subscription);
+	connect(this->trayIcon->refreshScreenAction, &QAction::triggered, this, &DMApp::reset_windows);
+	connect(this->trayIcon->showAction, &QAction::triggered, this, &DMApp::show);
+	connect(this->trayIcon->aboutAction, &QAction::triggered, this, &DMApp::show_about_dialog);
+	connect(this->trayIcon->exitAction, &QAction::triggered, this, &DMApp::close);
 
 
 	this->show();
@@ -103,21 +103,21 @@ void DMApp::toggle_subscription() {
 		this->subscriber = new Subscriber(server->text(), channel->text(), passwd->text(), this);
 		for(auto w=this->dm_windows.begin(); w != this->dm_windows.end(); ++w) {
 			connect(
-				this->subscriber, SIGNAL(new_danmaku(QString, QString, QString)),
-				*w, SLOT(new_danmaku(QString, QString, QString))
+				this->subscriber, &Subscriber::new_danmaku,
+				qobject_cast<DMWindow*>(*w), &DMWindow::new_danmaku
 			);
 		}
 		connect(
-			this->subscriber, SIGNAL(started()),
-			this, SLOT(on_subscription_started())
+			this->subscriber, &Subscriber::started,
+			this, &DMApp::on_subscription_started
 		);
 		connect(
-			this->subscriber, SIGNAL(finished()),
-			this, SLOT(on_subscription_stopped())
+			this->subscriber, &Subscriber::finished,
+			this, &DMApp::on_subscription_stopped
 		);
 		connect(
-			this->subscriber, SIGNAL(new_alert(QString)),
-			this, SLOT(on_new_alert(QString))
+			this->subscriber, &Subscriber::new_alert,
+			this, &DMApp::on_new_alert
 		);
 		this->subscriber->start();
 
@@ -142,8 +142,8 @@ void DMApp::init_windows() {
 
 		if (!(this->subscriber == NULL || this->subscriber->isFinished())) {
 			connect(
-				this->subscriber, SIGNAL(new_danmaku(QString, QString, QString)),
-				w, SLOT(new_danmaku(QString, QString, QString))
+				this->subscriber, &Subscriber::new_danmaku,
+				w, &DMWindow::new_danmaku
 		   );
 		}
 	}
@@ -215,8 +215,8 @@ DMTrayIcon::DMTrayIcon(QWidget *parent)
 	this->setContextMenu(menu);
 
 	connect(
-		this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-		this, SLOT(on_activated(QSystemTrayIcon::ActivationReason))
+		this, &DMTrayIcon::activated,
+		this, &DMTrayIcon::on_activated
 	);
 	this->show();
 }

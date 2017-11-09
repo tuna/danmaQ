@@ -65,12 +65,12 @@ int main(int argc, char *argv[])
 	QDesktopWidget* desktop = QApplication::desktop();
 	DMApp* dm_app = new DMApp();
 	app.connect(
-		desktop, SIGNAL(workAreaResized(int)),
-		dm_app, SLOT(reset_windows())
+		desktop, &QDesktopWidget::workAreaResized,
+		dm_app, &DMApp::reset_windows
 	);
 	app.connect(
-		desktop, SIGNAL(screenCountChanged(int)),
-		dm_app, SLOT(reset_windows())
+		desktop, &QDesktopWidget::screenCountChanged,
+		dm_app, &DMApp::reset_windows
 	);
 	return app.exec();
 }
