@@ -17,6 +17,7 @@
 
 #ifndef __DANMAQ_APP_H__
 #define __DANMAQ_APP_H__
+#include <QApplication>
 #include <QWidget>
 #include <QVector>
 #include <QLineEdit>
@@ -53,7 +54,7 @@ class DMApp: public QWidget
 	Q_OBJECT
 
 public:
-	DMApp();
+	DMApp(QApplication* callback);
 
 	int lineHeight, fontSize, screenCount;
 	QString fontFamily;
@@ -75,6 +76,7 @@ signals:
 	void stop_subscription();
 
 private:
+	QApplication* callback;
 	QVector<QWidget*>	dm_windows;
 	Subscriber *subscriber;
 	DMTrayIcon *trayIcon;
