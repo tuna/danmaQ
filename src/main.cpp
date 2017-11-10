@@ -26,8 +26,8 @@
 #include <ctime>
 #include <cstdlib>
 
-#include "danmaQ_app.h"
-#include "danmaku.h"
+#include "DMMainWindow.hpp"
+#include "common.hpp"
 
 #if defined NDEBUG && (defined _WIN32 || defined __CYGWIN__)
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
@@ -66,11 +66,11 @@ int main(int argc, char *argv[])
 	auto dmMainWindow = new DMMainWindow(&app);
 	app.connect(
 		desktop, &QDesktopWidget::workAreaResized,
-		dmMainWindow, &DMMainWindow::reset_windows
+		dmMainWindow, &DMMainWindow::reset_canvases
 	);
 	app.connect(
 		desktop, &QDesktopWidget::screenCountChanged,
-		dmMainWindow, &DMMainWindow::reset_windows
+		dmMainWindow, &DMMainWindow::reset_canvases
 	);
 	return app.exec();
 }

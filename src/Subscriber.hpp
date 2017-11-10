@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This file is part of danmaQ.
  * 
  * DanmaQ is free software: you can redistribute it and/or modify
@@ -15,47 +15,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __DANMAKU_UI_H__
-#define __DANMAKU_UI_H__
+#ifndef SUBSCRIBER_HPP
+#define SUBSCRIBER_HPP
+#include <QtCore>
+#include <QThread>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QTime>
 
-#include <QWidget>
-#include <QLabel>
-#include <QString>
 
-enum Position { TOP=1, BOTTOM, FLY };
-
-const int VMARGIN = 20;
-
-class DMWindow;
-class DMMainWindow;
-
-class Danmaku: public QLabel
+class Subscriber : public QThread
 {
-Q_OBJECT
-
+	Q_OBJECT
+	
 public:
-    Danmaku(QString text, QString color, Position position, int slot, DMWindow *parent, DMMainWindow *mainWindow);
-	// Danmaku(QString text, QWidget *parent=0);
-	Position position;
-	int slot;
-	DMWindow *dmwin;
-    DMMainWindow *app;
+	Subscriber(QString server, QString channel, QString passwd, QObject* parent=0);
+	void run();
+	bool mark_stop;
 
 public slots:
-	void fly();
-	void clean_close();
+	void parse_response(QNetworkReply* reply);
 
 signals:
-	void exited(Danmaku*);
-	void clear_fly_slot(int slot);
+	void new_danmaku(QString text, QString color, QString position);
+	void new_alert(QString msg);
 
 private:
-	static QString style_tmpl;
-	int _x, _y;
-	
-	static QString escape_text(QString text);
-	void init_position();
+	QNetworkAccessManager* http;
+	QNetworkRequest request;
+	QString server, channel, passwd, _uuid;
 	
 };
 
-#endif
+
+#endif 

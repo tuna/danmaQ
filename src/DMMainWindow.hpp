@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __DANMAQ_APP_H__
-#define __DANMAQ_APP_H__
+#ifndef DMMAINWINDOW_HPP
+#define DMMAINWINDOW_HPP
 #include <QApplication>
 #include <QWidget>
 #include <QVector>
@@ -65,7 +65,7 @@ public:
 	
 
 public slots:
-	void reset_windows();
+	void reset_canvases();
 	void toggle_subscription();
 	void on_subscription_started();
 	void on_subscription_stopped();
@@ -77,10 +77,10 @@ signals:
 
 private:
 	QApplication* app;
-	QVector<QWidget*>	dm_windows;
+	QVector<QWidget*>	dm_canvases;
 	Subscriber *subscriber;
 	DMTrayIcon *trayIcon;
-	void init_windows();
+	void init_canvases();
 
 
 };

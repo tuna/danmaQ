@@ -32,7 +32,7 @@
 #include <QVariantMap>
 #include <QDebug>
 
-#include "danmaku.h"
+#include "common.hpp"
 
 
 Subscriber::Subscriber(QString server, QString channel, QString passwd, QObject* parent)

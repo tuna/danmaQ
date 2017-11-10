@@ -38,7 +38,7 @@
 #include <Windows.h>
 #endif
 
-#include "danmaku.h"
+#include "common.hpp"
 
 
 static std::map<QString, std::pair<QString, QColor>> colormap = {
@@ -54,19 +54,19 @@ static std::map<QString, std::pair<QString, QColor>> colormap = {
 
 // Danmaku::Danmaku(QString text, QWidget *parent): Danmaku(text, "blue", FLY, -1, parent){};
 
-Danmaku::Danmaku(QString text, QString color, Position position, int slot, DMWindow *parent, DMMainWindow* mainWindow)
+Danmaku::Danmaku(QString text, QString color, Position position, int slot, DMCanvas *parent, DMMainWindow* mainWindow)
 	:QLabel(escape_text(text), parent)
 {
-	this->dmwin = parent;
-    this->app = mainWindow;
+	this->canvas = parent;
+    this->mainWindow = mainWindow;
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	QString tcolor = colormap[color].first;
 	QColor bcolor = colormap[color].second;
 	
 	QString style = style_tmpl
-		.arg(this->app->fontSize)
-		.arg(this->app->fontFamily)
+		.arg(this->mainWindow->fontSize)
+		.arg(this->mainWindow->fontFamily)
 		.arg(tcolor);
 
 	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(this);
@@ -74,7 +74,7 @@ Danmaku::Danmaku(QString text, QString color, Position position, int slot, DMWin
 	bool enableShadow = false;
 
 #ifndef Q_WS_X11
-	if (this->app->screenCount == 1) {
+	if (this->mainWindow->screenCount == 1) {
 		this->setWindowFlags(
 			Qt::ToolTip
 			| Qt::FramelessWindowHint
@@ -128,7 +128,7 @@ QString Danmaku::style_tmpl = QString(
 
 void Danmaku::init_position() {
 	int sw = this->parentWidget()->width();
-	this->_y = this->dmwin->slot_y(this->slot);
+	this->_y = this->canvas->slot_y(this->slot);
 
 	switch(this->position) {
 		case FLY:

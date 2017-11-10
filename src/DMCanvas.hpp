@@ -15,18 +15,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __DANMAKU_H__
-#define __DANMAKU_H__
+#ifndef DMCANVAS_HPP
+#define DMCANVAS_HPP
+#include <QWidget>
+#include <QVector>
+#include "DMMainWindow.hpp"
+#include "Danmaku.hpp"
 
-#include "danmaku_ui.h"
-#include "danmaku_window.h"
-#include "subscriber.h"
-#include "danmaQ_app.h"
+class DMCanvas: public QWidget
+{
+	Q_OBJECT
 
-#if defined _WIN32 || defined __CYGWIN__
-#define myDebug (qDebug() << "[" << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << "]")
-#else
-#define myDebug (qDebug() << "\x1b[34;1m" << __FILE__ << ":" << __LINE__ << ":" <<__PRETTY_FUNCTION__ << "\x1b[0m")
+public:
+    DMCanvas(DMMainWindow *parent);
+    DMCanvas(int screenNumber, DMMainWindow *parent);
+	~DMCanvas();
+    DMMainWindow *mainWindow;
+
+	int slot_y(int slot);
+
+
+public slots:
+	void new_danmaku(QString text, QString color, QString position);
+	void delete_danmaku(Danmaku*);
+	void clear_fly_slot(int slot);
+
+private:
+	QVector<bool> fly_slots, fixed_slots;
+	void init_slots();
+	int allocate_slot(Position);
+	QString escape_text(QString &);
+
+};
+
 #endif
-
-#endif 
