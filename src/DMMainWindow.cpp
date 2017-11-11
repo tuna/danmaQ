@@ -42,7 +42,7 @@ DMMainWindow::DMMainWindow(QApplication *app) {
 
 	QHBoxLayout* hbox = new QHBoxLayout(this);
 	hbox->addWidget(new QLabel(tr("Server: "), this));
-	this->server = new QLineEdit("https://dm.tuna.moe", this);
+    this->server = new QLineEdit("https://dm.tuna.moe:8443", this);
 	hbox->addWidget(this->server);
 	layout->addLayout(hbox);
 	
@@ -75,7 +75,7 @@ DMMainWindow::DMMainWindow(QApplication *app) {
 	this->fontSize = 36;
 	this->lineHeight = this->fontSize * 1.2;
 	this->fontFamily = QString(
-		"WenQuanYi Micro Hei, Source Han Sans CN, WenQuanYi Zen Hei,"
+        "WenQuanYi Micro Hei, Source Han Sans CN, Source Han Sans, WenQuanYi Zen Hei,"
 		"Microsoft YaHei, SimHei, "
 		"STHeiti, Hiragino Sans GB, "
 		"sans-serif"
