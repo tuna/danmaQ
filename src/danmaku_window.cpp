@@ -19,9 +19,6 @@
 #include <QtGui/qtextdocument.h>
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QVector>
-#include <QRegExp>
-#include <QDebug>
 
 #ifdef	__linux
 #include <QtX11Extras/qx11info_x11.h>
@@ -31,15 +28,14 @@
 #include <X11/extensions/shape.h>
 #endif
 
-#include <cstdlib>
-
 #include "danmaku.h"
 
 
-DMWindow::DMWindow(int screenNumber, DMMainWindow *parent)
+DMWindow::DMWindow(int screenNumber, DMMainWindow *parent, int vertical_margin)
 {
 	this->setParent(parent);
 	this->app = parent;
+    this->vertical_margin = vertical_margin;
 	QDesktopWidget desktop;
 	QRect geo = desktop.screenGeometry(screenNumber);
 	int sw = geo.width(), sh = geo.height();
@@ -77,7 +73,7 @@ DMWindow::DMWindow(DMMainWindow *parent): DMWindow(0, parent){};
 void DMWindow::init_slots()
 {
 	int height = this->height();
-	int nlines = (height - 2*VMARGIN) / (this->app->lineHeight);
+	int nlines = (height - 2*this->vertical_margin) / (this->app->lineHeight);
 	myDebug << nlines << this->app->lineHeight;
 	for(int i=0; i<nlines; i++) {
 		this->fly_slots.append(false);
@@ -130,7 +126,11 @@ int DMWindow::allocate_slot(Position position) {
 
 int DMWindow::slot_y(int slot)
 {
-	return (this->app->lineHeight * slot + VMARGIN);
+	// return (this->app->lineHeight * slot + this->vertical_margin);
+	int height = this->height();
+	int delta = (height - 2 * this->vertical_margin) % (this->app->lineHeight);
+	int nlines = (height - 2 * this->vertical_margin) / (this->app->lineHeight);
+	return (this->app->lineHeight * slot + this->vertical_margin + delta * (slot + 1) / (nlines + 1));
 }
 
 QString DMWindow::escape_text(QString & text) {

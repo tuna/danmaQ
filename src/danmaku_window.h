@@ -28,7 +28,7 @@ class DMWindow: public QWidget
 
 public:
     DMWindow(DMMainWindow *parent);
-    DMWindow(int screenNumber, DMMainWindow *parent);
+    DMWindow(int screenNumber, DMMainWindow *parent, int vertical_margin = VMARGIN);
 	~DMWindow();
     DMMainWindow *app;
 
@@ -42,6 +42,7 @@ public slots:
 
 private:
 	QVector<bool> fly_slots, fixed_slots;
+	int vertical_margin;
 	void init_slots();
 	int allocate_slot(Position);
 	QString escape_text(QString &);
