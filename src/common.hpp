@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of danmaQ.
  * 
  * DanmaQ is free software: you can redistribute it and/or modify
@@ -15,37 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __DANMAKU_SUBSCRIBER_H__
-#define __DANMAKU_SUBSCRIBER_H__
-#include <QtCore>
-#include <QThread>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QTime>
+#ifndef COMMON_HPP
+#define COMMON_HPP
 
+#include "Danmaku.hpp"
+#include "DMCanvas.hpp"
+#include "Subscriber.hpp"
+#include "DMMainWindow.hpp"
 
-class Subscriber : public QThread
-{
-	Q_OBJECT
-	
-public:
-	Subscriber(QString server, QString channel, QString passwd, QObject* parent=0);
-	void run();
-	bool mark_stop;
-
-public slots:
-	void parse_response(QNetworkReply* reply);
-
-signals:
-	void new_danmaku(QString text, QString color, QString position);
-	void new_alert(QString msg);
-
-private:
-	QNetworkAccessManager* http;
-	QNetworkRequest request;
-	QString server, channel, passwd, _uuid;
-	
-};
-
+#if defined _WIN32 || defined __CYGWIN__
+#define myDebug (qDebug() << "[" << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << "]")
+#else
+#define myDebug (qDebug() << "\x1b[34;1m" << __FILE__ << ":" << __LINE__ << ":" <<__PRETTY_FUNCTION__ << "\x1b[0m")
+#endif
 
 #endif 

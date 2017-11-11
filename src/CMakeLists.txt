@@ -1,9 +1,9 @@
 set(danmaQ_SOURCES 
 	main.cpp 
-	danmaku_ui.cpp
-	danmaku_window.cpp
-	danmaQ_app.cpp
-	subscriber.cpp
+	Danmaku.cpp
+	DMCanvas.cpp
+	DMMainWindow.cpp
+	Subscriber.cpp
 	)
 
 IF (WIN32 AND NOT MINGW AND NOT CYGWIN)
@@ -11,11 +11,11 @@ IF (WIN32 AND NOT MINGW AND NOT CYGWIN)
 ENDIF()
 
 set(danmaQ_HEADERS
-	subscriber.h
-	danmaku_ui.h
-	danmaku_window.h
-	danmaQ_app.h
-	danmaku.h
+	Subscriber.hpp
+	Danmaku.hpp
+	DMCanvas.hpp
+	DMMainWindow.hpp
+	common.h
 	)
 
 add_subdirectory(translations)

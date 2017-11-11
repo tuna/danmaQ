@@ -33,13 +33,13 @@
 
 #include <cstdlib>
 
-#include "danmaku.h"
+#include "common.hpp"
 
 
-DMWindow::DMWindow(int screenNumber, DMMainWindow *parent)
+DMCanvas::DMCanvas(int screenNumber, DMMainWindow *parent)
 {
 	this->setParent(parent);
-	this->app = parent;
+	this->mainWindow = parent;
 	QDesktopWidget desktop;
 	QRect geo = desktop.screenGeometry(screenNumber);
 	int sw = geo.width(), sh = geo.height();
@@ -72,20 +72,20 @@ DMWindow::DMWindow(int screenNumber, DMMainWindow *parent)
 
 }
 
-DMWindow::DMWindow(DMMainWindow *parent): DMWindow(0, parent){};
+DMCanvas::DMCanvas(DMMainWindow *parent): DMCanvas(0, parent){};
 
-void DMWindow::init_slots()
+void DMCanvas::init_slots()
 {
 	int height = this->height();
-	int nlines = (height - 2*VMARGIN) / (this->app->lineHeight);
-	myDebug << nlines << this->app->lineHeight;
+	int nlines = (height - 2*VMARGIN) / (this->mainWindow->lineHeight);
+	myDebug << nlines << this->mainWindow->lineHeight;
 	for(int i=0; i<nlines; i++) {
 		this->fly_slots.append(false);
 		this->fixed_slots.append(false);
 	}
 }
 
-int DMWindow::allocate_slot(Position position) {
+int DMCanvas::allocate_slot(Position position) {
 // 	if(position == "fly")
 //
 	int slot = -1;
@@ -128,12 +128,12 @@ int DMWindow::allocate_slot(Position position) {
 	return slot;
 }
 
-int DMWindow::slot_y(int slot)
+int DMCanvas::slot_y(int slot)
 {
-	return (this->app->lineHeight * slot + VMARGIN);
+	return (this->mainWindow->lineHeight * slot + VMARGIN);
 }
 
-QString DMWindow::escape_text(QString & text) {
+QString DMCanvas::escape_text(QString & text) {
 	QString escaped = text.toHtmlEscaped();
 
 	escaped.replace(QRegExp("([^\\\\])\\\\n"), "\\1<br/>");
@@ -143,7 +143,7 @@ QString DMWindow::escape_text(QString & text) {
 	return escaped;
 }
 
-void DMWindow::new_danmaku(QString text, QString color, QString position)
+void DMCanvas::new_danmaku(QString text, QString color, QString position)
 {
 	Position pos;
 	if(position.compare("fly") == 0) {
@@ -166,28 +166,28 @@ void DMWindow::new_danmaku(QString text, QString color, QString position)
 		return;
 	} 
 
-	Danmaku *l = new Danmaku(escape_text(text), color, pos, slot, this, this->app);
+	Danmaku *l = new Danmaku(escape_text(text), color, pos, slot, this, this->mainWindow);
 	this->connect(l, &Danmaku::exited,
-				  this, &DMWindow::delete_danmaku);
+				  this, &DMCanvas::delete_danmaku);
 	this->connect(l, &Danmaku::clear_fly_slot,
-				this, &DMWindow::clear_fly_slot);
+				this, &DMCanvas::clear_fly_slot);
 	l->show();
 	// l->move(200, 200);
 }
 
-void DMWindow::clear_fly_slot(int slot) {
+void DMCanvas::clear_fly_slot(int slot) {
 	myDebug << "Clear Flying Slot: " << slot;
 	// myDebug << this->fly_slots;
 	this->fly_slots[slot] = false;
 }
 
-void DMWindow::delete_danmaku(Danmaku* dm) {
+void DMCanvas::delete_danmaku(Danmaku* dm) {
 	if (dm->position == TOP || dm->position == BOTTOM) {
 		this->fixed_slots[dm->slot] = false;
 	}
 	myDebug << "danmaku closed";
 }
 
-DMWindow::~DMWindow() {
+DMCanvas::~DMCanvas() {
 	myDebug << "window closed";
 }

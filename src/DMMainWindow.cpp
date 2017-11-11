@@ -28,7 +28,7 @@
 #include <QMenu>
 #include <QAction>
 
-#include "danmaku.h"
+#include "common.hpp"
 
 DMMainWindow::DMMainWindow(QApplication *app) {
 
@@ -83,12 +83,12 @@ DMMainWindow::DMMainWindow(QApplication *app) {
 	this->speedScale = 1.0;
 	
     this->subscriber = nullptr;
-	this->init_windows();
+	this->init_canvases();
 
 	connect(this->mainBtn, &QPushButton::released, this, &DMMainWindow::toggle_subscription);
 	connect(this->hideBtn, &QPushButton::released, this, &DMMainWindow::hide);
 	connect(this->trayIcon->toggleAction, &QAction::triggered, this, &DMMainWindow::toggle_subscription);
-	connect(this->trayIcon->refreshScreenAction, &QAction::triggered, this, &DMMainWindow::reset_windows);
+	connect(this->trayIcon->refreshScreenAction, &QAction::triggered, this, &DMMainWindow::reset_canvases);
 	connect(this->trayIcon->showAction, &QAction::triggered, this, &DMMainWindow::show);
 	connect(this->trayIcon->aboutAction, &QAction::triggered, this, &DMMainWindow::show_about_dialog);
     connect(this->trayIcon->exitAction, &QAction::triggered, this->app, &QApplication::quit);
@@ -104,10 +104,10 @@ void DMMainWindow::toggle_subscription() {
     if (this->subscriber == nullptr || this->subscriber->isFinished())
 	{
 		this->subscriber = new Subscriber(server->text(), channel->text(), passwd->text(), this);
-		for(auto w=this->dm_windows.begin(); w != this->dm_windows.end(); ++w) {
+		for(auto w=this->dm_canvases.begin(); w != this->dm_canvases.end(); ++w) {
 			connect(
 				this->subscriber, &Subscriber::new_danmaku,
-				qobject_cast<DMWindow*>(*w), &DMWindow::new_danmaku
+				qobject_cast<DMCanvas*>(*w), &DMCanvas::new_danmaku
 			);
 		}
 		connect(
@@ -131,34 +131,34 @@ void DMMainWindow::toggle_subscription() {
 			this->subscriber->terminate();
 		}
         this->subscriber = nullptr;
-		this->reset_windows();
+		this->reset_canvases();
 	}
 
 }
 
-void DMMainWindow::init_windows() {
+void DMMainWindow::init_canvases() {
 	QDesktopWidget desktop;
 	this->screenCount = desktop.screenCount();
 	for (int i=0; i<desktop.screenCount(); i++) {
-		DMWindow* w = new DMWindow(i, this);
-		this->dm_windows.append(w);
+		DMCanvas* canvas = new DMCanvas(i, this);
+		this->dm_canvases.append(canvas);
 
         if (!(this->subscriber == nullptr || this->subscriber->isFinished())) {
 			connect(
 				this->subscriber, &Subscriber::new_danmaku,
-				w, &DMWindow::new_danmaku
+				canvas, &DMCanvas::new_danmaku
 		   );
 		}
 	}
 }
 
-void DMMainWindow::reset_windows() {
-	myDebug << "Resetting windows";
-    for(auto w = this->dm_windows.begin(); w != this->dm_windows.end(); ++w) {
+void DMMainWindow::reset_canvases() {
+	myDebug << "Resetting canvases";
+    for(auto w = this->dm_canvases.begin(); w != this->dm_canvases.end(); ++w) {
 		delete *w;
 	}
-	this->dm_windows.clear();
-	this->init_windows();
+	this->dm_canvases.clear();
+	this->init_canvases();
 }
 
 void DMMainWindow::on_subscription_started() {
