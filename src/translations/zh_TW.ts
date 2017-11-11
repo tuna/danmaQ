@@ -2,83 +2,88 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_TW">
 <context>
-    <name>DMApp</name>
+    <name>DMMainWindow</name>
     <message>
-        <location filename="../danmaQ_app.cpp" line="41"/>
+        <location filename="../DMMainWindow.cpp" line="44"/>
         <source>Server: </source>
         <translation>地址： </translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="47"/>
+        <location filename="../DMMainWindow.cpp" line="50"/>
         <source>Channel: </source>
         <translation>頻道： </translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="53"/>
+        <location filename="../DMMainWindow.cpp" line="56"/>
         <source>Password: </source>
         <translation>密碼： </translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="60"/>
+        <location filename="../DMMainWindow.cpp" line="63"/>
         <source>&amp;Hide</source>
         <translation>隱藏(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="61"/>
+        <location filename="../DMMainWindow.cpp" line="64"/>
         <source>&amp;Config</source>
         <translation>配置(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="63"/>
-        <location filename="../danmaQ_app.cpp" line="172"/>
+        <location filename="../DMMainWindow.cpp" line="66"/>
+        <location filename="../DMMainWindow.cpp" line="175"/>
         <source>&amp;Subscribe</source>
         <translation>訂閱(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="165"/>
+        <location filename="../DMMainWindow.cpp" line="168"/>
         <source>&amp;Unsubscribe</source>
         <translation>停止(&amp;U)</translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="166"/>
+        <location filename="../DMMainWindow.cpp" line="169"/>
         <source>Subscription Started</source>
         <translation>訂閱開始</translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="166"/>
+        <location filename="../DMMainWindow.cpp" line="169"/>
         <source>Let&apos;s Go</source>
         <translation>快發條彈幕試試吧</translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="177"/>
+        <location filename="../DMMainWindow.cpp" line="180"/>
         <source>Ooops!</source>
         <translation>哎呀！</translation>
+    </message>
+    <message>
+        <location filename="../DMMainWindow.cpp" line="192"/>
+        <source>About</source>
+        <translation>關於</translation>
     </message>
 </context>
 <context>
     <name>DMTrayIcon</name>
     <message>
-        <location filename="../danmaQ_app.cpp" line="209"/>
+        <location filename="../DMMainWindow.cpp" line="215"/>
         <source>Toggle Subscription</source>
         <translation>切換訂閱狀態</translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="210"/>
+        <location filename="../DMMainWindow.cpp" line="216"/>
         <source>Refresh Screen</source>
         <translation>刷新屏幕</translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="211"/>
+        <location filename="../DMMainWindow.cpp" line="217"/>
         <source>Show Main Window</source>
         <translation>顯示主窗口</translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="212"/>
+        <location filename="../DMMainWindow.cpp" line="218"/>
         <source>About</source>
         <translation>關於</translation>
     </message>
     <message>
-        <location filename="../danmaQ_app.cpp" line="213"/>
+        <location filename="../DMMainWindow.cpp" line="219"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>

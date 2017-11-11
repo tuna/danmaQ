@@ -189,9 +189,10 @@ void DMMainWindow::on_new_alert(QString msg) {
 void DMMainWindow::show_about_dialog() {
 	this->show();
 	QMessageBox::about(
-        this, "About",
+        this, tr("About"),
                 R"(
                 <strong>DanmaQ</strong>
+                <p>Version )" DANMAQ_VERSION R"( </p>
                 <p>Copyright &copy; 2015-2017 Justin Wong & TUNA members<br />
                 Tsinghua University TUNA Association</p>
                 <p> Source Code Available under GPLv3<br />

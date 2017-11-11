@@ -23,6 +23,8 @@
 #include "Subscriber.hpp"
 #include "DMMainWindow.hpp"
 
+#define DANMAQ_VERSION "0.2.3"
+
 #if defined _WIN32 || defined __CYGWIN__
 #define myDebug (qDebug() << "[" << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << "]")
 #else
