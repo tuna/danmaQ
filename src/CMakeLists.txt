@@ -19,6 +19,7 @@ set(danmaQ_HEADERS
 	)
 
 add_subdirectory(translations)
+add_subdirectory(resource)
 
 set(danmaQ_RESOURCES icons.qrc i18n.qrc)
 
