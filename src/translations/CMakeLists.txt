@@ -4,7 +4,9 @@ set(danmaQ_I18N_SRC
     ja_JP.ts)
 
 find_program(LRELEASE lrelease)
-find_program(LUPDATE lupdate)
+if (NOT LRELEASE)
+    message(FATAL_ERROR "lrelease not found in PATH")
+endif()
 set(danmaQ_I18N_FILES)
 foreach(I18N_SRC ${danmaQ_I18N_SRC})
     string(REPLACE ".ts" ".qm" I18N_FILE ${I18N_SRC})
