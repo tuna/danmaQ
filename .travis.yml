@@ -1,9 +1,14 @@
-sudo: required
 os:
-  - osx
-  - linux
+    - osx
+    - linux
 dist: trusty
 language: cpp
+addons:
+    apt:
+        packages:
+            - qt5-default
+            - libqt5x11extras5-dev
+            - qttools5-dev-tools
 
 env:
     - BUILDTYPE=Release
@@ -11,11 +16,9 @@ env:
 
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq ; fi
 
 install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq qt5-default libqt5x11extras5-dev qttools5-dev-tools ; fi
 
 script:
     - mkdir build/
