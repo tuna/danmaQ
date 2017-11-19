@@ -4,7 +4,7 @@ PROJECT(danmaQ)
 
 option(ENABLE_TEST "Enable test program build" Off)
 
-set(VERSION "0.2.2")
+set(VERSION "0.2.3.1")
 
 # From https://github.com/Homebrew/homebrew-core/issues/8392
 if(APPLE AND EXISTS /usr/local/opt/qt)
