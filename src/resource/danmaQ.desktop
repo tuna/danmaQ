@@ -1,13 +1,16 @@
 [Desktop Entry]
 Name=danmaQ
 Name[zh_CN]=danmaQ 弹幕客户端
+Name[ja_JP]=danmaQ クライエント
 Comment=Show danmaku on screen
 Comment[zh_CN]=在桌面上显示弹幕
+Comment[ja_JP]=デスクトップにコメントを流す
 GenericName=danmaQ
 Exec=danmaQ
 Icon=danmaQ
 Terminal=false
 Type=Application
 Categories=Qt;Utility;
-Keywords=danmaQ;
+Keywords=comment;
 Keywords[zh_CN]=弹幕;
+Keywords[ja_JP]=コメント;
