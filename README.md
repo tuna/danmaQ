@@ -48,7 +48,7 @@ Or you can also use CMake and Qt to build it yourself, but there is no help avai
 
     dnf install danmaq
 
-### AOSC OS
+### AOSC OS / Ubuntu 18.04+ / Debian 10+
 
     apt install danmaq
 
