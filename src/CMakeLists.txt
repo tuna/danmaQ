@@ -18,6 +18,10 @@ set(danmaQ_HEADERS
 	common.h
 	)
 
+set(CMAKE_AUTOMOC ON) 
+set(CMAKE_AUTOUIC ON) 
+set(CMAKE_AUTORCC ON)
+
 add_subdirectory(translations)
 add_subdirectory(resource)
 
@@ -25,8 +29,6 @@ set(danmaQ_RESOURCES icons.qrc i18n.qrc)
 
 add_custom_target(resources ALL DEPENDS ${danmaQ_RESOURCES})
 add_dependencies(resources translations)
-
-set(CMAKE_AUTOMOC ON)
 
 qt5_add_resources(danmaQ_RCC_SRCS ${danmaQ_RESOURCES})
 

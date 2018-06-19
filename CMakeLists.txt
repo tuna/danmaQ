@@ -6,6 +6,12 @@ option(ENABLE_TEST "Enable test program build" Off)
 
 set(VERSION "0.2.3.1")
 
+set(CMAKE_CXX_STANDARD 14)
+
+IF (WIN32 AND NOT MINGW AND NOT CYGWIN)
+	set(CMAKE_PREFIX_PATH "$ENV{QTDIR} ${CMAKE_PREFIX_PATH}")
+ENDIF()
+
 # From https://github.com/Homebrew/homebrew-core/issues/8392
 if(APPLE AND EXISTS /usr/local/opt/qt)
 	# Because Qt5 is key-only, Homebrew installs Qt5 in
@@ -18,10 +24,14 @@ find_package(Qt5Core)
 find_package(Qt5Widgets)
 find_package(Qt5Network)
 
+
 IF (UNIX)
-        set(CMAKE_CXX_FLAGS "-Wall --std=c++11 ${CMAKE_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
 ENDIF ()
 
+IF (WIN32 AND NOT MINGW AND NOT CYGWIN)
+	set(CMAKE_CXX_FLAGS "/permissive- /MP ${CMAKE_CXX_FLAGS}")
+ENDIF()
 
 if (APPLE)
     add_custom_command(
