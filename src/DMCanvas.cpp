@@ -29,6 +29,7 @@
 #include <X11/Xregion.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/shape.h>
+#undef None
 #endif
 
 #include <cstdlib>
