@@ -4,7 +4,7 @@ PROJECT(danmaQ)
 
 option(ENABLE_TEST "Enable test program build" Off)
 
-set(VERSION "0.2.3.1")
+set(VERSION "0.2.3.2")
 
 set(CMAKE_CXX_STANDARD 14)
 
