@@ -40,9 +40,8 @@
             ],
             "sources": [
                 {
-                    "type": "git",
-                    "url": "https://github.com/tuna/danmaQ.git",
-                    "branch": "master"
+                    "type": "dir",
+                    "path": "../"
                 }
             ]
         }

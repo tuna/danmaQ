@@ -18,58 +18,50 @@
 #include <QtCore>
 #include <QtGui/qtextdocument.h>
 #include <QApplication>
+#include <QScreen>
 #include <QDesktopWidget>
 #include <QVector>
 #include <QRegExp>
 #include <QDebug>
-
-#ifdef	__linux
-#include <QtX11Extras/qx11info_x11.h>
-#include <X11/Xlib.h>
-#include <X11/Xregion.h>
-#include <X11/Xutil.h>
-#include <X11/extensions/shape.h>
-#undef None
-#endif
 
 #include <cstdlib>
 
 #include "common.hpp"
 
 
-DMCanvas::DMCanvas(int screenNumber, DMMainWindow *parent)
+DMCanvas::DMCanvas(QScreen* screen, DMMainWindow *parent)
 {
 	this->setParent(parent);
 	this->mainWindow = parent;
-	QDesktopWidget desktop;
-	QRect geo = desktop.screenGeometry(screenNumber);
-	int sw = geo.width(), sh = geo.height();
-	myDebug << sw << ", " << sh;
-	this->resize(sw, sh);
+	this->screen = screen->geometry();
+
+	// this->sx = geo.topLeft().x();
+	// this->sy = geo.topLeft().y();
+	// this->sw = geo.width();
+	// this->sh = geo.height();
+	// myDebug << sx << ", " << sy << ", " <<sw << ", " << sh;
+
+	// QPoint windowPos = parent->mapFromGlobal(geo.topLeft());
+	// this->resize(sw, sh);
+	// this->move(geo.topLeft());
+	// this->setGeometry(sx, sy, sw, sh);
+	// this->setWindowFlags(
+	// 	Qt::X11BypassWindowManagerHint
+	// 	| Qt::WindowStaysOnTopHint
+	// 	| Qt::ToolTip
+	// 	| Qt::FramelessWindowHint
+	// );
+	// this->setAttribute(Qt::WA_TranslucentBackground, true);
+	// this->setAttribute(Qt::WA_DeleteOnClose, true);
+	// this->setAttribute(Qt::WA_Disabled, true);
+	// this->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+	// this->setStyleSheet("background: transparent");
+
 	this->setWindowTitle("Danmaku");
-	this->setWindowFlags(
-		Qt::X11BypassWindowManagerHint
-		| Qt::WindowStaysOnTopHint
-		| Qt::ToolTip
-		| Qt::FramelessWindowHint
-	);
-	this->setAttribute(Qt::WA_TranslucentBackground, true);
-	this->setAttribute(Qt::WA_DeleteOnClose, true);
-	this->setAttribute(Qt::WA_Disabled, true);
-	this->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-	this->setStyleSheet("background: transparent");
 
 	this->init_slots();
 	
-	this->show();
-	this->move(geo.topLeft());
-
-#ifdef __linux
-	Region region = XCreateRegion();
-	XShapeCombineRegion(
-			QX11Info::display(), this->winId(),
-			ShapeInput, 0, 0, region, ShapeSet);
-#endif
+	this->hide();
 
 }
 
@@ -77,7 +69,7 @@ DMCanvas::DMCanvas(DMMainWindow *parent): DMCanvas(0, parent){};
 
 void DMCanvas::init_slots()
 {
-	int height = this->height();
+	int height = this->screen.height();
 	int nlines = (height - 2*VMARGIN) / (this->mainWindow->lineHeight);
 	myDebug << nlines << this->mainWindow->lineHeight;
 	for(int i=0; i<nlines; i++) {
@@ -86,44 +78,70 @@ void DMCanvas::init_slots()
 	}
 }
 
+QPoint DMCanvas::getGlboalPoint(QPoint p)
+{
+	return this->screen.topLeft() + p;
+}
+
 int DMCanvas::allocate_slot(Position position) {
-// 	if(position == "fly")
-//
 	int slot = -1;
 	switch (position) {
-	case FLY:
-		for (int i=0; i < 6; i++) {
-			int try_slot;
-			if (i < 3) {
-				try_slot = std::rand() % (this->fly_slots.size() / 2);
-			} else {
-				try_slot = std::rand() % (this->fly_slots.size());
+		case topScrolling:
+		case topReverse:
+			for (int i=0; i < 10; i++) {
+				int try_slot;
+				if (i < 5) {
+					try_slot = std::rand() % (this->fly_slots.size() / 2);
+				} else {
+					try_slot = std::rand() % (this->fly_slots.size());
+				}
+				if(this->fly_slots.at(try_slot) == false) {
+					this->fly_slots[try_slot] = true;
+					slot = try_slot;
+					break;
+				}
 			}
-			if(this->fly_slots.at(try_slot) == false) {
-				this->fly_slots[try_slot] = true;
-				slot = try_slot;
-				break;
+			break;
+		case bottomScrolling:
+			for (int i = 0; i < 10; i++)
+			{
+				int try_slot;
+				if (i < 5)
+				{
+					try_slot = this->fly_slots.size() / 2 + std::rand() % (this->fly_slots.size() / 2);
+				}
+				else
+				{
+					try_slot = std::rand() % (this->fly_slots.size());
+				}
+				if (this->fly_slots.at(try_slot) == false)
+				{
+					this->fly_slots[try_slot] = true;
+					slot = try_slot;
+					break;
+				}
 			}
-		}
-		break;
-	case TOP:
-		for(int i=0; i < this->fixed_slots.size(); i++) {
-			if(this->fixed_slots.at(i) == false) {
-				this->fixed_slots[i] = true;
-				slot = i;
-				break;
+			break;
+		case topStatic:
+			for(int i=0; i < this->fixed_slots.size(); i++) {
+				if(this->fixed_slots.at(i) == false) {
+					this->fixed_slots[i] = true;
+					slot = i;
+					break;
+				}
 			}
-		}
-		break;
-	case BOTTOM:
-		for(int i=this->fixed_slots.size()-1; i >= 0; i--) {
-			if(this->fixed_slots.at(i) == false) {
-				this->fixed_slots[i] = true;
-				slot = i;
-				break;
+			break;
+		case bottomStatic:
+			for(int i=this->fixed_slots.size()-1; i >= 0; i--) {
+				if(this->fixed_slots.at(i) == false) {
+					this->fixed_slots[i] = true;
+					slot = i;
+					break;
+				}
 			}
-		}
-		break;
+			break;
+		default:
+			break;
 	}
 	myDebug << "Slot: " << slot;
 	return slot;
@@ -144,20 +162,16 @@ QString DMCanvas::escape_text(QString & text) {
 	return escaped;
 }
 
-void DMCanvas::new_danmaku(QString text, QString color, QString position)
+void DMCanvas::new_danmaku(QString text, int color, int position)
 {
-	Position pos;
-	if(position.compare("fly") == 0) {
-		myDebug << "fly";
-		pos = FLY;
-	} else if (position.compare("top") == 0) {
-		myDebug << "top";
-		pos = TOP;
-	} else if (position.compare("bottom") == 0) {
-		myDebug << "bottom";
-		pos = BOTTOM;
-	} else {
-		myDebug << "wrong position: " << position;
+	Position pos = static_cast<Position>(position);
+	if (pos > 0 && pos < position_name.size())
+	{
+		myDebug << "position: " << position_name[position];
+	}
+	else
+	{
+		myDebug << "wrong position: " << pos;
 		return;
 	}
 
@@ -165,26 +179,28 @@ void DMCanvas::new_danmaku(QString text, QString color, QString position)
 	if (slot < 0) {
 		myDebug << "Screen is Full!";
 		return;
-	} 
+	}
 
 	Danmaku *l = new Danmaku(escape_text(text), color, pos, slot, this, this->mainWindow);
 	this->connect(l, &Danmaku::exited,
 				  this, &DMCanvas::delete_danmaku);
-	this->connect(l, &Danmaku::clear_fly_slot,
-				this, &DMCanvas::clear_fly_slot);
 	l->show();
-	// l->move(200, 200);
 }
 
-void DMCanvas::clear_fly_slot(int slot) {
-	myDebug << "Clear Flying Slot: " << slot;
-	// myDebug << this->fly_slots;
-	this->fly_slots[slot] = false;
-}
 
 void DMCanvas::delete_danmaku(Danmaku* dm) {
-	if (dm->position == TOP || dm->position == BOTTOM) {
-		this->fixed_slots[dm->slot] = false;
+	switch (dm->position){
+		case topScrolling:
+		case bottomScrolling:
+		case topReverse:
+			this->fly_slots[dm->slot] = false;
+			break;
+		case topStatic:
+		case bottomStatic:
+			this->fixed_slots[dm->slot] = false;
+			break;
+		default:
+			break;
 	}
 	myDebug << "danmaku closed";
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <title>danmakuQ socket.io client</title>
+   </head>
+   <body>
+      <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+      <script src="qrc:socket.io.js"></script>
+      <script type="text/javascript">
+      function danmaku(channel) {
+         const context = channel.objects.context;
+         context.get_server((server)=>{
+            if(server.startsWith("danmaQ://")){
+               server = server.substr(9);
+            }
+            server = atob(server);
+            server = JSON.parse(server);
+            const socket = io(server.host, { reconnect: true, query: server.query });
+            socket.on('connect', (socket) => {
+               context.connected();
+            });
+            socket.on("disconnect", () => {
+               context.disconnected();
+            });
+            socket.on("danmaku", (data) => {
+               const color = parseInt(data.color) || 0;
+               const postion = parseInt(data.mode) || 1;
+               context.show(data.text, color, postion);
+            });
+         });
+      }
+      const channel = new QWebChannel(qt.webChannelTransport, danmaku);
+      </script>
+   </body>
+</html>

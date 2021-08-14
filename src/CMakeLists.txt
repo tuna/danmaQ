@@ -25,7 +25,7 @@ set(CMAKE_AUTORCC ON)
 add_subdirectory(translations)
 add_subdirectory(resource)
 
-set(danmaQ_RESOURCES icons.qrc i18n.qrc)
+set(danmaQ_RESOURCES icons.qrc i18n.qrc socket.qrc)
 
 add_custom_target(resources ALL DEPENDS ${danmaQ_RESOURCES})
 add_dependencies(resources translations)
@@ -35,7 +35,7 @@ qt5_add_resources(danmaQ_RCC_SRCS ${danmaQ_RESOURCES})
 add_executable(${CMAKE_PROJECT_NAME} ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC} ${danmaQ_RCC_SRCS})
 add_dependencies(${CMAKE_PROJECT_NAME} resources)
 
-set(DANMAQ_LIBRARIES Qt5::Widgets Qt5::Core Qt5::Network)
+set(DANMAQ_LIBRARIES Qt5::Widgets Qt5::Core Qt5::Network Qt5::WebEngineCore Qt5::WebEngineWidgets)
 
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 	find_package(Qt5X11Extras REQUIRED)

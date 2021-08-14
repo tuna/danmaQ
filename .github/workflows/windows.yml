@@ -1,0 +1,54 @@
+name: Windows
+on: [push]
+env:
+  targetName: danmaQ
+jobs:
+  build:
+    name: Build
+    runs-on: windows-2019
+    strategy:
+      matrix:
+        include:
+          - qt_ver: 5.15.2          
+            qt_arch: win64_msvc2019_64
+            msvc_arch: x64
+            qt_arch_install: msvc2019_64
+    steps:
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.13.0
+        with:
+          version: ${{ matrix.qt_ver }}
+          modules: 'qtwebengine'
+          arch: ${{ matrix.qt_arch }}
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: MSVC Build
+        id: build
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.msvc_arch }}
+          cmake -B . -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=Release
+          msbuild ALL_BUILD.vcxproj
+      - name: Package Qt
+        env:
+          VCINSTALLDIR: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory ${env:targetName}
+          Copy-Item src\Debug\${{ env.targetName }}.exe ${env:targetName}\
+          windeployqt ${env:targetName}\${env:targetName}.exe
+          Compress-Archive -Path ${env:targetName} ${env:targetName}'.zip'
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.targetName }}.win.${{ matrix.msvc_arch }}.zip
+          path: ${{ env.targetName }}.zip
+      - name: Upload Release
+        if: startsWith(github.event.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.targetName }}.zip
+          asset_name: ${{ env.targetName }}.win.${{ matrix.msvc_arch }}.zip
+          tag: ${{ github.ref }}
+          overwrite: true 

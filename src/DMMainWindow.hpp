@@ -18,6 +18,7 @@
 #ifndef DMMAINWINDOW_HPP
 #define DMMAINWINDOW_HPP
 #include <QApplication>
+#include <QMessageBox>
 #include <QWidget>
 #include <QVector>
 #include <QLineEdit>
@@ -28,15 +29,14 @@
 
 class Subscriber;
 
-class DMTrayIcon: public QSystemTrayIcon
+class DMTrayIcon : public QSystemTrayIcon
 {
 	Q_OBJECT
 
 public:
-	DMTrayIcon(QWidget *parent=0);
-	QAction *toggleAction, *showAction, *aboutAction, *exitAction,
-			*refreshScreenAction;
-
+	DMTrayIcon(QWidget *parent = 0);
+	QAction *showAction, *aboutAction, *exitAction,
+		*refreshScreenAction;
 
 public slots:
 	void on_activated(QSystemTrayIcon::ActivationReason e);
@@ -45,24 +45,21 @@ public slots:
 
 private:
 	QIcon icon_running, icon_stopped;
-
 };
 
-
-class DMMainWindow: public QWidget
+class DMMainWindow : public QWidget
 {
 	Q_OBJECT
 
 public:
-    DMMainWindow(QApplication* app);
+	DMMainWindow(QApplication *app);
 
 	int lineHeight, fontSize, screenCount;
 	QString fontFamily;
 	float speedScale;
 
-	QLineEdit *server, *channel, *passwd;
-	QPushButton *configBtn, *hideBtn, *mainBtn;
-	
+	QLineEdit *server;
+	QPushButton *hideBtn, *mainBtn;
 
 public slots:
 	void reset_canvases();
@@ -76,13 +73,13 @@ signals:
 	void stop_subscription();
 
 private:
-	QApplication* app;
-	QVector<QWidget*>	dm_canvases;
-	Subscriber *subscriber;
-	DMTrayIcon *trayIcon;
+	QApplication *app;
+	QVector<QWidget *> dm_canvases;
+	QVector<QCheckBox *> screenBoxes;
+	QWidget *screenWidget{};
+	Subscriber *subscriber{};
+	DMTrayIcon *trayIcon{};
 	void init_canvases();
-
-
 };
 
 #endif
