@@ -1,0 +1,45 @@
+name: Ubuntu
+on: [push]
+env:
+  targetName: danmaQ
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        qt_ver: [5.15.2]
+        qt_arch: [gcc_64]
+    steps:
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: ${{ matrix.qt_ver }}
+          modules: 'qtcharts qtwebengine'
+          cached: 'false'
+      - name: ubuntu install
+        run: sudo apt-get install -y libqt5x11extras5-dev cmake flatpak flatpak-builder
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: build flatpak
+        run: |
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install flathub org.kde.Sdk//5.15 io.qt.qtwebengine.BaseApp//5.15 -y
+          sudo flatpak-builder --repo=repo --force-clean build-dir org.tuna.danmaQ.local.json
+          sudo flatpak build-bundle repo danmaQ.flatpak org.tuna.danmaQ
+        working-directory: flatpak
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.targetName }}.linux.amd64.flatpak
+          path: flatpak/danmaQ.flatpak
+      - name: uploadRelease
+        if: startsWith(github.event.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: flatpak/danmaQ.flatpak
+          asset_name: ${{ env.targetName }}.linux.amd64.flatpak
+          tag: ${{ github.ref }}
+          overwrite: true

@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file alias="socket.html">resource/socket.html</file>
+    <file alias="socket.io.js">resource/socket.io.js</file>
+</qresource>
+</RCC>

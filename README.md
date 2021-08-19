@@ -25,7 +25,7 @@ On Linux X86-64, you can download the bundled AppImage.
 ### Source
 
     apt-get install qt5-default qttools5-dev qttools5-dev-tools libqt5x11extras5-dev cmake  # for ubuntu trusty (aka 14.04 LTS) and debian jessie (aka 8)
-    apt-get install qt5-default qttools5-dev-tools libqt5x11extras5-dev cmake  # for ubuntu and debian
+    apt-get install qt5-default qttools5-dev-tools qtwebengine5-dev libqt5x11extras5-dev cmake  # for ubuntu and debian
     zypper install libqt5-qtx11extras-devel libqt5-linguist-devel cmake        # for openSUSE
     dnf install qt5-devel qt5-qtx11extras-devel qt5-linguist cmake             # for fedora
     brew install qt                                                            # for macOS

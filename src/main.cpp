@@ -17,6 +17,7 @@
 
 #include <QtGlobal>
 #include <QApplication>
+#include <QScreen>
 #include <QDebug>
 #include <QTranslator>
 #include <QDesktopWidget>
@@ -46,6 +47,7 @@ int main(int argc, char *argv[])
 										  QDir::Name);
 
 	QString systemLocale = QLocale::system().name();
+
 	myDebug << "System locale:" << systemLocale;
 
 	// if system language is zh_CN, then first look for zh_CN, then zh_*
@@ -62,16 +64,14 @@ int main(int argc, char *argv[])
 		myDebug << "No available translation found.";
 	}
 
-	QDesktopWidget* desktop = QApplication::desktop();
+	
 	auto dmMainWindow = new DMMainWindow(&app);
 	app.connect(
-		desktop, &QDesktopWidget::workAreaResized,
-		dmMainWindow, &DMMainWindow::reset_canvases
-	);
+		&app, &QApplication::screenAdded,
+		dmMainWindow, &DMMainWindow::reset_canvases);
 	app.connect(
-		desktop, &QDesktopWidget::screenCountChanged,
-		dmMainWindow, &DMMainWindow::reset_canvases
-	);
+		&app, &QApplication::screenRemoved,
+		dmMainWindow, &DMMainWindow::reset_canvases);
+	app.setQuitOnLastWindowClosed(false);
 	return app.exec();
-}
-
+	}

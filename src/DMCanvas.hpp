@@ -28,24 +28,23 @@ class DMCanvas: public QWidget
 
 public:
     DMCanvas(DMMainWindow *parent);
-    DMCanvas(int screenNumber, DMMainWindow *parent);
+    DMCanvas(QScreen* screen, DMMainWindow *parent);
 	~DMCanvas();
     DMMainWindow *mainWindow;
 
 	int slot_y(int slot);
-
+	QRect screen;
+	QPoint getGlboalPoint(QPoint p);
 
 public slots:
-	void new_danmaku(QString text, QString color, QString position);
+	void new_danmaku(QString text, int color, int position);
 	void delete_danmaku(Danmaku*);
-	void clear_fly_slot(int slot);
 
 private:
 	QVector<bool> fly_slots, fixed_slots;
 	void init_slots();
 	int allocate_slot(Position);
 	QString escape_text(QString &);
-
 };
 
 #endif

@@ -20,6 +20,8 @@
 #include <QThread>
 #include <QTimer>
 #include <QNetworkReply>
+#include <QWebEngineView>
+#include <QtWebChannel>
 
 #include <QUuid>
 #include <QUrl>
@@ -35,111 +37,52 @@
 #include "common.hpp"
 
 
-Subscriber::Subscriber(QString server, QString channel, QString passwd, QObject* parent)
-	: QThread(parent)
+Subscriber::Subscriber(QString server, QObject* parent)
+	: QObject(parent)
 {
 	this->server = server;
-	this->channel = channel;
-	this->passwd = passwd;
-	
-	QUuid uuid = QUuid::createUuid();
-	this->_uuid = uuid.toString();
-	// myDebug << this->_uuid;
-	
-	QUrl uri = QUrl((this->server+"/api/v1.1/channels/%1/danmaku").arg(this->channel));
-
-	if(uri.scheme().compare("https") == 0) {
-		uri.port(443);
-	}
-	
-	request.setUrl(uri);
-	// myDebug << uri;
-	request.setRawHeader("X-GDANMAKU-SUBSCRIBER-ID", this->_uuid.toUtf8() );
-	request.setRawHeader("X-GDANMAKU-AUTH-KEY", this->passwd.toUtf8() );
-	
-	connect(this, &Subscriber::finished, this, &Subscriber::deleteLater);
 }
 
-void Subscriber::run() 
+void Subscriber::start()
 {
-	mark_stop = false;
-	
-    http = new QNetworkAccessManager(nullptr);
-
-	QEventLoop loop;
-    connect(qobject_cast<DMMainWindow*>(this->parent()), &DMMainWindow::stop_subscription,
-			&loop, &QEventLoop::quit);
-	
-	// Set HTTP request timeout
-	QTimer timeout;
-	timeout.setSingleShot(true);
-	
-	while(1) {
-		timeout.start(10000);
-		QNetworkReply *reply = http->get(request);
-		// If timeout signaled, let http request abort
-		connect(&timeout, &QTimer::timeout, reply, &QNetworkReply::abort);
-		connect(reply, &QNetworkReply::finished,
-				 &loop, &QEventLoop::quit);
-		loop.exec();
-		timeout.stop();
-		if(mark_stop) {
-			myDebug << "Thread marked to stop";
-			break;
-		}
-		if(reply->error()){
-			myDebug << reply->errorString() << "Wait 2 secs";
-			this->msleep(2000);
-		} else {
-			parse_response(reply);
-		}
-		reply->deleteLater();
-	}
-	delete http;
-    http = nullptr;
+	webView = new QWebEngineView;
+	webChannel = new QWebChannel;
+	webView->load(QUrl("qrc:socket.html"));
+	webChannel->registerObject("context", this);
+	webView->page()->setWebChannel(webChannel);
+	connect(this, &Subscriber::finished, this, &Subscriber::deleteLater);
+	emit started();
+	myDebug << "started";
 }
 
-
-void Subscriber::parse_response(QNetworkReply* reply) {
-	QVariant resp = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-	if(resp.isValid()) {
-		bool fatal = false;
-		int statusCode = resp.toInt();
-		if (statusCode >= 400) {
-			fatal = true;
-			QString errMsg;
-			if (statusCode == 403 ) {
-				errMsg = "Wrong Password";
-			} else if (statusCode == 404) {
-				errMsg = "No Such Channel";
-			} else if (statusCode >= 500) {
-				errMsg = "Server Error";
-			}
-			myDebug << errMsg;
-			emit new_alert(errMsg);
-		}
-		if (fatal) {
-			return;
-		}
-	}
-	
-	// QByteArray json = QByteArray(
-	// 		"[{\"text\": \"test\", \"style\": \"white\", \"position\": \"fly\"},"
-	// 		"{\"text\": \"test2\", \"style\": \"white\", \"position\": \"fly\"}]"
-	// );
-	QJsonDocument json = QJsonDocument::fromJson(reply->readAll());
-
-	if(json.isArray()) {
-		QJsonArray dms = json.array();
-		for(QJsonArray::iterator i = dms.begin(); i != dms.end(); ++i) {
-			QJsonObject dm = (*i).toObject();
-			QString text = dm["text"].toString(),
-					color = dm["style"].toString(),
-					position = dm["position"].toString();
-			myDebug << text ;
-
-			emit new_danmaku(text, color, position);
-		}
-	}
+void Subscriber::finish()
+{
+	webChannel->deleteLater();
+	webView->deleteLater();
+	emit finished();
+	myDebug << "finished";
 }
 
+QString Subscriber::get_server()
+{
+	return this->server;
+}
+
+void Subscriber::webError(QString text){
+	myDebug << text;
+}
+
+void Subscriber::show(QString text, int color, int position)
+{
+	emit new_danmaku(text, color, position);
+}
+
+void Subscriber::connected()
+{
+	emit new_danmaku(tr("Server connected"), 16777215, 5);
+}
+
+void Subscriber::disconnected()
+{
+	emit new_danmaku(tr("Server disconnected"), 16777215, 5);
+}

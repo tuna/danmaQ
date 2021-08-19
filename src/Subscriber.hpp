@@ -22,29 +22,37 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QTime>
+#include <QWebEngineView>
+#include <QtWebChannel>
 
-
-class Subscriber : public QThread
+class Subscriber : public QObject
 {
 	Q_OBJECT
 	
 public:
-	Subscriber(QString server, QString channel, QString passwd, QObject* parent=0);
-	void run();
-	bool mark_stop;
+	Subscriber(QString server, QObject* parent=0);
+	void start();
+	void finish();
 
 public slots:
-	void parse_response(QNetworkReply* reply);
+	void show(QString text, int color, int position);
+	void connected();
+	void disconnected();
+	QString get_server();
+	void webError(QString text);
 
 signals:
-	void new_danmaku(QString text, QString color, QString position);
+	void new_danmaku(QString text, int color, int position);
 	void new_alert(QString msg);
+	void started();
+	void finished();
 
 private:
-	QNetworkAccessManager* http;
+	QWebEngineView *webView;
+	QWebChannel *webChannel;
+	QNetworkAccessManager *http;
 	QNetworkRequest request;
-	QString server, channel, passwd, _uuid;
-	
+	QString server;
 };
 
 
