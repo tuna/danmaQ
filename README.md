@@ -55,17 +55,6 @@ apt install danmaq
 
 ## Usage
 
-### TUNA Public Service
+DanmaQ >= 0.3 works as a client of [Comment9](https://github.com/prnake/Comment9).
 
-First you need to create a channel, go to https://dm.tuna.moe:8443/ and create a channel, 
-(let's use `ooxx` as the channel name and `passw0rd` as the password)
-
-Then run `danmaQ` and fill `https://dm.tuna.moe:8443` to server, 
-and channel name (`ooxx`) & channel password (`passw0rd`). 
-
-Then any audiences can open https://dm.tuna.moe:8443/ and click to your channel page,
-lauch danmaku in your screen!
-
-### Self Hosted Service
-
-See [gdanmaku-server](https://github.com/tuna/gdanmaku-server).
+DanmaQ < 0.3 should be used as a client to [gdanmaku-server](https://github.com/tuna/gdanmaku-server).
