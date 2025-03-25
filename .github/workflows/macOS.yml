@@ -13,12 +13,12 @@ env:
 jobs:
   build:
     name: Build
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: 5.15.2
+          version: 6.8.2
           modules: 'qtwebengine'
           cache: true
       - uses: actions/checkout@v4

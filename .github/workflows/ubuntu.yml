@@ -17,17 +17,17 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        qt_ver: [5.15.2]
+        qt_ver: [6.8.2]
         qt_arch: [gcc_64]
     steps:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt_ver }}
-          modules: 'qtcharts qtwebengine'
+          modules: 'qtwebengine'
           cache: true
       - name: Install other dependencies
-        run: sudo apt-get install -y libqt5x11extras5-dev cmake flatpak flatpak-builder
+        run: sudo apt-get install -y cmake ninja-build flatpak flatpak-builder
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
