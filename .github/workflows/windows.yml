@@ -44,7 +44,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory ${env:targetName}
-          Copy-Item src\Debug\${{ env.targetName }}.exe ${env:targetName}\
+          Copy-Item build\src\Debug\${{ env.targetName }}.exe ${env:targetName}\
           windeployqt ${env:targetName}\${env:targetName}.exe
           Compress-Archive -Path ${env:targetName} ${env:targetName}'.zip'
       - uses: actions/upload-artifact@v4
