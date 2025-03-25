@@ -35,7 +35,7 @@ qt_add_translations(${CMAKE_PROJECT_NAME}
     TS_FILES ${danmqQ_TRANSLATIONS}
 )
 
-set(DANMAQ_LIBRARIES Qt6::Widgets Qt6::Core Qt6::Network Qt6::WebEngineCore Qt6::WebEngineWidgets)
+set(DANMAQ_LIBRARIES Qt6::Widgets Qt6::Core Qt6::Network Qt6::WebEngineWidgets)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${DANMAQ_LIBRARIES})
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION bin)

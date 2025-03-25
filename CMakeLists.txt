@@ -15,24 +15,6 @@ ENDIF()
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network WebEngineWidgets LinguistTools)
 
-# # From https://github.com/Homebrew/homebrew-core/issues/8392
-# if(APPLE)
-# if(EXISTS /usr/local/opt/qt5)
-# 	# Because Qt5 is key-only, Homebrew installs Qt5 in
-# 	# /usr/local/qt5, ensure it can be found by CMake since
-# 	# it is not in the default /usr/local prefix.
-# 	list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
-#         set(CMAKE_MACDEPLOYQT_PATH "/usr/local/opt/qt5/bin/macdeployqt")
-#         set(CMAKE_MACOSX_RPATH 1)
-#         # set (_frameworks ${CMAKE_FRAMEWORK_PATH} $ENV{CMAKE_FRAMEWORK_PATH} ~/Library/Frameworks /usr/local/Frameworks ${CMAKE_SYSTEM_FRAMEWORK_PATH})
-#         # list (REMOVE_DUPLICATES _frameworks)
-#         set(CMAKE_INSTALL_RPATH "$INSTALL_DIR/lib")
-#         # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
-# else()
-#         set(CMAKE_MACDEPLOYQT_PATH "macdeployqt")
-# endif()
-# endif()
-
 IF (UNIX)
         set(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
 ENDIF ()
@@ -68,14 +50,14 @@ if (APPLE)
             COMMAND mkdir -p ${CMAKE_PROJECT_NAME}.app/Contents/Resources
             COMMAND touch ${CMAKE_PROJECT_NAME}.app/Contents/Resources/empty.lproj
             COMMAND cp Icon.icns ${CMAKE_PROJECT_NAME}.app/Contents/Resources/
-            COMMAND ${CMAKE_MACDEPLOYQT_PATH} ${CMAKE_PROJECT_NAME}.app -no-strip
+            COMMAND macdeployqt ${CMAKE_PROJECT_NAME}.app -no-strip
             DEPENDS ${CMAKE_BINARY_DIR}/src/${CMAKE_PROJECT_NAME}
             DEPENDS ${CMAKE_BINARY_DIR}/Icon.icns
             OUTPUT ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app
     )
     add_custom_command(
             COMMAND cp -r ${CMAKE_PROJECT_NAME}.app ${CMAKE_PROJECT_NAME}.app.bak
-            COMMAND ${CMAKE_MACDEPLOYQT_PATH} ${CMAKE_PROJECT_NAME}.app -dmg
+            COMMAND macdeployqt ${CMAKE_PROJECT_NAME}.app -dmg
             COMMAND rm -rf ${CMAKE_PROJECT_NAME}.app
             COMMAND mv ${CMAKE_PROJECT_NAME}.app.bak ${CMAKE_PROJECT_NAME}.app
             DEPENDS ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app

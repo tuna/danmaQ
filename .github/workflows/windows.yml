@@ -25,7 +25,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt_ver }}
-          modules: 'qtwebengine'
+          modules: "qtwebengine qtwebchannel qtpositioning" # latter two are required by webengine
           arch: ${{ matrix.qt_arch }}
           cache: true
       - uses: actions/checkout@v4
@@ -36,8 +36,8 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.msvc_arch }}
-          cmake -B . -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=Release
-          cmake --build .
+          cmake -B build -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DQT_DEBUG_FIND_PACKAGE=ON
+          cmake --build build
       - name: Package Qt
         env:
           VCINSTALLDIR: 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC'

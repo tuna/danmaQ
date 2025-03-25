@@ -24,30 +24,39 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt_ver }}
-          modules: 'qtwebengine'
+          modules: "qtwebengine qtwebchannel qtpositioning" # latter two are required by webengine
           cache: true
       - name: Install other dependencies
         run: sudo apt-get install -y cmake ninja-build flatpak flatpak-builder
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Build flatpak
+      - name: Build native
         run: |
-          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          sudo flatpak install flathub org.kde.Sdk//5.15 io.qt.qtwebengine.BaseApp//5.15 -y
-          sudo flatpak-builder --repo=repo --force-clean build-dir org.tuna.danmaQ.local.json
-          sudo flatpak build-bundle repo danmaQ.flatpak org.tuna.danmaQ
-        working-directory: flatpak
-      - uses: actions/upload-artifact@v4
+          cmake -B build -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -GNinja -DQT_DEBUG_FIND_PACKAGE=ON
+          cmake --build build
+      - name: Upload build result
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.targetName }}.linux.amd64.flatpak
-          path: flatpak/danmaQ.flatpak
-      - name: Update to release
-        if: startsWith(github.event.ref, 'refs/tags/')
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: flatpak/danmaQ.flatpak
-          asset_name: ${{ env.targetName }}.linux.amd64.flatpak
-          tag: ${{ github.ref }}
-          overwrite: true
+          name: ${{ env.targetName }}.linux.amd64
+          path: build/src/danmaQ
+      # - name: Build flatpak
+      #   run: |
+      #     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      #     sudo flatpak install flathub org.kde.Sdk//5.15 io.qt.qtwebengine.BaseApp//5.15 -y
+      #     sudo flatpak-builder --repo=repo --force-clean build-dir org.tuna.danmaQ.local.json
+      #     sudo flatpak build-bundle repo danmaQ.flatpak org.tuna.danmaQ
+      #   working-directory: flatpak
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ${{ env.targetName }}.linux.amd64.flatpak
+      #     path: flatpak/danmaQ.flatpak
+      # - name: Update to release
+      #   if: startsWith(github.event.ref, 'refs/tags/')
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: flatpak/danmaQ.flatpak
+      #     asset_name: ${{ env.targetName }}.linux.amd64.flatpak
+      #     tag: ${{ github.ref }}
+      #     overwrite: true

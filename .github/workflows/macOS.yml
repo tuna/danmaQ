@@ -19,16 +19,15 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: 6.8.2
-          modules: 'qtwebengine'
+          modules: "qtwebengine qtwebchannel qtpositioning" # latter two are required by webengine
           cache: true
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - name: Build MacOS
         run: |
-          cmake . && make translations
-          cmake -B build -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=Release
-          cd build && make dmg       
+          cmake -B build -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DQT_DEBUG_FIND_PACKAGE=ON
+          cd build && make dmg
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.targetName }}.macos.amd64.dmg
