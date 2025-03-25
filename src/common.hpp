@@ -1,6 +1,6 @@
 ﻿/*
  * This file is part of danmaQ.
- * 
+ *
  * DanmaQ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,17 +18,17 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
-#include "Danmaku.hpp"
 #include "DMCanvas.hpp"
-#include "Subscriber.hpp"
 #include "DMMainWindow.hpp"
+#include "Danmaku.hpp"
+#include "Subscriber.hpp"
 
 #define DANMAQ_VERSION "0.2.3.2"
 
 #if defined _WIN32 || defined __CYGWIN__
 #define myDebug (qDebug() << "[" << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << "]")
 #else
-#define myDebug (qDebug() << "\x1b[34;1m" << __FILE__ << ":" << __LINE__ << ":" <<__PRETTY_FUNCTION__ << "\x1b[0m")
+#define myDebug (qDebug() << "\x1b[34;1m" << __FILE__ << ":" << __LINE__ << ":" << __PRETTY_FUNCTION__ << "\x1b[0m")
 #endif
 
-#endif 
+#endif

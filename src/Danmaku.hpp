@@ -1,6 +1,6 @@
 ﻿/*
  * This file is part of danmaQ.
- * 
+ *
  * DanmaQ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,52 +18,42 @@
 #ifndef DANMAKU_HPP
 #define DANMAKU_HPP
 
-#include <QWidget>
 #include <QLabel>
 #include <QString>
 #include <QVector>
+#include <QWidget>
 
-enum Position
-{
-	UNUSED0 = 0,
-	topScrolling,
-	bottomScrolling,
-	UNUSED3,
-	bottomStatic,
-	topStatic,
-	topReverse
-};
-const QVector<QString> position_name = {"UNUSED0", "topScrolling", "bottomScrolling", "UNUSED3", "bottomStatic", "topStatic", "topReverse"};
+enum Position { UNUSED0 = 0, topScrolling, bottomScrolling, UNUSED3, bottomStatic, topStatic, topReverse };
+const QVector<QString> position_name = {"UNUSED0",      "topScrolling", "bottomScrolling", "UNUSED3",
+                                        "bottomStatic", "topStatic",    "topReverse"};
 
 const int VMARGIN = 20;
 
 class DMCanvas;
 class DMMainWindow;
 
-class Danmaku: public QLabel
-{
-Q_OBJECT
+class Danmaku : public QLabel {
+  Q_OBJECT
 
-public:
-    Danmaku(QString text, int color, Position position, int slot, DMCanvas *parent, DMMainWindow *mainWindow);
-	// Danmaku(QString text, QWidget *parent=0);
-	Position position;
-	int slot;
-	DMCanvas *canvas;
-    DMMainWindow *mainWindow;
+ public:
+  Danmaku(QString text, int color, Position position, int slot, DMCanvas* parent, DMMainWindow* mainWindow);
+  // Danmaku(QString text, QWidget *parent=0);
+  Position position;
+  int slot;
+  DMCanvas* canvas;
+  DMMainWindow* mainWindow;
 
-public slots:
-	void linearMotion(int startX, int startY, int endX, int endY);
-	void clean_close();
+ public slots:
+  void linearMotion(int startX, int startY, int endX, int endY);
+  void clean_close();
 
-signals:
-	void exited(Danmaku*);
+ signals:
+  void exited(Danmaku*);
 
-private:
-	static QString style_tmpl;
-	static QString escape_text(QString text);
-	void init_position();
-	
+ private:
+  static QString style_tmpl;
+  static QString escape_text(QString text);
+  void init_position();
 };
 
 #endif

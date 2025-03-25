@@ -1,6 +1,6 @@
 ﻿/*
  * This file is part of danmaQ.
- * 
+ *
  * DanmaQ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -15,74 +15,65 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QtCore>
 #include <QEventLoop>
+#include <QNetworkReply>
 #include <QThread>
 #include <QTimer>
-#include <QNetworkReply>
 #include <QWebEngineView>
+#include <QtCore>
 #include <QtWebChannel>
 
-#include <QUuid>
-#include <QUrl>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QUrl>
+#include <QUuid>
 
 #include <QByteArray>
+#include <QDebug>
 #include <QVariant>
 #include <QVariantList>
 #include <QVariantMap>
-#include <QDebug>
 
 #include "common.hpp"
 
-
-Subscriber::Subscriber(QString server, QObject* parent)
-	: QObject(parent)
-{
-	this->server = server;
+Subscriber::Subscriber(QString server, QObject* parent) : QObject(parent) {
+  this->server = server;
 }
 
-void Subscriber::start()
-{
-	webView = new QWebEngineView;
-	webChannel = new QWebChannel;
-	webView->load(QUrl("qrc:socket.html"));
-	webChannel->registerObject("context", this);
-	webView->page()->setWebChannel(webChannel);
-	connect(this, &Subscriber::finished, this, &Subscriber::deleteLater);
-	emit started();
-	myDebug << "started";
+void Subscriber::start() {
+  webView = new QWebEngineView;
+  webChannel = new QWebChannel;
+  webView->load(QUrl("qrc:socket.html"));
+  webChannel->registerObject("context", this);
+  webView->page()->setWebChannel(webChannel);
+  connect(this, &Subscriber::finished, this, &Subscriber::deleteLater);
+  emit started();
+  myDebug << "started";
 }
 
-void Subscriber::finish()
-{
-	webChannel->deleteLater();
-	webView->deleteLater();
-	emit finished();
-	myDebug << "finished";
+void Subscriber::finish() {
+  webChannel->deleteLater();
+  webView->deleteLater();
+  emit finished();
+  myDebug << "finished";
 }
 
-QString Subscriber::get_server()
-{
-	return this->server;
+QString Subscriber::get_server() {
+  return this->server;
 }
 
-void Subscriber::webError(QString text){
-	myDebug << text;
+void Subscriber::webError(QString text) {
+  myDebug << text;
 }
 
-void Subscriber::show(QString text, int color, int position)
-{
-	emit new_danmaku(text, color, position);
+void Subscriber::show(QString text, int color, int position) {
+  emit new_danmaku(text, color, position);
 }
 
-void Subscriber::connected()
-{
-	emit new_danmaku(tr("Server connected"), 16777215, 5);
+void Subscriber::connected() {
+  emit new_danmaku(tr("Server connected"), 16777215, 5);
 }
 
-void Subscriber::disconnected()
-{
-	emit new_danmaku(tr("Server disconnected"), 16777215, 5);
+void Subscriber::disconnected() {
+  emit new_danmaku(tr("Server disconnected"), 16777215, 5);
 }

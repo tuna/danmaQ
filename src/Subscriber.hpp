@@ -1,6 +1,6 @@
 /*
  * This file is part of danmaQ.
- * 
+ *
  * DanmaQ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,43 +17,41 @@
 
 #ifndef SUBSCRIBER_HPP
 #define SUBSCRIBER_HPP
-#include <QtCore>
-#include <QThread>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
+#include <QThread>
 #include <QTime>
 #include <QWebEngineView>
+#include <QtCore>
 #include <QtWebChannel>
 
-class Subscriber : public QObject
-{
-	Q_OBJECT
-	
-public:
-	Subscriber(QString server, QObject* parent=0);
-	void start();
-	void finish();
+class Subscriber : public QObject {
+  Q_OBJECT
 
-public slots:
-	void show(QString text, int color, int position);
-	void connected();
-	void disconnected();
-	QString get_server();
-	void webError(QString text);
+ public:
+  Subscriber(QString server, QObject* parent = 0);
+  void start();
+  void finish();
 
-signals:
-	void new_danmaku(QString text, int color, int position);
-	void new_alert(QString msg);
-	void started();
-	void finished();
+ public slots:
+  void show(QString text, int color, int position);
+  void connected();
+  void disconnected();
+  QString get_server();
+  void webError(QString text);
 
-private:
-	QWebEngineView *webView;
-	QWebChannel *webChannel;
-	QNetworkAccessManager *http;
-	QNetworkRequest request;
-	QString server;
+ signals:
+  void new_danmaku(QString text, int color, int position);
+  void new_alert(QString msg);
+  void started();
+  void finished();
+
+ private:
+  QWebEngineView* webView;
+  QWebChannel* webChannel;
+  QNetworkAccessManager* http;
+  QNetworkRequest request;
+  QString server;
 };
 
-
-#endif 
+#endif
