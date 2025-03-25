@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 2.8.12)
+﻿cmake_minimum_required(VERSION 3.16)
 
 PROJECT(danmaQ)
 
@@ -6,35 +6,32 @@ option(ENABLE_TEST "Enable test program build" Off)
 
 set(VERSION "0.3.0")
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 
 IF (WIN32 AND NOT MINGW AND NOT CYGWIN)
 	set(CMAKE_PREFIX_PATH "$ENV{QTDIR} ${CMAKE_PREFIX_PATH}")
 ENDIF()
 
-# From https://github.com/Homebrew/homebrew-core/issues/8392
-if(APPLE)
-if(EXISTS /usr/local/opt/qt5)
-	# Because Qt5 is key-only, Homebrew installs Qt5 in
-	# /usr/local/qt5, ensure it can be found by CMake since
-	# it is not in the default /usr/local prefix.
-	list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
-        set(CMAKE_MACDEPLOYQT_PATH "/usr/local/opt/qt5/bin/macdeployqt")
-        set(CMAKE_MACOSX_RPATH 1)
-        # set (_frameworks ${CMAKE_FRAMEWORK_PATH} $ENV{CMAKE_FRAMEWORK_PATH} ~/Library/Frameworks /usr/local/Frameworks ${CMAKE_SYSTEM_FRAMEWORK_PATH})
-        # list (REMOVE_DUPLICATES _frameworks)
-        set(CMAKE_INSTALL_RPATH "$INSTALL_DIR/lib")
-        # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
-else()
-        set(CMAKE_MACDEPLOYQT_PATH "macdeployqt")
-endif()
-endif()
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network WebEngineWidgets LinguistTools)
 
-find_package(Qt5Core)
-find_package(Qt5Widgets)
-find_package(Qt5Network)
-find_package(Qt5WebEngineWidgets)
+# # From https://github.com/Homebrew/homebrew-core/issues/8392
+# if(APPLE)
+# if(EXISTS /usr/local/opt/qt5)
+# 	# Because Qt5 is key-only, Homebrew installs Qt5 in
+# 	# /usr/local/qt5, ensure it can be found by CMake since
+# 	# it is not in the default /usr/local prefix.
+# 	list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
+#         set(CMAKE_MACDEPLOYQT_PATH "/usr/local/opt/qt5/bin/macdeployqt")
+#         set(CMAKE_MACOSX_RPATH 1)
+#         # set (_frameworks ${CMAKE_FRAMEWORK_PATH} $ENV{CMAKE_FRAMEWORK_PATH} ~/Library/Frameworks /usr/local/Frameworks ${CMAKE_SYSTEM_FRAMEWORK_PATH})
+#         # list (REMOVE_DUPLICATES _frameworks)
+#         set(CMAKE_INSTALL_RPATH "$INSTALL_DIR/lib")
+#         # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
+# else()
+#         set(CMAKE_MACDEPLOYQT_PATH "macdeployqt")
+# endif()
+# endif()
 
 IF (UNIX)
         set(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")

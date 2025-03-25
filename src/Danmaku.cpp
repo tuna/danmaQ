@@ -17,7 +17,6 @@
 
 #include <QtCore>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QLabel>
 #include <QWidget>
 #include <QColor>

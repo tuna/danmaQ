@@ -19,9 +19,8 @@
 #include <QtGui/qtextdocument.h>
 #include <QApplication>
 #include <QScreen>
-#include <QDesktopWidget>
 #include <QVector>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QDebug>
 
 #include <cstdlib>
@@ -155,9 +154,9 @@ int DMCanvas::slot_y(int slot)
 QString DMCanvas::escape_text(QString & text) {
 	QString escaped = text.toHtmlEscaped();
 
-	escaped.replace(QRegExp("([^\\\\])\\\\n"), "\\1<br/>");
-	escaped.replace(QRegExp("\\\\\\\\n"), "\\n");
-	escaped.replace(QRegExp("\\[s\\](.+)\\[/s\\]"), "<s>\\1</s>");
+	escaped.replace(QRegularExpression("([^\\\\])\\\\n"), "\\1<br/>");
+	escaped.replace(QRegularExpression("\\\\\\\\n"), "\\n");
+	escaped.replace(QRegularExpression("\\[s\\](.+)\\[/s\\]"), "<s>\\1</s>");
 
 	return escaped;
 }

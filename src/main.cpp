@@ -20,7 +20,6 @@
 #include <QScreen>
 #include <QDebug>
 #include <QTranslator>
-#include <QDesktopWidget>
 #include <QRegularExpression>
 #include <QDir>
 
@@ -35,19 +34,15 @@
 #endif
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(i18n);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
     QApplication app(argc, argv);
     std::srand(std::time(0));
 
-	QDir dir(":translations");
+	QDir dir(":/i18n");
 	QStringList fileNames = dir.entryList(QStringList("*.qm"), QDir::Files,
 										  QDir::Name);
+	myDebug << "Available translations:" << fileNames;
 
 	QString systemLocale = QLocale::system().name();
-
 	myDebug << "System locale:" << systemLocale;
 
 	// if system language is zh_CN, then first look for zh_CN, then zh_*

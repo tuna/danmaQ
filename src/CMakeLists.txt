@@ -18,35 +18,24 @@ set(danmaQ_HEADERS
 	common.h
 	)
 
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES zh_CN zh_TW ja_JP)
+
 set(CMAKE_AUTOMOC ON) 
 set(CMAKE_AUTOUIC ON) 
 set(CMAKE_AUTORCC ON)
 
-add_subdirectory(translations)
 add_subdirectory(resource)
 
-set(danmaQ_RESOURCES icons.qrc i18n.qrc socket.qrc)
+set(danmaQ_RESOURCES icons.qrc socket.qrc)
+file(GLOB danmqQ_TRANSLATIONS translations/*.ts)
 
-add_custom_target(resources ALL DEPENDS ${danmaQ_RESOURCES})
-add_dependencies(resources translations)
+qt_add_resources(danmaQ_RCC_SRCS ${danmaQ_RESOURCES})
+qt_add_executable(${CMAKE_PROJECT_NAME} ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC} ${danmaQ_RCC_SRCS})
+qt_add_translations(${CMAKE_PROJECT_NAME}
+    TS_FILES ${danmqQ_TRANSLATIONS}
+)
 
-qt5_add_resources(danmaQ_RCC_SRCS ${danmaQ_RESOURCES})
+set(DANMAQ_LIBRARIES Qt6::Widgets Qt6::Core Qt6::Network Qt6::WebEngineCore Qt6::WebEngineWidgets)
 
-add_executable(${CMAKE_PROJECT_NAME} ${danmaQ_SOURCES} ${danmaQ_HEADERS_MOC} ${danmaQ_RCC_SRCS})
-add_dependencies(${CMAKE_PROJECT_NAME} resources)
-
-set(DANMAQ_LIBRARIES Qt5::Widgets Qt5::Core Qt5::Network Qt5::WebEngineCore Qt5::WebEngineWidgets)
-
-if(CMAKE_SYSTEM_NAME STREQUAL Linux)
-	find_package(Qt5X11Extras REQUIRED)
-	set(DANMAQ_LIBRARIES ${DANMAQ_LIBRARIES} Qt5::X11Extras)
-
-	find_package(X11 REQUIRED)
-	set(DANMAQ_LIBRARIES ${DANMAQ_LIBRARIES} ${X11_LIBRARIES})
-
-	# find_library(X_LIB X11 Xext)
-	# set(DANMAQ_LIBRARIES ${DANMAQ_LIBRARIES} ${X_LIB})
-endif()
-
-target_link_libraries(${CMAKE_PROJECT_NAME} ${DANMAQ_LIBRARIES})
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${DANMAQ_LIBRARIES})
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION bin)
