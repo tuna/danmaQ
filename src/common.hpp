@@ -23,7 +23,7 @@
 #include "Danmaku.hpp"
 #include "Subscriber.hpp"
 
-#define DANMAQ_VERSION "0.2.3.2"
+#define DANMAQ_VERSION "0.3.0"
 
 #if defined _WIN32 || defined __CYGWIN__
 #define myDebug (qDebug() << "[" << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << "]")
