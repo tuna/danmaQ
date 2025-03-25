@@ -183,7 +183,7 @@ void DMMainWindow::show_about_dialog() {
                      R"(
                 <strong>DanmaQ</strong>
                 <p>Version )" DANMAQ_VERSION R"( </p>
-                <p>Copyright &copy; 2015-2021 Justin Wong & TUNA members<br />
+                <p>Copyright &copy; 2015-2025 Justin Wong & TUNA members<br />
                 Tsinghua University TUNA Association</p>
                 <p> Source Code Available under GPLv3<br />
                 <a href='https://github.com/tuna/danmaQ'>
