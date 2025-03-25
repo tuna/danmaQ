@@ -1,45 +1,53 @@
 name: Windows
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
 env:
   targetName: danmaQ
 jobs:
   build:
     name: Build
-    runs-on: windows-2019
+    runs-on: windows-latest
     strategy:
       matrix:
         include:
           - qt_ver: 5.15.2          
             qt_arch: win64_msvc2019_64
             msvc_arch: x64
-            qt_arch_install: msvc2019_64
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2.13.0
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt_ver }}
           modules: 'qtwebengine'
           arch: ${{ matrix.qt_arch }}
-      - uses: actions/checkout@v2
+          cache: true
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - name: MSVC Build
         id: build
         shell: cmd
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.msvc_arch }}
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.msvc_arch }}
           cmake -B . -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=Release
           msbuild ALL_BUILD.vcxproj
       - name: Package Qt
         env:
-          VCINSTALLDIR: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC'
+          VCINSTALLDIR: 'C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC'
         shell: pwsh
         run: |
           New-Item -ItemType Directory ${env:targetName}
           Copy-Item src\Debug\${{ env.targetName }}.exe ${env:targetName}\
           windeployqt ${env:targetName}\${env:targetName}.exe
           Compress-Archive -Path ${env:targetName} ${env:targetName}'.zip'
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.targetName }}.win.${{ matrix.msvc_arch }}.zip
           path: ${{ env.targetName }}.zip

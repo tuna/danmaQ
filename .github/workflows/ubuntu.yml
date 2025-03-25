@@ -1,5 +1,13 @@
 name: Ubuntu
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
 env:
   targetName: danmaQ
 jobs:
@@ -8,19 +16,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04]
+        os: [ubuntu-latest]
         qt_ver: [5.15.2]
         qt_arch: [gcc_64]
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt_ver }}
           modules: 'qtcharts qtwebengine'
-          cached: 'false'
+          cache: true
       - name: ubuntu install
         run: sudo apt-get install -y libqt5x11extras5-dev cmake flatpak flatpak-builder
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - name: build flatpak
@@ -30,7 +38,7 @@ jobs:
           sudo flatpak-builder --repo=repo --force-clean build-dir org.tuna.danmaQ.local.json
           sudo flatpak build-bundle repo danmaQ.flatpak org.tuna.danmaQ
         working-directory: flatpak
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.targetName }}.linux.amd64.flatpak
           path: flatpak/danmaQ.flatpak
