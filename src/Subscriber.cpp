@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "common.hpp"
 
 Subscriber::Subscriber(QString server, QObject* parent) : QObject(parent) {

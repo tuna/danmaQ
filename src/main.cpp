@@ -50,8 +50,11 @@ int main(int argc, char* argv[]) {
     QString translationPath = dir.filePath(availableTranslation.at(0));
     myDebug << "Using translation:" << translationPath;
     QTranslator* translator = new QTranslator();
-    translator->load(translationPath);
-    app.installTranslator(translator);
+    if (translator->load(translationPath)) {
+      app.installTranslator(translator);
+    } else {
+      myDebug << "Failed to load translation into translator.";
+    }
   } else {
     myDebug << "No available translation found.";
   }
