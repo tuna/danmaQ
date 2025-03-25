@@ -13,7 +13,7 @@ IF (WIN32 AND NOT MINGW AND NOT CYGWIN)
 	set(CMAKE_PREFIX_PATH "$ENV{QTDIR} ${CMAKE_PREFIX_PATH}")
 ENDIF()
 
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network WebEngineWidgets LinguistTools)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets WebEngineWidgets LinguistTools)
 
 IF (UNIX)
         set(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")

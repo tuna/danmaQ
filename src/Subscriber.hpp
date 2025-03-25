@@ -17,12 +17,9 @@
 
 #ifndef SUBSCRIBER_HPP
 #define SUBSCRIBER_HPP
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QThread>
-#include <QTime>
-#include <QWebEngineView>
+
 #include <QtCore>
+#include <QWebEngineView>
 #include <QtWebChannel>
 
 class Subscriber : public QObject {
@@ -49,8 +46,6 @@ class Subscriber : public QObject {
  private:
   QWebEngineView* webView;
   QWebChannel* webChannel;
-  QNetworkAccessManager* http;
-  QNetworkRequest request;
   QString server;
 };
 

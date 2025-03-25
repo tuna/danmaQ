@@ -15,24 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QEventLoop>
-#include <QNetworkReply>
-#include <QThread>
-#include <QTimer>
-#include <QWebEngineView>
-#include <QtCore>
-#include <QtWebChannel>
-
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QUrl>
-#include <QUuid>
-
-#include <QByteArray>
-#include <QDebug>
-#include <QVariant>
-#include <QVariantList>
-#include <QVariantMap>
 
 #include "common.hpp"
 
