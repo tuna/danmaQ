@@ -26,12 +26,12 @@ jobs:
           version: ${{ matrix.qt_ver }}
           modules: 'qtcharts qtwebengine'
           cache: true
-      - name: ubuntu install
+      - name: Install other dependencies
         run: sudo apt-get install -y libqt5x11extras5-dev cmake flatpak flatpak-builder
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: build flatpak
+      - name: Build flatpak
         run: |
           sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           sudo flatpak install flathub org.kde.Sdk//5.15 io.qt.qtwebengine.BaseApp//5.15 -y
@@ -42,7 +42,7 @@ jobs:
         with:
           name: ${{ env.targetName }}.linux.amd64.flatpak
           path: flatpak/danmaQ.flatpak
-      - name: uploadRelease
+      - name: Update to release
         if: startsWith(github.event.ref, 'refs/tags/')
         uses: svenstaro/upload-release-action@v2
         with:
