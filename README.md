@@ -1,7 +1,9 @@
 
 # DanmaQ  
 
-[![Travis CI status](https://travis-ci.org/tuna/danmaQ.svg?branch=master)](https://travis-ci.org/tuna/danmaQ?branch=master)
+[![Ubuntu](https://github.com/tuna/danmaQ/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/tuna/danmaQ/actions/workflows/ubuntu.yml)
+[![macOS](https://github.com/tuna/danmaQ/actions/workflows/macOS.yml/badge.svg)](https://github.com/tuna/danmaQ/actions/workflows/macOS.yml)
+[![Windows](https://github.com/tuna/danmaQ/actions/workflows/windows.yml/badge.svg)](https://github.com/tuna/danmaQ/actions/workflows/windows.yml)
 
 DanmaQ, pronounced as `/danmakju:/` is a small QT program to play danmaku on any screen.
 
@@ -11,28 +13,21 @@ DanmaQ is **still under development**, documents might be outdated.
 
 ## Dependencies
 
-`danmaQ` depends on `Qt5`, version >= 5.6.2 preferred.
+danmaQ depends on Qt6. Qt 6.8 LTS is recommended.
 
 ## Installation
 
-### AppImage
-On Linux X86-64, you can download the bundled AppImage.
-   
-    wget https://github.com/tuna/danmaQ/releases/download/cpp-0.1/danmaQ.AppImage
-    chmod +x danmaQ.AppImage
-    ./danmaQ.AppImage
-
 ### Source
 
-    apt-get install qt5-default qttools5-dev qttools5-dev-tools libqt5x11extras5-dev cmake  # for ubuntu trusty (aka 14.04 LTS) and debian jessie (aka 8)
-    apt-get install qt5-default qttools5-dev-tools qtwebengine5-dev libqt5x11extras5-dev cmake  # for ubuntu and debian
-    zypper install libqt5-qtx11extras-devel libqt5-linguist-devel cmake        # for openSUSE
-    dnf install qt5-devel qt5-qtx11extras-devel qt5-linguist cmake             # for fedora
-    brew install qt                                                            # for macOS
-    
-    mkdir build && cd build 
-    cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release 
-    make && sudo make install
+```shell
+apt-get install qt6-base-dev qt6-webengine-dev qt6-tools-dev-tools cmake ninja-build # for debian / ubuntu
+dnf install qt6-qtbase-devel qt6-qtwebengine-devel qt6-linguist cmake ninja-build    # for fedora
+brew install qt cmake                                                                # for macOS
+
+mkdir build && cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release 
+make && sudo make install
+```
 
 ### Windows
 
@@ -42,19 +37,25 @@ Or you can also use CMake and Qt to build it yourself, but there is no help avai
 
 ### Arch Linux
 
-    pacman -S danmaq
+```shell
+pacman -S danmaq
+```
 
 ### Fedora
 
-    dnf install danmaq
+```shell
+dnf install danmaq
+```
 
-### AOSC OS / Ubuntu 18.04+ / Debian 10+
+### Debian / Ubuntu / AOSC OS
 
-    apt install danmaq
+```shell
+apt install danmaq
+```
 
 ## Usage
 
-### Use TUNA Service
+### TUNA Public Service
 
 First you need to create a channel, go to https://dm.tuna.moe:8443/ and create a channel, 
 (let's use `ooxx` as the channel name and `passw0rd` as the password)
@@ -68,10 +69,3 @@ lauch danmaku in your screen!
 ### Self Hosted Service
 
 See [gdanmaku-server](https://github.com/tuna/gdanmaku-server).
-
-## TODO
-
-- [x] Multi-Screen support
-- [x] Chatting
-- [x] RPM package
-- [x] Deb package
