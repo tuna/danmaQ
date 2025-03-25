@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>moe.tuna.danmaq</id>
+    <name>DanmaQ</name>
+    <metadata_license>FSFAP</metadata_license>
+    <project_license>GPL-3.0+</project_license>
+
+    <summary>QT program to play danmaku on any screen</summary>
+    <description>DanmaQ, pronounced as `/danmakju:/` is a small QT program to play danmaku on any screen.</description>
+
+    <categories>
+        <category>Graphics</category>
+		<category>Qt</category>
+    </categories>
+
+	<url type="homepage">https://github.com/tuna/danmaQ</url>
+	<launchable type="desktop-id">danmaQ.desktop</launchable>
+	
+    <provides>
+        <binary>danmaQ</binary>
+    </provides>
+	
+    <developer_name>Tsinghua University TUNA Association</developer_name>
+    <update_contact>tuna@tsinghua.edu.cn</update_contact>
+</component>
