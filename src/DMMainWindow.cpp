@@ -16,7 +16,6 @@
  */
 
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QScreen>
 #include <QIcon>
 #include <QVBoxLayout>

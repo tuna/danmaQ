@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #include <QtCore>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QLabel>
 #include <QWidget>
 #include <QColor>
