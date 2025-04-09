@@ -42,23 +42,23 @@ jobs:
         with:
           name: ${{ env.targetName }}.linux.amd64
           path: build/src/danmaQ
-      # - name: Build flatpak
-      #   run: |
-      #     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-      #     sudo flatpak install flathub org.kde.Sdk//5.15 io.qt.qtwebengine.BaseApp//5.15 -y
-      #     sudo flatpak-builder --repo=repo --force-clean build-dir org.tuna.danmaQ.local.json
-      #     sudo flatpak build-bundle repo danmaQ.flatpak org.tuna.danmaQ
-      #   working-directory: flatpak
-      # - uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ env.targetName }}.linux.amd64.flatpak
-      #     path: flatpak/danmaQ.flatpak
-      # - name: Update to release
-      #   if: startsWith(github.event.ref, 'refs/tags/')
-      #   uses: svenstaro/upload-release-action@v2
-      #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     file: flatpak/danmaQ.flatpak
-      #     asset_name: ${{ env.targetName }}.linux.amd64.flatpak
-      #     tag: ${{ github.ref }}
-      #     overwrite: true
+      - name: Build flatpak
+        run: |
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install flathub org.kde.Sdk//6.8 io.qt.qtwebengine.BaseApp//6.8 -y
+          sudo flatpak-builder --repo=repo --force-clean build-dir org.tuna.danmaQ.local.json
+          sudo flatpak build-bundle repo danmaQ.flatpak org.tuna.danmaQ
+        working-directory: flatpak
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.targetName }}.linux.amd64.flatpak
+          path: flatpak/danmaQ.flatpak
+      - name: Update to release
+        if: startsWith(github.event.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: flatpak/danmaQ.flatpak
+          asset_name: ${{ env.targetName }}.linux.amd64.flatpak
+          tag: ${{ github.ref }}
+          overwrite: true
